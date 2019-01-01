@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% for book in books %}
+    
+
+    <div class="card text-left">
+      <div class="card-header">
+        Seller: <a href="{% url 'userbooksforuser' book.user %}" style="color:black">{{ book.user.username }}</a>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">{{ book.book_name }}</h5>
+        <p class="card-text">{{ book.description }}</p>
+        <p class="card-text">Condition : {{ book.condition }} </p>
+      </div>
+      <div class="card-footer text-mutxed">
+        {{ book.created_at }} <a href="#" class="btn btn-primary float-right">ADD FOR EXCHANGE</a>
+        <a href="#" class="mr-2 btn btn-info float-right">BUY FOR {{ book.price }}</a>
+      </div>
+    </div>
+  </br>
+
+{% endfor %}
+
+{% endblock %}

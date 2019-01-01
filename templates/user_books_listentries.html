@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Get count and username -->
+
+{% for book in books %}
+
+<div class="card text-left">
+    <div class="card-header">
+        {{ book.user.username }} 
+        <a href="{% url 'post-delete' book.id %}" class="btn btn-danger float-right">Delete</a>
+        <a href="{% url 'post-update' book.id %}" class="mr-2 btn btn-info float-right" >Edit</a>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ book.book_name }}</h5>
+        <p class="card-text">{{ book.description }}</p>
+        <p class="card-text">Condition : {{ book.condition }} </p>
+        <p class="card-text">Price : {{ book.price }} </p>
+    </div>
+    <div class="card-footer text-mutxed">
+        {{ book.created_at }} 
+    </div>
+</div>
+</br>
+
+{% endfor %}
+
+{% endblock %}

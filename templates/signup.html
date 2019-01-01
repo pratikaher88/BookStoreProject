@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Login{% endblock %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10 col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">Sign up</h3>
+            <form method="post" novalidate>
+              {% csrf_token %}
+              {{ form|crispy}}
+              <button type="submit" class="btn btn-primary btn-block">Create an account</button>
+            </form>
+          </div>
+          <div class="card-footer text-muted text-center">
+            Already have an account? <a href="{% url 'login' %}">Log in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- 
+  <h2>Sign Up</h2>
+	<div class="content-section">
+
+		<form method="POST">
+			{% csrf_token %}
+			<fieldset class="form-group">
+
+				{{ form|crispy}}
+				
+			</fieldset>
+			<br>
+			<div class="form-group">
+				<button class="btn btn-outline-info" type="submit">SignUp</button>
+			</div>
+
+		</form> -->
+
+{% endblock %}
