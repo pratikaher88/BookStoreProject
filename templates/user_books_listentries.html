@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<!-- Get count and username -->
+{% if books %}
 
 {% for book in books %}
 
@@ -25,5 +25,12 @@
 </br>
 
 {% endfor %}
+
+{% else %}
+
+<div class="text-center"><h1>No Books Found ! Add Books ! </h1></div>
+
+
+{% endif %}
 
 {% endblock %}

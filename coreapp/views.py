@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.views import generic
 from django.urls import reverse_lazy
 from .forms import UserCreationForm, NewEntryForm
 from django.contrib.auth.decorators import login_required
-from coreapp.models import Book
+from coreapp.models import Book,Profile
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 # @login_required
@@ -12,7 +12,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 @login_required
 def profile(request):
-    return render(request, 'profile.html')
+	profile = get_object_or_404(Profile, user=request.user)
+	return render(request, 'profile.html', {'profile': profile })
 
 # def addforexchange(request):
 	

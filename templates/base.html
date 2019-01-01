@@ -11,9 +11,9 @@
 
     <header class="site-header">
       
-    <nav class="navbar navbar-expand-lg bg-light">
+    <nav class="navbar navbar-expand-lg bg-dark">
       <div class="container">
-        <a class="navbar-brand" style="color:black" href="{% url 'listentries' %}">FFG</a>
+        <a class="navbar-brand" style="color:white" href="{% url 'listentries' %}">FFG</a>
         
       </div>
 
@@ -24,11 +24,11 @@
       <div class="navbar-nav">
           <div><p style="padding-right:20px;padding-top:10px;">{{ user.username }} </p> </div>
         </div>
-        <a href="{% url 'logout' %}" class="btn btn-outline-secondary">Logout</a>       
+        <a href="{% url 'logout' %}" class="btn btn-outline-success">Logout</a>       
 
       {% else %}
         <div class="navbar-nav">
-          <a href="{% url 'login' %}" class="btn btn-outline-secondary">Login</a>
+          <a href="{% url 'login' %}" class="btn btn-outline-success">Login</a>
           <a href="{% url 'signup' %}" class="btn btn-primary ml-2">Sign up</a>
         </div>
       {% endif %}
