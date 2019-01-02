@@ -31,7 +31,6 @@ class Profile(models.Model):
     profile_pic = models.ImageField(default='avatar.jpg', upload_to="profile_images/")
     # Books = models.ManyToManyField(Book)
 
-
     def __str__(self):
         return self.user.username
 

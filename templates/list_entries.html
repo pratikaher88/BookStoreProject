@@ -1,7 +1,29 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="{% static 'css/search.css' %}">
+
+{% endblock %}
+
+{% block search %}
+
+<div class="container">
+  <div class="col-md-17">
+<form class="navbar-form" method="GET" action="{% url 'search' %}">
+  <div class="input-group add-on">
+    <input class="form-control" placeholder="Search book or author" name="search" id="srch-term" type="text">
+    <div class="ml-1 input-group-btn">
+      <button class="btn btn-info" type="submit" >Submit</button>
+    </div>
+  </div>
+</form>
+</div>
+</div>
+
+{% endblock %}
 
 {% block content %}
-
 <!-- {{ books | length }} -->
 
 {% if messages %}
@@ -11,6 +33,10 @@
 </div>
 {% endfor %}
 {% endif %}
+
+<br/>
+
+{% if books %}
 
     {% for book in books %}
     
@@ -29,7 +55,14 @@
       </div>
     </div>
   </br>
+  {% endfor %}
 
-{% endfor %}
+  {% else %}
+
+  <h2 align="center">No Relevant Books Found !</h2>
+
+  {% endif %}
+
+
 
 {% endblock %}

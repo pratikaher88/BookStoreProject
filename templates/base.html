@@ -22,7 +22,7 @@
 
 
       <div class="navbar-nav">
-          <div><p style="padding-right:20px;padding-top:10px;">{{ user.username }} </p> </div>
+          <div><p style="padding-right:20px;padding-top:10px; color:seashell">{{ user.username }} </p> </div>
         </div>
         <a href="{% url 'logout' %}" class="btn btn-outline-success">Logout</a>       
 
@@ -50,12 +50,16 @@
 
                 <div class="col-md-4">
                   <div class="content-section">
+                    {% block search %}
+                    {% endblock %}
+                    <br/>
                     <h3>Django Books</h3>
                       <ul class="list-group">
                         <li class="list-group-item list-group-item-light"><a href="{% url 'listentries' %}" style="color:black"> Home</a></li>                       
-                        <li class="list-group-item list-group-item-light"><a href="{% url 'newentry' %}" style="color:black"> New Entry</a></li>
+                        <li class="list-group-item list-group-item-light"><a href="{% url 'newentry' %}" style="color:black"> Add Book</a></li>
                         <li class="list-group-item list-group-item-light"><a href="{% url 'profile' %}" style="color:black">Profile</a></li>
                         <li class="list-group-item list-group-item-light"><a href="{% url 'userbooks' %}" style="color:black">My Books</a></li>
+                        <li class="list-group-item list-group-item-light"><a href="{% url 'wish_list' %}" style="color:black">WishList</a></li>
                         
                       </ul>
                     </p>

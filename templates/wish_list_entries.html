@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if orders %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+<h2>WISHLIST:</h2>
+<br/>
+{% for item in orders %}
+
+<div class="card text-left">
+    <div class="card-header">
+        <!-- {{ order.user.username }} -->
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ item.book.book_name }}</h5>
+        <p class="card-text" >{{ item.book.description }}</p>
+
+        <!-- <p class="card-text">Condition : {{ book.condition }} </p>
+        <p class="card-text">Price : {{ book.price }} </p> -->
+    </div>
+    <div class="card-footer text-mutxed">
+        <a href="{% url 'delete_item' item.id %}" class="mr-2 btn btn-info float-right" >Delete Item</a>
+    </div>
+</div>
+</br>
+
+{% endfor %}
+
+{% else %}
+
+<div class="text-center">
+    <h1>WishList Empty ! Add Books to Wishlist ! </h1>
+</div>
+
+
+{% endif %}
+
+{% endblock %}
