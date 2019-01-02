@@ -118,8 +118,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOGIN_REDIRECT_URL = 'listentries'
-LOGIN_URL = 'listentries'
+LOGIN_REDIRECT_URL = 'list_entries'
+LOGIN_URL = 'list_entries'
 LOGOUT_REDIRECT_URL = 'login'
 
 MEDIA_ROOT = 'media'

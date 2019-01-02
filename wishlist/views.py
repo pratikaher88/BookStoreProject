@@ -23,14 +23,14 @@ def add_to_list(request, item_id):
         owner=user_profile)
     if order_item in user_order[0].items.all():
         messages.warning(request, 'Item Already in Wishlist!')
-        return redirect(reverse('coreapp:listentries'))
+        return redirect(reverse('coreapp:list_entries'))
     # create orderItem of the selected product
     user_order[0].items.add(order_item)
     user_order[0].save()
 
     # show confirmation message and redirect back to the same page
     messages.info(request, "item added to cart")
-    return redirect(reverse('coreapp:listentries'))
+    return redirect(reverse('coreapp:list_entries'))
 
 
 def delete_from_list(request, item_id):

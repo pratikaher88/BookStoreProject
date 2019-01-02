@@ -42,10 +42,9 @@ class BookListView(generic.ListView):
     def get_queryset(self):
         return Book.objects.exclude(user=self.request.user)
 
-
 class UserBookListView(generic.ListView):
     model = Book
-    template_name = 'user_books_listentries.html'
+    template_name = 'user_books_list_entries.html'
     context_object_name = 'books'
     ordering = ['-created_at']
 
@@ -67,7 +66,7 @@ class UserBookListViewForUser(generic.ListView):
 
 class NewEntry(generic.CreateView):
     form_class = NewEntryForm
-    success_url = reverse_lazy('listentries')
+    success_url = reverse_lazy('list_entries')
     template_name = 'new_entry.html'
 
     def form_valid(self, form):
