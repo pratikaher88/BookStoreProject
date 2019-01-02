@@ -10,7 +10,7 @@
 
 <div class="container">
   <div class="col-md-17">
-<form class="navbar-form" method="GET" action="{% url 'search' %}">
+<form class="navbar-form" method="GET" action="{% url 'coreapp:search' %}">
   <div class="input-group add-on">
     <input class="form-control" placeholder="Search book or author" name="search" id="search" type="text">
     <div class="ml-1 input-group-btn">
@@ -42,7 +42,7 @@
     
     <div class="card text-left">
       <div class="card-header">
-        Seller: <a href="{% url 'userbooksforuser' book.user %}" style="color:black">{{ book.user.username }}</a>
+        Seller: <a href="{% url 'coreapp:userbooksforuser' book.user %}" style="color:black">{{ book.user.username }}</a>
       </div>
       <div class="card-body">
         <h5 class="card-title">{{ book.book_name }}</h5>
@@ -50,7 +50,7 @@
         <p class="card-text">Condition : {{ book.condition }} </p>
       </div>
       <div class="card-footer text-mutxed">
-        {{ book.created_at }} <a href="{% url 'add_to_list' book.id %}" class="btn btn-primary float-right">ADD FOR EXCHANGE</a>
+        {{ book.created_at }} <a href="{% url 'wishlist:add_to_list' book.id %}" class="btn btn-primary float-right">ADD FOR EXCHANGE</a>
         <a href="#" class="mr-2 btn btn-info float-right">BUY FOR {{ book.price }}</a>
       </div>
     </div>

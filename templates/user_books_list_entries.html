@@ -12,8 +12,8 @@
 <div class="card text-left">
     <div class="card-header">
         {{ book.user.username }} 
-        <a href="{% url 'post-delete' book.id %}" class="btn btn-danger float-right">Delete</a>
-        <a href="{% url 'post-update' book.id %}" class="mr-2 btn btn-info float-right" >Edit</a>
+        <a href="{% url 'coreapp:post-delete' book.id %}" class="btn btn-danger float-right">Delete</a>
+        <a href="{% url 'coreapp:post-update' book.id %}" class="mr-2 btn btn-info float-right" >Edit</a>
     </div>
     <div class="card-body">
         <h5 class="card-title">{{ book.book_name }}</h5>

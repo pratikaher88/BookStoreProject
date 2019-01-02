@@ -13,7 +13,7 @@
       
     <nav class="navbar navbar-expand-lg bg-dark">
       <div class="container">
-        <a class="navbar-brand" style="color:white" href="{% url 'listentries' %}">FFG</a>
+        <a class="navbar-brand" style="color:white" href="{% url 'coreapp:list_entries' %}">FFG</a>
         
       </div>
 
@@ -55,11 +55,11 @@
                     <br/>
                     <h3>Django Books</h3>
                       <ul class="list-group">
-                        <li class="list-group-item list-group-item-light"><a href="{% url 'listentries' %}" style="color:black"> Home</a></li>                       
-                        <li class="list-group-item list-group-item-light"><a href="{% url 'newentry' %}" style="color:black"> Add Book</a></li>
-                        <li class="list-group-item list-group-item-light"><a href="{% url 'profile' %}" style="color:black">Profile</a></li>
-                        <li class="list-group-item list-group-item-light"><a href="{% url 'userbooks' %}" style="color:black">My Books</a></li>
-                        <li class="list-group-item list-group-item-light"><a href="{% url 'wish_list' %}" style="color:black">WishList</a></li>
+                        <li class="list-group-item list-group-item-light"><a href="{% url 'coreapp:list_entries' %}" style="color:black"> Home</a></li>                       
+                        <li class="list-group-item list-group-item-light"><a href="{% url 'coreapp:new_entry' %}" style="color:black"> Add Book</a></li>
+                        <li class="list-group-item list-group-item-light"><a href="{% url 'coreapp:profile' %}" style="color:black">Profile</a></li>
+                        <li class="list-group-item list-group-item-light"><a href="{% url 'coreapp:userbooks' %}" style="color:black">My Books</a></li>
+                        <li class="list-group-item list-group-item-light"><a href="{% url 'wishlist:wish_list' %}" style="color:black">WishList</a></li>
                         
                       </ul>
                     </p>
@@ -67,15 +67,7 @@
                 </div>
 
                 {% endif %}
-
-                <!-- <a href="{% url 'newentry' %}">
-                  <li class="list-group-item list-group-item-light">New Entry</li>
-                </a>
-                <a href="{% url 'profile' %}">
-                  <li class="list-group-item list-group-item-light">Profile</li>
-                </a>
-                <li class="list-group-item list-group-item-light">Requests</li>
-                <li class="list-group-item list-group-item-light">etc</li> -->
+                
       </div>
     </div>
   </body>
