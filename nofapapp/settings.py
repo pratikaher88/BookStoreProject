@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'coreapp',
-    'accounts',
+    'wishlist',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
