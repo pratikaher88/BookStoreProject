@@ -4,6 +4,14 @@
 
 <!-- {{ books | length }} -->
 
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">
+  {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
     {% for book in books %}
     
     <div class="card text-left">
@@ -16,7 +24,7 @@
         <p class="card-text">Condition : {{ book.condition }} </p>
       </div>
       <div class="card-footer text-mutxed">
-        {{ book.created_at }} <a href="#" class="btn btn-primary float-right">ADD FOR EXCHANGE</a>
+        {{ book.created_at }} <a href="{% url 'add_to_list' book.id %}" class="btn btn-primary float-right">ADD FOR EXCHANGE</a>
         <a href="#" class="mr-2 btn btn-info float-right">BUY FOR {{ book.price }}</a>
       </div>
     </div>

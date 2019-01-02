@@ -35,9 +35,27 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
-# class Cart(models.Model):
-#     user = models.ForeignKey(User ,on_delete = models.CASCADE ,null=True)
-#     book = modes.ForeignKey(Book)
+
+class OrderItem(models.Model):
+    book = models.OneToOneField(
+        Book, on_delete=models.SET_NULL, null=True)
+    date_added = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.book.book_name
+
+
+class Order(models.Model):
+    owner = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
+    items = models.ManyToManyField(OrderItem)
+    date_ordered = models.DateTimeField(auto_now=True)
+
+    def get_cart_items(self):
+        return self.items.all()
+
+    def __str__(self):
+        return self.owner.user.username
+
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
