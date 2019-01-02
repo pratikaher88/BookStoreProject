@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView,LogoutView
 
 urlpatterns = [
     url('', include('coreapp.urls')),
+    url('list/',include('wishlist.urls', namespace='wishlist')),
     url(r'^login/$', LoginView.as_view(), name='login'),
     url(r'^logout/$', LogoutView.as_view(), name='logout'),
     url('^', include('django.contrib.auth.urls')),

@@ -8,17 +8,10 @@ from coreapp.models import Book, Profile, OrderItem, Order
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 
-# @login_required
-# def logoutpage(request):
-#     return render(request,'registration/logout.html')
-
-
 @login_required
 def profile(request):
     profile = get_object_or_404(Profile, user=request.user)
     return render(request, 'profile.html', {'profile': profile})
-
-# def addforexchange(request):
 
 class SearchListView(generic.ListView):
     model = Book
@@ -30,43 +23,6 @@ class SearchListView(generic.ListView):
         book_name = self.request.GET.get('search')
         print(book_name)
         return Book.objects.filter(Q(book_name__icontains=book_name))
-
-
-def add_to_list(request, item_id):
-    # get the user profile
-    user_profile = get_object_or_404(Profile, user=request.user)
-    # filter products by id
-    book = Book.objects.filter(id=item_id).first()
-    # check if the user already owns this product
-    # if product in request.user.profile.ebooks.all():
-    #     messages.info(request, 'You already own this ebook')
-    #     return redirect(reverse('products:product-list'))
-    # create orderItem of the selected product
-    order_item, status = OrderItem.objects.get_or_create(book=book)
-    print(order_item)
-    # create order associated with the user
-    user_order = Order.objects.get_or_create(
-        owner=user_profile)
-    if order_item in user_order[0].items.all():
-        messages.warning(request, 'Item Already in Wishlist!')
-        return redirect(reverse('listentries'))
-    # create orderItem of the selected product
-    user_order[0].items.add(order_item)
-    user_order[0].save()
-
-    # show confirmation message and redirect back to the same page
-    messages.info(request, "item added to cart")
-    return redirect(reverse('listentries'))
-
-
-def delete_from_list(request, item_id):
-    item_to_delete = OrderItem.objects.filter(pk=item_id)
-    print(item_to_delete)
-    if item_to_delete.exists():
-        item_to_delete[0].delete()
-        messages.info(request, "Item has been deleted")
-    return redirect(reverse('wish_list'))
-
 
 def transaction(request):
     return render(request, 'transaction.html')
@@ -86,13 +42,6 @@ class BookListView(generic.ListView):
 
     def get_queryset(self):
         return Book.objects.exclude(user=self.request.user)
-
-
-class WishListView(generic.ListView):
-    model = OrderItem
-    template_name = 'wish_list_entries.html'
-    context_object_name = 'orders'
-    ordering = ['-date_added']
 
 
 class UserBookListView(generic.ListView):
