@@ -8,11 +8,18 @@
 
 {% block search %}
 
-<form action="" method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" />
+<div class="container">
+  <div class="col-md-17">
+<form class="navbar-form" method="GET" action="{% url 'searchapp:search' %}">
+  <div class="input-group add-on">
+    <input class="form-control" placeholder="Search book or author" name="search" id="search" type="text">
+    <div class="ml-1 input-group-btn">
+      <button class="btn btn-info" type="submit" >Submit</button>
+    </div>
+  </div>
 </form>
+</div>
+</div>
 
 {% endblock %}
 
@@ -28,6 +35,7 @@
 {% endif %}
 
 <br/>
+
 
 {% if books %}
 
