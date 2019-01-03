@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
+from django.views.generic.edit import FormView
 from django.urls import reverse_lazy, reverse
 from .forms import UserCreationForm, NewEntryForm ,UserForm,ProfileForm
 from django.contrib import messages
@@ -14,20 +15,8 @@ def profile(request):
     profile = get_object_or_404(Profile, user=request.user)
     return render(request, 'profile.html', {'profile': profile})
 
-class SearchListView(generic.ListView):
-    model = Book
-    template_name = 'list_entries.html'
-    context_object_name = 'books'
-    ordering = ['-created_at']
-
-    def get_queryset(self):
-        book_name = self.request.GET.get('search')
-        print(book_name)
-        return Book.objects.filter(Q(book_name__icontains=book_name))
-
 def transaction(request):
     return render(request, 'transaction.html')
-
 
 class SignUp(SuccessMessageMixin,generic.CreateView):
     form_class = UserCreationForm

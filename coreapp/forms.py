@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from coreapp.models import Book,Profile
+from coreapp.models import Book, Profile
+from dal import autocomplete
 
 
 class UserCreationForm(UserCreationForm):
@@ -18,12 +19,13 @@ class UserCreationForm(UserCreationForm):
             user.save()
         return user
 
+
 class NewEntryForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ['book_name' , 'description' , 'image', 'price','condition']
+        fields = ['book_name', 'description', 'image', 'price', 'condition']
         widgets = {
-          'description': forms.Textarea(attrs={'rows':4, 'cols':15}),
+            'description': forms.Textarea(attrs={'rows': 4, 'cols': 15}),
         }
 
 
@@ -36,8 +38,4 @@ class UserForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['profile_pic',]
-
-
-# class SearchForm(forms.Form):
-#     search_input = forms.CharField(max_length=20)
+        fields = ['profile_pic', ]
