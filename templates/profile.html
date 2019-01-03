@@ -4,15 +4,26 @@
 
 {% block content %}
 
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+
 <div class="card border-secondary mb-3 " >
-    <div class="card-header">{{ profile.user.username }}</div>
+
+    <div class="card-header">{{ profile.user.username }} <a href="{% url 'coreapp:profile_edit' %}" class="mr-2 btn btn-info float-right">Update Profile</a></div>
     <div class="card-body text-secondary">
+        <img class="rounded-circle account-img" src="{{ profile.profile_pic.url }}" style="max-width:100px;
+            max-height:100px;">
         <h5 class="card-title">{{ profile.user.email }}</h5>
         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
             content.</p>
     </div>
 </div>
-
 
 
 {% endblock %}

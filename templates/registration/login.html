@@ -8,10 +8,19 @@
 {% endblock %}
 {% block content %}
 
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">
+  {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
 <div class="container-fluid mt-5">
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="card">
+        
         <div class="card-body">
           <h3 class="card-title">Log in</h3>
           <form method="post" novalidate>
@@ -21,7 +30,7 @@
           </form>
         </div>
         <div class="card-footer text-muted text-center">
-          New to NoFapApp ? <a href="{% url 'signup' %}">Sign up</a>
+          New to NoFapApp ? <a href="{% url 'coreapp:signup' %}">Sign up</a>
         </div>
       </div>
       <div class="text-center py-2">

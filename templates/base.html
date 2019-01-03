@@ -5,36 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     {% block stylesheet %}{% endblock %}
-    <title>NO FAP APP</title>
+    <title>FFG</title>
   </head>
   <body>
 
     <header class="site-header">
-      
-    <nav class="navbar navbar-expand-lg bg-dark">
-      <div class="container">
-        <a class="navbar-brand" style="color:white" href="{% url 'coreapp:list_entries' %}">FFG</a>
-        
-      </div>
 
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #660066;">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
       {% if user.is_authenticated %}
 
-
-      <div class="navbar-nav">
-          <div><p style="padding-right:20px;padding-top:10px; color:seashell">{{ user.username }} </p> </div>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          {{ user.username }}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
         </div>
-        <a href="{% url 'logout' %}" class="btn btn-outline-success">Logout</a>       
+      </li>
+      <li><a class="btn btn-outline-success ml-2 my-2 my-sm-0" href="{% url 'logout'%}">Logout</a></li>
+        {% else %}
+      <li><a href="{% url 'login' %}" class="btn btn-outline-success">Login</a></li>
+      <li><a href="{% url 'coreapp:signup' %}" class="btn btn-primary ml-2">Sign up</a></li>
 
-      {% else %}
-        <div class="navbar-nav">
-          <a href="{% url 'login' %}" class="btn btn-outline-success">Login</a>
-          <a href="{% url 'signup' %}" class="btn btn-primary ml-2">Sign up</a>
-        </div>
       {% endif %}
+    </ul>
+  </div>
+</nav>
 
-
-    </nav>
+      
   </header>
 
   <br/>
@@ -70,5 +92,7 @@
                 
       </div>
     </div>
-  </body>
+<footer class="site-footer mr-3 mb-2" align ="right" style="font-family: 'Courier';font-style: bold;">
+  Made with <span style="color: #e25555;">&hearts;</span> in Dombivli!
+</footer>  </body>
 </html>

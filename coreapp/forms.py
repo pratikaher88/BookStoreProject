@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from coreapp.models import Book
+from coreapp.models import Book,Profile
 
 
 class UserCreationForm(UserCreationForm):
@@ -25,3 +25,19 @@ class NewEntryForm(forms.ModelForm):
         widgets = {
           'description': forms.Textarea(attrs={'rows':4, 'cols':15}),
         }
+
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['profile_pic',]
+
+
+# class SearchForm(forms.Form):
+#     search_input = forms.CharField(max_length=20)

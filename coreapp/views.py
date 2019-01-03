@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.urls import reverse_lazy, reverse
-from .forms import UserCreationForm, NewEntryForm
+from .forms import UserCreationForm, NewEntryForm ,UserForm,ProfileForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from coreapp.models import Book, Profile, OrderItem, Order
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
+from django.contrib.messages.views import SuccessMessageMixin
 
 @login_required
 def profile(request):
@@ -27,13 +28,14 @@ class SearchListView(generic.ListView):
 def transaction(request):
     return render(request, 'transaction.html')
 
-class SignUp(generic.CreateView):
+
+class SignUp(SuccessMessageMixin,generic.CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
+    success_message = 'Account Created! You can now Login!'
 
-
-class BookListView(generic.ListView):
+class BookListView(LoginRequiredMixin,generic.ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
@@ -66,7 +68,7 @@ class UserBookListViewForUser(generic.ListView):
 
 class NewEntry(generic.CreateView):
     form_class = NewEntryForm
-    success_url = reverse_lazy('list_entries')
+    success_url = reverse_lazy('coreapp:list_entries')
     template_name = 'new_entry.html'
 
     def form_valid(self, form):
@@ -105,3 +107,25 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
         if self.request.user == book.user:
             return True
         return False
+
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, (
+                'Your profile was successfully updated!'))
+            return redirect('coreapp:profile')
+        else:
+            messages.error(request, ('Please correct the error below.'))
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+    return render(request, 'profile_edit.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
