@@ -15,9 +15,6 @@ def profile(request):
     profile = get_object_or_404(Profile, user=request.user)
     return render(request, 'profile.html', {'profile': profile})
 
-def transaction(request):
-    return render(request, 'transaction.html')
-
 class SignUp(SuccessMessageMixin,generic.CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
@@ -46,7 +43,7 @@ class UserBookListView(generic.ListView):
 
 class UserBookListViewForUser(generic.ListView):
     model = Book
-    template_name = 'list_entries.html'
+    template_name = 'collection_user_entries.html'
     context_object_name = 'books'
     ordering = ['-created_at']
 

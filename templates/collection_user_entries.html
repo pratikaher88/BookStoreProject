@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>User Collection:</h2>
+<br />
+
+{% if books %}
+
+{% for book in books %}
+
+<div class="card text-left">
+    <div class="card-header">
+        {{ book.user.username }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ book.book_name }}</h5>
+        <p class="card-text">{{ book.description }}</p>
+        <p class="card-text">Condition : {{ book.condition }} </p>
+        <p class="card-text">Price : {{ book.price }} </p>
+    </div>
+    <div class="card-footer text-mutxed">
+        {{ book.created_at }} <a href="{% url 'wishlist:add_to_list' book.id %}" class="btn btn-primary float-right">ADD FOR EXCHANGE</a>
+    </div>
+</div>
+</br>
+
+{% endfor %}
+
+{% else %}
+
+<div class="text-center">
+    <h1>No Books Found ! </h1>
+</div>
+
+
+{% endif %}
+
+{% endblock %}

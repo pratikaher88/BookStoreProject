@@ -11,7 +11,6 @@ urlpatterns = [
     path('profile/',views.profile,name='profile'),
     path('profile/edit',views.update_profile,name='profile_edit'),
     path('signup/',views.SignUp.as_view(),name='signup'),
-    path('transaction/', views.transaction,name='transactions'),
     path('userbooks/', views.UserBookListView.as_view(),name='userbooks'),
     path('userbooks/<str:username>', views.UserBookListViewForUser.as_view(),name='userbooksforuser'),
     path('userbooks/<int:pk>/update',views.PostUpdateView.as_view(),name='post-update'),

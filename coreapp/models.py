@@ -46,13 +46,14 @@ class Book(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(
-        default=random_img(), upload_to="profile_images/")
+        default='default.png', upload_to="profile_images/")
 
     def __str__(self):
         return self.user.username
 
     def save(self, *args, **kwargs):
         super(Profile, self).save(*args, **kwargs)
+
         img = Image.open(self.profile_pic.path)
         if img.height > 300 or img.width > 300:
             output_size = (300, 300)
