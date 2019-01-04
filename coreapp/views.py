@@ -5,7 +5,7 @@ from django.urls import reverse_lazy, reverse
 from .forms import UserCreationForm, NewEntryForm ,UserForm,ProfileForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from coreapp.models import Book, Profile
+from coreapp.models import Book, Profile, UserCollection, UserCollectionItem
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
@@ -61,6 +61,18 @@ class NewEntry(generic.CreateView):
         book = form.save(commit=False)
         book.user = self.request.user
         book.save()
+
+        user_coll_item, status = UserCollectionItem.objects.get_or_create(book=book)
+        user_collection = UserCollection.objects.get_or_create(
+            owner=self.request.user)
+        print(user_collection)
+        if user_coll_item in user_collection[0].items.all():
+            messages.warning(request, 'Item Already Added')
+            return redirect(reverse('coreapp:list_entries'))
+        # create orderItem of the selected product
+        user_collection[0].items.add(user_coll_item)
+        user_collection[0].save()
+
         return super(NewEntry, self).form_valid(form)
 
 

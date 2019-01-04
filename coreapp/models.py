@@ -42,12 +42,22 @@ class Book(models.Model):
     def __str__(self):
         return self.book_name
 
-# class UserCollection():
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-#     items = models.ManyToManyField(Book)
 
-#     def __str__(self):
-#         return user.username
+class UserCollectionItem(models.Model):
+    book = models.OneToOneField(
+        Book, on_delete=models.SET_NULL, null=True)
+    date_added = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.book.book_name
+
+class UserCollection(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    items = models.ManyToManyField(UserCollectionItem)
+
+    def __str__(self):
+        return self.owner.username
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
