@@ -4,7 +4,8 @@ from django.views import generic
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from coreapp.models import Book, Profile, OrderItem, Order
+from coreapp.models import Book, Profile
+from wishlist.models import OrderItem, Order
 from django.db.models import Q
 
 

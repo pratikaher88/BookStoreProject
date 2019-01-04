@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Book,Profile,Order,OrderItem
+from coreapp.models import Book,Profile
+from wishlist.models import Order,OrderItem
 # Register your models here.
 
 admin.site.register(Book)

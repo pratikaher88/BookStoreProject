@@ -42,6 +42,12 @@ class Book(models.Model):
     def __str__(self):
         return self.book_name
 
+# class UserCollection():
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+#     items = models.ManyToManyField(Book)
+
+#     def __str__(self):
+#         return user.username
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -61,26 +67,6 @@ class Profile(models.Model):
             img.save(self.profile_pic.path)
 
 
-class OrderItem(models.Model):
-    book = models.OneToOneField(
-        Book, on_delete=models.SET_NULL, null=True)
-    date_added = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.book.book_name
-
-
-class Order(models.Model):
-    owner = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
-    items = models.ManyToManyField(OrderItem)
-    date_ordered = models.DateTimeField(auto_now=True)
-
-    def get_cart_items(self):
-        return self.items.all()
-
-    def __str__(self):
-        return self.owner.user.username
-
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
@@ -92,15 +78,3 @@ def create_profile(sender, instance, created, **kwargs):
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
-# @receiver(post_save, sender=Book)
-# def create_user_list(sender, instance, created, **kwargs):
-#     if created:
-#         Profile.objects.create(user=instance)
-
-# class UserBooks(models.Model):
-
-#     user = models.ForeignKey(User ,on_delete = models.CASCADE ,null=True)
-#     book = models.ManyToManyField( Book )
-
-#     def __str__(self):
-#         return self.book_name

@@ -5,7 +5,7 @@ from django.urls import reverse_lazy, reverse
 from .forms import UserCreationForm, NewEntryForm ,UserForm,ProfileForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from coreapp.models import Book, Profile, OrderItem, Order
+from coreapp.models import Book, Profile
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
