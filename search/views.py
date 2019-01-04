@@ -47,12 +47,12 @@ class SearchListView(generic.ListView):
 #     success_url = reverse_lazy('coreapp:list_entries')
 
 
-# class ContentAutoComplete(autocomplete.Select2QuerySetView):
+class ContentAutoComplete(autocomplete.Select2QuerySetView):
 
-# 	def get_queryset(self):
+	def get_queryset(self):
 
-# 		qs = Book.objects.all()
+		qs = Book.objects.all()
 
-# 		if self.q:
-# 			qs = qs.filter(book_name__istartswith=self.q)
-# 			return qs
+		if self.q:
+			qs = qs.filter(book_name__istartswith=self.q)
+			return qs
