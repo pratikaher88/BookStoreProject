@@ -27,11 +27,15 @@ def add_to_list(request, item_id):
 
 
 def delete_from_list(request, item_id):
-    item_to_delete = OrderItem.objects.filter(pk=item_id)
-    print(item_to_delete)
-    if item_to_delete.exists():
-        item_to_delete[0].delete()
-        messages.info(request, "Item has been deleted")
+    book = get_object_or_404(Book,id=item_id)
+    orders = Order.objects.get(owner=request.user.profile, items=book)
+    item_to_delete = Order.objects.get(items=book)
+    
+    print("Book",book)
+    print("Delete a item", item_to_delete.items)
+    print("Filtered item", item_to_delete)
+    # item_to_delete.delete()
+    messages.info(request, "Item has been deleted")
     return redirect(reverse('wishlist:wish_list'))
 
 
@@ -43,6 +47,6 @@ class WishListView(generic.ListView):
 
     def get_queryset(self):
         orders=Order.objects.get(owner=self.request.user.profile)
-        print(orders)
+        # print(orders)
         # print(orders.get_cart_items())
         return orders.get_cart_items()

@@ -30,17 +30,6 @@ class BookListView(LoginRequiredMixin,generic.ListView):
     def get_queryset(self):
         return Book.objects.exclude(user=self.request.user)
 
-# class UserBookListView(generic.ListView):
-#     model = Book
-#     template_name = 'user_books_list_entries.html'
-#     context_object_name = 'books'
-#     ordering = ['-created_at']
-
-#     def get_queryset(self):
-#         user = self.request.user
-#         return Book.objects.filter(user=user).order_by('-created_at')
-
-
 class UserBookListView(generic.ListView):
     model = Book
     template_name = 'user_books_list_entries.html'
@@ -53,8 +42,6 @@ class UserBookListView(generic.ListView):
         # print(collection_items)
         # print(collection_items.get_collection_items())
         return collection_items.get_collection_items()
-
-
 
 class UserBookListViewForUser(generic.ListView):
     model = Book

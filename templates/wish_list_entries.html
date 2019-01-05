@@ -29,6 +29,9 @@
         <p class="card-text">Price : {{ book.price }} </p> -->
     </div>
     <div class="card-footer text-mutxed">
+        {{ book.id }}
+        <a href="{% url 'wishlist:delete_item' book.id %}" class="mr-2 btn btn-info float-right">Delete Item</a>
+
     </div>
 </div>
 </br>

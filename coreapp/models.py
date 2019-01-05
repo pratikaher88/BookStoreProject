@@ -99,6 +99,41 @@ class UserCollection(models.Model):
     def __str__(self):
         return self.owner.user.username
 
+# class ShippingAddress(models.Model):
+#     flatnumber = models.CharField(
+#         "Flat Number",
+#         max_length=100, label='Door/Flat Number'
+#     )
+
+#     address1 = models.CharField(
+#         "Address line 1",
+#         max_length=200,
+#     )
+
+#     address2 = models.CharField(
+#         "Address line 2",
+#         max_length=200,
+#     )
+
+#     zip_code = models.CharField(
+#         "Postal code",
+#         max_length=12,
+#     )
+
+#     city = models.CharField(
+#         "City",
+#         max_length=100,
+#     )
+
+#     country = models.CharField(
+#         "Country",
+#         max_length=100,
+#     )
+
+#     class Meta:
+#         verbose_name = "Shipping Address"
+#         verbose_name_plural = "Shipping Addresses"
+
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
