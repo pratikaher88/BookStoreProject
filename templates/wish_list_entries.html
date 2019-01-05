@@ -15,21 +15,20 @@
 <h2>WISHLIST:</h2>
 <br/>
 {{ orders }}
-{% for item in orders %}
+{% for book in orders %}
 
 <div class="card text-left">
     <div class="card-header">
         <!-- {{ order.user.username }} -->
     </div>
     <div class="card-body">
-        <h5 class="card-title">{{ item.book.book_name }}</h5>
-        <p class="card-text" >{{ item.book.description }}</p>
+        <h5 class="card-title">{{ book.book_name }}</h5>
+        <p class="card-text" >{{ book.description }}</p>
 
         <!-- <p class="card-text">Condition : {{ book.condition }} </p>
         <p class="card-text">Price : {{ book.price }} </p> -->
     </div>
     <div class="card-footer text-mutxed">
-        <a href="{% url 'wishlist:delete_item' item.id %}" class="mr-2 btn btn-info float-right" >Delete Item</a>
     </div>
 </div>
 </br>

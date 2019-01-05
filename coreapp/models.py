@@ -43,20 +43,20 @@ class Book(models.Model):
         return self.book_name
 
 
-class UserCollectionItem(models.Model):
-    book = models.OneToOneField(
-        Book, on_delete=models.SET_NULL, null=True)
-    date_added = models.DateTimeField(auto_now=True)
+# class UserCollectionItem(models.Model):
+#     book = models.OneToOneField(
+#         Book, on_delete=models.SET_NULL, null=True)
+#     date_added = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.book.book_name
+#     def __str__(self):
+#         return self.book.book_name
 
-class UserCollection(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    items = models.ManyToManyField(UserCollectionItem)
+# class UserCollection(models.Model):
+#     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+#     items = models.ManyToManyField(UserCollectionItem)
 
-    def __str__(self):
-        return self.owner.username
+#     def __str__(self):
+#         return self.owner.username
 
 
 class Profile(models.Model):
@@ -77,11 +77,34 @@ class Profile(models.Model):
             img.save(self.profile_pic.path)
 
 
+class Order(models.Model):
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    items = models.ManyToManyField(Book)
+    date_ordered = models.DateTimeField(auto_now=True)
+
+    def get_cart_items(self):
+        return self.items.all()
+
+    def __str__(self):
+        return self.owner.user.username
+
+class UserCollection(models.Model):
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    books = models.ManyToManyField(Book)
+    date_ordered = models.DateTimeField(auto_now=True)
+
+    def get_collection_items(self):
+        return self.books.all()
+
+    def __str__(self):
+        return self.owner.user.username
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+        Order.objects.create(owner=instance.profile)
+        UserCollection.objects.create(owner=instance.profile)
 
 
 @receiver(post_save, sender=User)

@@ -5,7 +5,7 @@ from django.urls import reverse_lazy, reverse
 from .forms import UserCreationForm, NewEntryForm ,UserForm,ProfileForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from coreapp.models import Book, Profile, UserCollection, UserCollectionItem
+from coreapp.models import Book, Profile, UserCollection
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
@@ -30,6 +30,17 @@ class BookListView(LoginRequiredMixin,generic.ListView):
     def get_queryset(self):
         return Book.objects.exclude(user=self.request.user)
 
+# class UserBookListView(generic.ListView):
+#     model = Book
+#     template_name = 'user_books_list_entries.html'
+#     context_object_name = 'books'
+#     ordering = ['-created_at']
+
+#     def get_queryset(self):
+#         user = self.request.user
+#         return Book.objects.filter(user=user).order_by('-created_at')
+
+
 class UserBookListView(generic.ListView):
     model = Book
     template_name = 'user_books_list_entries.html'
@@ -37,8 +48,12 @@ class UserBookListView(generic.ListView):
     ordering = ['-created_at']
 
     def get_queryset(self):
-        user = self.request.user
-        return Book.objects.filter(user=user).order_by('-created_at')
+        collection_items = UserCollection.objects.get(
+            owner=self.request.user.profile)
+        # print(collection_items)
+        # print(collection_items.get_collection_items())
+        return collection_items.get_collection_items()
+
 
 
 class UserBookListViewForUser(generic.ListView):
@@ -49,7 +64,12 @@ class UserBookListViewForUser(generic.ListView):
 
     def get_queryset(self):
         user = self.kwargs['username']
-        return Book.objects.filter(user__username=user).order_by('-created_at')
+
+        user_profile = get_object_or_404(Profile,user__username=user)
+        # print(user_profile)
+        collection_items = UserCollection.objects.get(
+            owner=user_profile)
+        return collection_items.get_collection_items()
 
 
 class NewEntry(generic.CreateView):
@@ -62,16 +82,11 @@ class NewEntry(generic.CreateView):
         book.user = self.request.user
         book.save()
 
-        user_coll_item, status = UserCollectionItem.objects.get_or_create(book=book)
-        user_collection = UserCollection.objects.get_or_create(
-            owner=self.request.user)
-        print(user_collection)
-        if user_coll_item in user_collection[0].items.all():
-            messages.warning(request, 'Item Already Added')
-            return redirect(reverse('coreapp:list_entries'))
-        # create orderItem of the selected product
-        user_collection[0].items.add(user_coll_item)
-        user_collection[0].save()
+        collection, status = UserCollection.objects.get_or_create(
+            owner=self.request.user.profile)
+        
+        collection.books.add(book)
+        collection.save()
 
         return super(NewEntry, self).form_valid(form)
 
