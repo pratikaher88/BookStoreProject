@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     url('', include('coreapp.urls')),
+    url('transaction/', include('transaction.urls', namespace='transaction')),
     url('search/',include('search.urls',namespace='search')),
     url('list/',include('wishlist.urls', namespace='wishlist')),
     url(r'^login/$', LoginView.as_view(), name='login'),
