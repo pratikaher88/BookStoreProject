@@ -14,4 +14,33 @@
 
 Requests
 
+
+{% if requests %}
+
+{% for request in requests %}
+
+<div class="card text-left">
+    <div class="card-header">
+        Seller: <a href="{% url 'coreapp:userbooksforuser' book.user %}" style="color:black">{{ request.offerrer }}</a>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ request.requester_book.book_name }}</h5>
+        <p class="card-text">{{ request.requester_book.description }}</p>
+        <p class="card-text">Condition : {{ request.requester_book.condition }} </p>
+    </div>
+    <div class="card-footer text-mutxed">
+
+        <a href="#" class="mr-2 btn btn-info float-right">BUY FOR {{ request.requester_book.price }}</a>
+    </div>
+</div>
+</br>
+{% endfor %}
+
+{% else %}
+
+<h2 align="center">No Requests Found! Make a request !</h2>
+
+{% endif %}
+
+
 {% endblock %}

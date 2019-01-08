@@ -6,7 +6,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from coreapp.models import Book, Profile,Order
 from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
 
+@login_required
 def add_to_list(request, item_id):
     # get the user profile
     user_profile = get_object_or_404(Profile, user=request.user)
@@ -25,7 +27,7 @@ def add_to_list(request, item_id):
     messages.info(request, "item added to cart")
     return redirect(reverse('coreapp:list_entries'))
 
-
+@login_required
 def delete_from_list(request, item_id):
     book = get_object_or_404(Book,id=item_id)
     orders = Order.objects.get(owner=request.user.profile, items=book)
@@ -39,7 +41,7 @@ def delete_from_list(request, item_id):
     return redirect(reverse('wishlist:wish_list'))
 
 
-class WishListView(generic.ListView):
+class WishListView(LoginRequiredMixin,generic.ListView):
     model = Order
     template_name = 'wish_list_entries.html'
     context_object_name = 'orders'

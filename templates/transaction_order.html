@@ -12,6 +12,36 @@
 {% endfor %}
 {% endif %}
 
-Orders
+{% if orders %}
+
+{% for order in orders %}
+
+<div class="card text-left">
+    <div class="card-header">
+        Request User: <a href="{% url 'coreapp:userbooksforuser' book.user %}" style="color:black">{{ order.requester }}</a>
+        Offerer User: <a href="{% url 'coreapp:userbooksforuser' book.user %}" style="color:black">{{ order.offerrer }}</a>
+
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ order.requester_book.book_name }}</h5>
+        <p class="card-text">{{ order.requester_book.description }}</p>
+        <p class="card-text">Condition : {{ order.requester_book.condition }} </p>
+        <h5 class="card-title">{{ order.offerer_book.book_name }}</h5>
+        <p class="card-text">{{ order.offerer_book.description }}</p>
+        <p class="card-text">Condition : {{ order.offerer_book.condition }} </p>
+    </div>
+    <div class="card-footer text-mutxed">
+
+        <a href="#" class="mr-2 btn btn-info float-right">BUY FOR {{ order.requester_book.price }}</a>
+    </div>
+</div>
+</br>
+{% endfor %}
+
+{% else %}
+
+<h2 align="center">No Requests Found! Make a request !</h2>
+
+{% endif %}
 
 {% endblock %}

@@ -52,17 +52,67 @@
       </div>
       <div class="card-footer text-mutxed">
         {{ book.created_at }} <a href="{% url 'wishlist:add_to_list' book.id %}" class="btn btn-primary float-right">ADD FOR EXCHANGE</a>
-        <a href="#" class="mr-2 btn btn-info float-right">BUY FOR {{ book.price }}</a>
+        <div class="container">
+        <!-- <button type="button" class="mr-2 btn btn-info float-right" data-toggle="modal" data-target="#requestmodal">Request for Exchange</a> -->
+        
+        <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Small Modal</button> -->
+        
+        
+        <div class="modal fade" id="requestmodal" role="dialog">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+              </div>
+              <div class="modal-body">
+                <p>This is a small modal.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" href="#">Are you sure you want to request {{ book.book_name }} ?</button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+
       </div>
     </div>
   </br>
   {% endfor %}
+
+  {% if is_paginated %}
+  
+      {% if page_obj.has_previous %}
+      <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+  
+  {% for num in page_obj.paginator.page_range %}
+
+        {% if page_obj.number == num %}
+        <a class="btn btn-info mb-4" href="?page={{ num }}"> {{ num }} </a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          {% endif %}
+  
+  {% endfor %}
+        
+        {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+  
+  
+    {% endif %}
 
   {% else %}
 
   <h2 align="center">No Relevant Books Found !</h2>
 
   {% endif %}
+
 
 
 

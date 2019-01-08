@@ -25,10 +25,10 @@ class BookListView(LoginRequiredMixin,generic.ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
-    ordering = ['-created_at']
+    paginate_by = 15
 
     def get_queryset(self):
-        return Book.objects.exclude(user=self.request.user)
+        return Book.objects.exclude(user=self.request.user).order_by('?')
 
 class UserBookListView(generic.ListView):
     model = Book
@@ -39,11 +39,10 @@ class UserBookListView(generic.ListView):
     def get_queryset(self):
         collection_items = UserCollection.objects.get(
             owner=self.request.user.profile)
-        # print(collection_items)
-        # print(collection_items.get_collection_items())
         return collection_items.get_collection_items()
 
-class UserBookListViewForUser(generic.ListView):
+
+class UserBookListViewForUser(LoginRequiredMixin,generic.ListView):
     model = Book
     template_name = 'collection_user_entries.html'
     context_object_name = 'books'
@@ -59,9 +58,9 @@ class UserBookListViewForUser(generic.ListView):
         return collection_items.get_collection_items()
 
 
-class NewEntry(generic.CreateView):
+class NewEntry(LoginRequiredMixin,generic.CreateView):
     form_class = NewEntryForm
-    success_url = reverse_lazy('coreapp:list_entries')
+    success_url = reverse_lazy('coreapp:userbooks')
     template_name = 'new_entry.html'
 
     def form_valid(self, form):

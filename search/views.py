@@ -1,6 +1,4 @@
 from django.shortcuts import render
-
-# Create your views here.
 from dal import autocomplete
 from django.views import generic
 from django.views.generic.edit import FormView
