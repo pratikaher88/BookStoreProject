@@ -29,6 +29,10 @@ class BookListView(LoginRequiredMixin,generic.ListView):
 
     def get_queryset(self):
         return Book.objects.exclude(user=self.request.user).order_by('?')
+        # if self.request.user.is_authenticated:
+        #     return Book.objects.exclude(user=self.request.user).order_by('?')
+        # else:
+        #     return Book.objects.all().order_by('?')
 
 class UserBookListView(generic.ListView):
     model = Book
