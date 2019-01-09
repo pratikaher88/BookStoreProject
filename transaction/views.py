@@ -69,3 +69,14 @@ class TransactionListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         return Transaction.objects.filter(offerrer=self.request.user).order_by('timestamp')
 
+
+class TransactionDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = Transaction
+    success_url = reverse_lazy('transaction:orders_view')
+    template_name = 'transaction_order_confirm_delete.html'
+
+    def test_func(self):
+        request = self.get_object()
+        if self.request.user == request.requester or self.request.user == request.offerrer:
+            return True
+        return False

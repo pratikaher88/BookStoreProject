@@ -32,7 +32,7 @@
     </div>
     <div class="card-footer text-mutxed">
 
-        <a href="#" class="mr-2 btn btn-info float-right">BUY FOR {{ order.requester_book.price }}</a>
+        <a href="{% url 'transaction:order-delete' order.id %}" class="mr-2 btn btn-danger float-right">Cancel Order</a>
     </div>
 </div>
 </br>
