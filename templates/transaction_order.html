@@ -18,8 +18,8 @@
 
 <div class="card text-left">
     <div class="card-header">
-        Request User: <a href="{% url 'coreapp:userbooksforuser' book.user %}" style="color:black">{{ order.requester }}</a>
-        Offerer User: <a href="{% url 'coreapp:userbooksforuser' book.user %}" style="color:black">{{ order.offerrer }}</a>
+        Request User: <a style="color:black">{{ order.requester }}</a>
+        Offerer User: <a style="color:black">{{ order.offerrer }}</a>
 
     </div>
     <div class="card-body">
@@ -40,7 +40,7 @@
 
 {% else %}
 
-<h2 align="center">No Requests Found! Make a request !</h2>
+<h2 align="center">No Order Found! Make a request !</h2>
 
 {% endif %}
 

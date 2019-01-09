@@ -52,6 +52,8 @@
       </div>
       <div class="card-footer text-mutxed">
         {{ book.created_at }} <a href="{% url 'wishlist:add_to_list' book.id %}" class="btn btn-primary float-right">ADD FOR EXCHANGE</a>
+        <a href="{% url 'transaction:add_request' book.id %}" class="btn btn-primary mr-2 float-right">MAKE A REQUEST</a>
+        
         <div class="container">
         <!-- <button type="button" class="mr-2 btn btn-info float-right" data-toggle="modal" data-target="#requestmodal">Request for Exchange</a> -->
         

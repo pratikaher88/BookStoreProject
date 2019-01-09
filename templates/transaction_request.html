@@ -21,7 +21,7 @@ Requests
 
 <div class="card text-left">
     <div class="card-header">
-        Seller: <a href="{% url 'coreapp:userbooksforuser' book.user %}" style="color:black">{{ request.offerrer }}</a>
+        Seller: {{ request.offerrer }}</a>
     </div>
     <div class="card-body">
         <h5 class="card-title">{{ request.requester_book.book_name }}</h5>
@@ -30,7 +30,7 @@ Requests
     </div>
     <div class="card-footer text-mutxed">
 
-        <a href="#" class="mr-2 btn btn-info float-right">BUY FOR {{ request.requester_book.price }}</a>
+        <a href="{% url 'transaction:request-delete' request.id %}" class="mr-2 btn btn-danger float-right">Decline Request</a>
     </div>
 </div>
 </br>

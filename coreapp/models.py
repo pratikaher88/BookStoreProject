@@ -15,6 +15,11 @@ CONITION_CHOICES = (
     ('Bad', 'Bad'),
     ('Good', 'Good'),
 )
+ZIP_CHOICES = (
+    ('421202', '421202'),
+    ('421201', '421201'),
+    ('421203', '421203'),
+)
 
 
 def random_img():
@@ -42,23 +47,6 @@ class Book(models.Model):
     def __str__(self):
         return self.book_name
 
-
-# class UserCollectionItem(models.Model):
-#     book = models.OneToOneField(
-#         Book, on_delete=models.SET_NULL, null=True)
-#     date_added = models.DateTimeField(auto_now=True)
-
-#     def __str__(self):
-#         return self.book.book_name
-
-# class UserCollection(models.Model):
-#     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-#     items = models.ManyToManyField(UserCollectionItem)
-
-#     def __str__(self):
-#         return self.owner.username
-
-
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(
@@ -75,7 +63,6 @@ class Profile(models.Model):
             output_size = (300, 300)
             img.thumbnail(output_size)
             img.save(self.profile_pic.path)
-
 
 class Order(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
@@ -99,40 +86,54 @@ class UserCollection(models.Model):
     def __str__(self):
         return self.owner.user.username
 
-# class ShippingAddress(models.Model):
-#     flatnumber = models.CharField(
-#         "Flat Number",
-#         max_length=100, label='Door/Flat Number'
-#     )
 
-#     address1 = models.CharField(
-#         "Address line 1",
-#         max_length=200,
-#     )
+class Requests(models.Model):
 
-#     address2 = models.CharField(
-#         "Address line 2",
-#         max_length=200,
-#     )
+	requester = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE)
+	offerrer = models.ForeignKey(User, related_name='from_user', on_delete=models.CASCADE)
+	timestamp = models.DateTimeField(auto_now_add=True)
+	requester_book = models.ForeignKey(Book, related_name='requester_book_from_user', on_delete=models.CASCADE)
 
-#     zip_code = models.CharField(
-#         "Postal code",
-#         max_length=12,
-#     )
+	def __str__(self):
+	    return "Request from {}, to {} ,with Book {}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name)
 
-#     city = models.CharField(
-#         "City",
-#         max_length=100,
-#     )
+    # class Meta:
+    #     verbose_name_plural = "Requests"
 
-#     country = models.CharField(
-#         "Country",
-#         max_length=100,
-#     )
+class Transaction(models.Model):
 
-#     class Meta:
-#         verbose_name = "Shipping Address"
-#         verbose_name_plural = "Shipping Addresses"
+	requester = models.ForeignKey(User, related_name='requester', on_delete=models.CASCADE)
+	offerrer = models.ForeignKey(User, related_name='offerrer', on_delete=models.CASCADE)
+	timestamp = models.DateTimeField(auto_now_add=True)
+	requester_book = models.ForeignKey(Book, related_name='requested_book_from_user', on_delete=models.CASCADE)
+	offerer_book = models.ForeignKey(Book, related_name='offerrer_book_from_user', on_delete=models.CASCADE)
+
+	def __str__(self):
+		return "From {}, to {} Book1 is {} Book2 is{}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name, self.offerer_book.book_name)
+
+
+class OldRequests(models.Model):
+
+	requester = models.ForeignKey(User, related_name='old_to_user', on_delete=models.CASCADE)
+	offerrer = models.ForeignKey(User, related_name='old_from_user', on_delete=models.CASCADE)
+	requester_book = models.ForeignKey( Book, related_name='old_requester_book_from_user', on_delete=models.CASCADE, )
+
+	def __str__(self):
+	    return "From {}, to {} ,with Book {}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name)
+
+
+class ShippingAddress(models.Model):
+    flatnumber = models.CharField("Flat Number", max_length=100)
+    address1 = models.CharField("Address line 1", max_length=200,)
+    address2 = models.CharField("Address line 2", max_length=200,)
+    zip_code = models.CharField(max_length=100, choices=ZIP_CHOICES, default='421201')
+    city = models.CharField("City", max_length=100,)
+    country = models.CharField("Country", max_length=100,)
+
+    class Meta:
+        verbose_name = "Shipping Address"
+        verbose_name_plural = "Shipping Addresses"
+
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):

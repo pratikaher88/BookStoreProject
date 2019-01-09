@@ -6,8 +6,10 @@ app_name = 'transaction'
 
 urlpatterns = [
 
-    path('requests/', views.requestsview, name='requests_view'),
-    # path('offers/', views.BookListView.as_view(), name='list_entries'),
-    # path('orders/', views.BookListView.as_view(), name='list_entries'),
+    path('<int:book_id>/add', views.add_request, name='add_request'),
+    path('requests/', views.RequestListView.as_view(), name='requests_view'),
+    path('requests/<int:pk>/delete',views.RequestDeleteView.as_view(), name='request-delete'),
+    path('offers/', views.OfferListView.as_view(), name='offers_entries'),
+    path('orders/', views.TransactionListView.as_view(), name='orders_entries'),
 
 ]

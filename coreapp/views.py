@@ -28,7 +28,7 @@ class BookListView(LoginRequiredMixin,generic.ListView):
     paginate_by = 15
 
     def get_queryset(self):
-        return Book.objects.exclude(user=self.request.user).order_by('?')
+        return Book.objects.exclude(user=self.request.user).order_by('-created_at')
         # if self.request.user.is_authenticated:
         #     return Book.objects.exclude(user=self.request.user).order_by('?')
         # else:
@@ -101,7 +101,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     model = Book
-    success_url = reverse_lazy('userbooks')
+    success_url = reverse_lazy('coreapp:userbooks')
     template_name = 'book_confirm_delete.html'
 
     def test_func(self):

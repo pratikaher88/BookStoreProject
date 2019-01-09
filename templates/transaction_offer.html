@@ -18,7 +18,7 @@
 
 <div class="card text-left">
     <div class="card-header">
-        Seller: <a href="{% url 'coreapp:userbooksforuser' book.user %}" style="color:black">{{ offer.offerrer }}</a>
+        Seller: <a style="color:black">{{ offer.requester }}</a>
     </div>
     <div class="card-body">
         <h5 class="card-title">{{ offer.requester_book.book_name }}</h5>
@@ -27,7 +27,7 @@
     </div>
     <div class="card-footer text-mutxed">
 
-        <a href="#" class="mr-2 btn btn-info float-right">BUY FOR {{ offer.requester_book.price }}</a>
+        <a href="#" class="mr-2 btn btn-info float-right">Make Transaction</a>
     </div>
 </div>
 </br>
