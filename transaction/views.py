@@ -61,6 +61,22 @@ class OfferListView(LoginRequiredMixin, generic.ListView):
         return Requests.objects.filter(offerrer=self.request.user).order_by('timestamp')
 
 
+class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = Requests
+    success_url = reverse_lazy('transaction:offers_view')
+    template_name = 'transaction_offer_confirm_delete.html'
+
+    def test_func(self):
+        request = self.get_object()
+        if self.request.user == request.requester:
+            return True
+        return False
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        # self.object.delete()
+        return redirect(self.get_success_url())
+
 class TransactionListView(LoginRequiredMixin, generic.ListView):
     model = Transaction
     template_name = 'transaction_order.html'

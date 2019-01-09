@@ -10,6 +10,7 @@ urlpatterns = [
     path('requests/', views.RequestListView.as_view(), name='requests_view'),
     path('requests/<int:pk>/delete',views.RequestDeleteView.as_view(), name='request-delete'),
     path('offers/', views.OfferListView.as_view(), name='offers_view'),
+    path('offers/<int:pk>/delete', views.OfferDeleteView.as_view(), name='offer-delete'),
     path('orders/', views.TransactionListView.as_view(), name='orders_view'),
     path('orders/<int:pk>/delete', views.TransactionDeleteView.as_view(),name='order-delete'),
 

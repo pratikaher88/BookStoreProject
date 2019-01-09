@@ -26,8 +26,8 @@
         <p class="card-text">Condition : {{ offer.requester_book.condition }} </p>
     </div>
     <div class="card-footer text-mutxed">
-
-        <a href="#" class="mr-2 btn btn-info float-right">Make Transaction</a>
+        <a href="{% url 'transaction:offer-delete' offer.id %}" class="mr-2 btn btn-info float-right">Decline Transaction</a>
+        <a href="#" class="mr-2 btn btn-danger float-right">Make Transaction</a>
     </div>
 </div>
 </br>
