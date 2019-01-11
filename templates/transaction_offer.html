@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load user_books_tag %}
 {% block title %} Offers {% endblock %}
 
 {% block content %}
@@ -28,9 +28,47 @@
     <div class="card-footer text-mutxed">
         <a href="{% url 'transaction:offer-delete' offer.id %}" class="mr-2 btn btn-info float-right">Decline Transaction</a>
         <a href="#" class="mr-2 btn btn-danger float-right">Make Transaction</a>
+        
+        <p>
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                aria-controls="collapseExample">
+                User collection 
+            </a>
+
+        </p>
+        Select a book from the below collection 
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                {% for book in collection_all|user_books_for_user:offer.requester %}
+                <div class="card text-left">
+                    <div class="card-header">
+                        Seller: {{ book.user }}</a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.book_name }}</h5>
+                        <p class="card-text">{{ book.description }}</p>
+                        <p class="card-text">Condition : {{ book.price }} </p>
+                    </div>
+                    <div class="card-footer text-mutxed">
+                
+                    <a class="mr-2 btn btn-success float-right" style="color: cornsilk">Make Request</a>
+                    </div>
+                </div>
+                <br/>
+                                
+                {% endfor %}
+                
+            </div>
+        </div>
+
+    
     </div>
 </div>
 </br>
+
+
+ 
+
 {% endfor %}
 
 {% else %}

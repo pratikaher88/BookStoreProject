@@ -47,8 +47,8 @@ class RequestDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteV
     template_name = 'transaction_request_confirm_delete.html'
 
     def test_func(self):
-        request = self.get_object()
-        if self.request.user == request.requester:
+        request_object = self.get_object()
+        if self.request.user == request_object.requester:
             return True
         return False
 
@@ -60,6 +60,16 @@ class OfferListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         return Requests.objects.filter(offerrer=self.request.user).order_by('timestamp')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['collection_all'] = UserCollection.objects.all()
+        return context
+
+        # user_profile = get_object_or_404(Profile, user__username=user)
+        # collection_items = UserCollection.objects.get(
+        #     owner=user_profile)
+
 
 class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     model = Requests
@@ -67,14 +77,15 @@ class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteVie
     template_name = 'transaction_offer_confirm_delete.html'
 
     def test_func(self):
-        request = self.get_object()
-        if self.request.user == request.requester:
+        offer = self.get_object()
+        if self.request.user == offer.offerrer:
             return True
         return False
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         # self.object.delete()
+        print(self.object)
         return redirect(self.get_success_url())
 
 class TransactionListView(LoginRequiredMixin, generic.ListView):
@@ -92,7 +103,8 @@ class TransactionDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.Del
     template_name = 'transaction_order_confirm_delete.html'
 
     def test_func(self):
-        request = self.get_object()
-        if self.request.user == request.requester or self.request.user == request.offerrer:
+        transaction = self.get_object()
+        if self.request.user == transaction.requester or self.request.user == transaction.offerrer:
             return True
         return False
+    

@@ -72,6 +72,11 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries':{
+                'user_books_tag': 'transaction.transaction.templatetags.user_books_tag',
+
+            }
+            
         },
     },
 ]
@@ -124,7 +129,7 @@ USE_TZ = True
 
 # LOGIN_REDIRECT_URL = 'coreapp:list_entries'
 LOGIN_URL = 'login'
-LOGOUT_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = 'coreapp:list_entries'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
