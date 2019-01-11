@@ -10,10 +10,13 @@ from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 # Create your views here.
 
-@login_required
-def requestsview(request):
-
-    return render(request,'transaction_request.html')
+def make_transaction(request,offer_id, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    print(offer_id)
+    # old_request = get_object_or_404(Requests,offer_id)
+    print(book)
+    messages.success(request, ('Transaction successful'))
+    return redirect('transaction:offers_view')
 
 @login_required
 def add_request(request,book_id):
@@ -24,7 +27,7 @@ def add_request(request,book_id):
         if Requests.objects.filter(requester=request.user, offerrer=book.user, requester_book=book).exists():
             messages.info("Requests already made!")
         else:
-            print("New Request")
+            messages.info("New Request")
             # request.save()
     else:
         messages.info(request, ('You need to add items to your collection to make a request!'))
@@ -106,5 +109,4 @@ class TransactionDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.Del
         transaction = self.get_object()
         if self.request.user == transaction.requester or self.request.user == transaction.offerrer:
             return True
-        return False
-    
+        return False    

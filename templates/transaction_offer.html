@@ -42,16 +42,32 @@
                 {% for book in collection_all|user_books_for_user:offer.requester %}
                 <div class="card text-left">
                     <div class="card-header">
-                        Seller: {{ book.user }}</a>
+                        Seller: {{ book.user }}
+                        <a class="mr-2 btn btn-success float-right" style="color: cornsilk" data-toggle="modal" data-target="#confirmselection">Make Request</a>
+                        
+                        <div class="modal fade" id="confirmselection" role="dialog">
+                            <div class="modal-dialog ">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Confirm Selection</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to select the book "{{ book.book_name }}"?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <a class="btn btn-info" href="{% url 'transaction:make-transaction' offer_id=offer.id book_id=book.id %}">Yes</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ book.book_name }}</h5>
                         <p class="card-text">{{ book.description }}</p>
                         <p class="card-text">Condition : {{ book.price }} </p>
-                    </div>
-                    <div class="card-footer text-mutxed">
-                
-                    <a class="mr-2 btn btn-success float-right" style="color: cornsilk">Make Request</a>
                     </div>
                 </div>
                 <br/>
@@ -64,6 +80,7 @@
     
     </div>
 </div>
+
 </br>
 
 

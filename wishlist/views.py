@@ -49,6 +49,4 @@ class WishListView(LoginRequiredMixin,generic.ListView):
 
     def get_queryset(self):
         orders=Order.objects.get(owner=self.request.user.profile)
-        # print(orders)
-        # print(orders.get_cart_items())
         return orders.get_cart_items()

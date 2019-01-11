@@ -56,7 +56,6 @@ class UserBookListViewForUser(LoginRequiredMixin,generic.ListView):
         user = self.kwargs['username']
 
         user_profile = get_object_or_404(Profile,user__username=user)
-        # print(user_profile)
         collection_items = UserCollection.objects.get(
             owner=user_profile)
         return collection_items.get_collection_items()
