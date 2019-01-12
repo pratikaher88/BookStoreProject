@@ -49,9 +49,9 @@
             {{ address }}
             <hr/>
            <p>Phone number: {{ address.phone_number }}</p>
+
         {% else %}
         <p class="card-text">
-
             Address and phone Number, you need to add address in profile settings, it is a one time process</p>
             <a class="btn btn-success" style="color: white" data-toggle="modal" data-target="#updateaddress" >Update</a>
 
@@ -90,8 +90,12 @@
 
 <br/>
 
-<button class="mr-2 mb-2 btn btn-success float-right" id="transact" style="color: cornsilk" data-toggle="modal" data-target="#confirmselection">Make Transaction!</button>
-                        
+{% if address.address1 == "" %}
+<button class="mr-2 mb-2 btn btn-success float-right disabled" style="color: cornsilk" data-toggle="modal"
+    data-target="#confirmselection" >Make Transaction!</button>
+{% else %}
+
+<button class="mr-2 mb-2 btn btn-success float-right" style="color: cornsilk" data-toggle="modal" data-target="#confirmselection">Make Transaction!</button>          
                         
     <div class="modal fade" id="confirmselection" role="dialog">
             <div class="modal-dialog ">
@@ -113,6 +117,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 
 
 {% endblock %}
