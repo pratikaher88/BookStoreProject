@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load user_books_tag %}
+{% load crispy_forms_tags %}
+{% block title %} Offers {% endblock %}
+
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+
+<div class="card text-left">
+    <div class="card-header">
+        Seller: {{ offer.requester }}</a>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ offer.requester_book.book_name }}</h5>
+        <p class="card-text">{{ offer.requester_book.description }}</p>
+        <p class="card-text">Condition : {{ offer.requester_book.condition }} </p>
+    </div>
+
+</div>
+</br>
+
+<div class="card text-left">
+    <div class="card-header">
+        Seller: {{ offer.requester }}</a>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ book.book_name }}</h5>
+        <p class="card-text">{{ book.description }}</p>
+        <p class="card-text">Condition : {{ book.condition }} </p>
+    </div>
+
+</div>
+
+<br/>
+<div class="row">
+    <div class="col-sm-6">
+<div class="card" >
+    <div class="card-body">
+        <h5 class="card-title">Address</h5>
+        {% if address.address1 != "" %}
+            {{ address }}
+            <hr/>
+           <p>Phone number: {{ address.phone_number }}</p>
+        {% else %}
+        <p class="card-text">
+
+            Address and phone Number, you need to add address in profile settings, it is a one time process</p>
+            <a class="btn btn-success" style="color: white" data-toggle="modal" data-target="#updateaddress" >Update</a>
+
+            <div class="modal fade" id="updateaddress" role="dialog">
+                    <div class="modal-dialog ">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Update Address </h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" novalidate>
+                                    {% csrf_token %}
+                                {{ address_form | crispy }}
+                                <button type="submit" class="btn btn-primary btn-block" name="updateadd">Save Changes</button>
+                                
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        {% endif %}
+    </div>
+</div>
+</div>
+<div class="col-sm-6">
+<div class="card" >
+    <div class="card-body">
+        <h5 class="card-title">Payment</h5>
+        <p class="card-text">You need to pay 20 rupees at the time of pickup or delivery.</p>
+    </div>
+</div>
+</div>
+</div>
+
+<br/>
+
+<button class="mr-2 mb-2 btn btn-success float-right" id="transact" style="color: cornsilk" data-toggle="modal" data-target="#confirmselection">Make Transaction!</button>
+                        
+                        
+    <div class="modal fade" id="confirmselection" role="dialog">
+            <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirm Selection</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                    <p>Are you sure you want to make the transaction?</p>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <form method="post" >
+                        {% csrf_token %}
+                    <input type="submit" class="btn btn-info" name ="Yes"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

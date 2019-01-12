@@ -10,6 +10,7 @@ urlpatterns = [
     path('newentry/',views.NewEntry.as_view(),name='new_entry'),
     path('profile/',views.profile,name='profile'),
     path('profile/edit',views.update_profile,name='profile_edit'),
+    path('profile/address/edit', views.update_address,name='address_edit'),
     path('signup/',views.SignUp.as_view(),name='signup'),
     path('userbooks/', views.UserBookListView.as_view(),name='userbooks'),
     path('userbooks/<str:username>', views.UserBookListViewForUser.as_view(),name='userbooksforuser'),

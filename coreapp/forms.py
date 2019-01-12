@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from coreapp.models import Book, Profile
+from coreapp.models import Book, Profile, ShippingAddress
 from dal import autocomplete
 
 
@@ -28,6 +28,14 @@ class NewEntryForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'rows': 4, 'cols': 15}),
         }
 
+class ShippingAddressForm(forms.ModelForm):
+    class Meta:
+        model = ShippingAddress
+        fields = '__all__'
+        exclude = ('profile',)
+
+    field_order = ['flatnumber', 'address1',
+                   'address2', 'zip_code','city', 'phone_number']
 
 
 class UserForm(forms.ModelForm):

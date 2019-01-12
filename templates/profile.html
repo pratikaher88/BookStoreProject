@@ -15,15 +15,46 @@
 
 <div class="card border-secondary mb-3 " >
 
-    <div class="card-header">{{ profile.user.username }} <a href="{% url 'coreapp:profile_edit' %}" class="mr-2 btn btn-info float-right">Update Profile</a></div>
+    <div class="card-header">{{ profile.user.username }} 
+        <a href="{% url 'coreapp:address_edit' %}" class="mr-2 btn btn-info float-right">Update Address</a> 
+        <a href="{% url 'coreapp:profile_edit' %}" class="mr-2 btn btn-info float-right">Update Profile</a></div>
     <div class="card-body text-secondary">
         <img class="rounded-circle account-img" src="{{ profile.profile_pic.url }}" style="max-width:100px;
-            max-height:100px;">
-        <h5 class="card-title">{{ profile.user.email }}</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-            content.</p>
+            max-height:100px;"/>
+            <br/>
+            <hr/>
+
+        <h5 class="card-title">Email: {{ profile.user.email }}</h5>
+        <p class="card-text">Address:</p>
+        
+            {% if address.address1 != "" %}
+            
+            {{ address }}
+            
+            {% else %}
+            
+            Address not added
+            
+            {% endif %}
+            <hr/>
+        
+            <p class="card-text">Phone Number: 
+
+            {% if address.phone_number != "" %}
+            
+            {{ address.phonenumber }}
+            
+            {% else %}
+            
+            Phone Number not added
+            
+            {% endif %}
+            </p>
+
+
     </div>
 </div>
+
 
 
 {% endblock %}

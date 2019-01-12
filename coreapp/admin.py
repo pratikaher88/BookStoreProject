@@ -1,5 +1,5 @@
 from django.contrib import admin
-from coreapp.models import Book,Profile , UserCollection, Order,Requests,Transaction
+from coreapp.models import Book, Profile, UserCollection, Order, Requests, Transaction, ShippingAddress
 # Register your models here.
 
 admin.site.register(Book)
@@ -9,6 +9,7 @@ admin.site.register(Order)
 admin.site.register(UserCollection)
 admin.site.register(Requests)
 admin.site.register(Transaction)
+admin.site.register(ShippingAddress)
 
 
 class SystemAdmin(admin.ModelAdmin):

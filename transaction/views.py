@@ -2,32 +2,66 @@ from django.shortcuts import render
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from coreapp.models import Book, Requests, Transaction, UserCollection
+from coreapp.models import Book, Requests, Transaction, UserCollection, OldRequests, Profile, ShippingAddress
 from coreapp.models import Requests
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import generic
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
-# Create your views here.
+from coreapp.forms import ShippingAddressForm
 
-def make_transaction(request,offer_id, book_id):
-    book = get_object_or_404(Book, id=book_id)
-    print(offer_id)
-    # old_request = get_object_or_404(Requests,offer_id)
-    print(book)
-    messages.success(request, ('Transaction successful'))
-    return redirect('transaction:offers_view')
+@login_required
+def final_transaction(request, offer_id, book_id):
+    offerrer_book = get_object_or_404(Book, id=book_id)
+    new_request = get_object_or_404(Requests,id=offer_id)
+    address_form = ShippingAddressForm(
+        request.POST, instance=request.user.profile.address)
+
+    # create new order
+    # save new order
+    # new_order.save()
+    if request.method == "POST" and 'Yes' in request.POST:
+        print("POST REQUEST")
+        new_order = Transaction(requester=new_request.requester, offerrer=new_request.offerrer,
+                                requester_book=new_request.requester_book, offerrer_book=offerrer_book)
+        old_request = OldRequests(requester=new_request.requester, offerrer=new_request.offerrer,
+                                  requester_book=new_request.requester_book)
+        # delete entry from requests
+        # new_request.delete()
+        # save old request
+        # save new order
+        # new_order.save()
+        # old_request.save()
+        # return redirect('transaction:orders_view')
+
+    if request.method == 'POST' and 'updateadd' in request.POST:
+        if address_form.is_valid():
+            address_form.save()
+            messages.success(request, ('Address successfully updated!'))
+
+    offer = get_object_or_404(Requests,id=offer_id)
+    user_profile = get_object_or_404(Profile ,user=request.user )
+    address = get_object_or_404(ShippingAddress,profile=user_profile)
+    context = {'offer': offer, 'book': offerrer_book,
+               'address': address, 'address_form': address_form}
+    return render(request,'transaction_final.html',context)
 
 @login_required
 def add_request(request,book_id):
     book = get_object_or_404(Book, id=book_id)
     new_request = Requests(requester=request.user, offerrer=book.user , requester_book=book)
 
+    #If address in null, send a prompt to update address 
+
+    address = ShippingAddress.objects.get(profile=request.user.profile)
+    if address.status():
+        messages.info(request, "You need to  address in profile to make request")
+
     if (UserCollection.objects.get(owner=request.user.profile).get_collection_items()):
         if Requests.objects.filter(requester=request.user, offerrer=book.user, requester_book=book).exists():
-            messages.info("Requests already made!")
+            messages.info(request,"Requests already made!")
         else:
-            messages.info("New Request")
+            messages.info(request,"New Request")
             # request.save()
     else:
         messages.info(request, ('You need to add items to your collection to make a request!'))

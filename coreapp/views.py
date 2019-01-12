@@ -2,18 +2,25 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy, reverse
-from .forms import UserCreationForm, NewEntryForm ,UserForm,ProfileForm
+from .forms import UserCreationForm, NewEntryForm, UserForm, ProfileForm, ShippingAddressForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from coreapp.models import Book, Profile, UserCollection
+from coreapp.models import Book, Profile, UserCollection , ShippingAddress
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.exceptions import ObjectDoesNotExist
 
 @login_required
 def profile(request):
     profile = get_object_or_404(Profile, user=request.user)
-    return render(request, 'profile.html', {'profile': profile})
+    try:
+        address = ShippingAddress.objects.get(profile=profile)
+        print("Address",address)
+    except ObjectDoesNotExist:
+        address = None
+
+    return render(request, 'profile.html', {'profile': profile,'address':address})
 
 class SignUp(SuccessMessageMixin,generic.CreateView):
     form_class = UserCreationForm
@@ -122,8 +129,6 @@ def update_profile(request):
             messages.success(request, (
                 'Your profile was successfully updated!'))
             return redirect('coreapp:profile')
-        else:
-            messages.error(request, ('Please correct the error below.'))
     else:
         user_form = UserForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
@@ -131,3 +136,21 @@ def update_profile(request):
         'user_form': user_form,
         'profile_form': profile_form
     })
+
+
+@login_required
+def update_address(request):
+    if request.method == 'POST':
+        address_form = ShippingAddressForm(request.POST,instance=request.user.profile.address)
+        if address_form.is_valid():
+            address_form.save()
+            messages.success(request, ('Address successfully updated!'))
+            return redirect('coreapp:profile')
+
+    else:
+        address_form = ShippingAddressForm(
+            instance=request.user.profile.address)
+    return render(request, 'address_edit.html', {
+        'address_form': address_form
+    })
+
