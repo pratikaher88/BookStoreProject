@@ -1,3 +1,5 @@
+from django.urls import reverse_lazy
+
 """
 Django settings for nofapapp project.
 
@@ -129,7 +131,8 @@ USE_TZ = True
 
 # LOGIN_REDIRECT_URL = 'coreapp:list_entries'
 LOGIN_URL = 'login'
-LOGOUT_REDIRECT_URL = 'coreapp:list_entries'
+LOGIN_REDIRECT_URL = reverse_lazy('coreapp:list_entries')
+LOGOUT_REDIRECT_URL = reverse_lazy('coreapp:list_entries')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

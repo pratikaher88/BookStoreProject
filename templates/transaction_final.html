@@ -13,10 +13,11 @@
 {% endfor %}
 {% endif %}
 
+<h2>Book from your collection</h2>
 
 <div class="card text-left">
     <div class="card-header">
-        Seller: {{ offer.requester }}</a>
+        Seller: {{ offer.offerrer }}</a>
     </div>
     <div class="card-body">
         <h5 class="card-title">{{ offer.requester_book.book_name }}</h5>
@@ -25,7 +26,8 @@
     </div>
 
 </div>
-</br>
+<hr/r>
+<h2>Book from {{ offer.requester }} collection</h2>
 
 <div class="card text-left">
     <div class="card-header">

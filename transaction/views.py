@@ -32,7 +32,7 @@ def final_transaction(request, offer_id, book_id):
         # save new order
         # new_order.save()
         # old_request.save()
-        # return redirect('transaction:orders_view')
+        return redirect('transaction:orders_view')
 
     if request.method == 'POST' and 'updateadd' in request.POST:
         if address_form.is_valid():
@@ -56,15 +56,16 @@ def add_request(request,book_id):
     address = ShippingAddress.objects.get(profile=request.user.profile)
     if address.status():
         messages.info(request, "You need to  address in profile to make request")
-
-    if (UserCollection.objects.get(owner=request.user.profile).get_collection_items()):
-        if Requests.objects.filter(requester=request.user, offerrer=book.user, requester_book=book).exists():
-            messages.info(request,"Requests already made!")
-        else:
-            messages.info(request,"New Request")
-            # request.save()
     else:
-        messages.info(request, ('You need to add items to your collection to make a request!'))
+
+        if (UserCollection.objects.get(owner=request.user.profile).get_collection_items()):
+            if Requests.objects.filter(requester=request.user, offerrer=book.user, requester_book=book).exists():
+                messages.info(request,"Requests already made!")
+            else:
+                messages.info(request,"New Request")
+                # new_request.save()
+        else:
+            messages.info(request, ('You need to add items to your collection to make a request!'))
 
     return redirect('coreapp:list_entries')
 

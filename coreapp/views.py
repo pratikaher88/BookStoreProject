@@ -5,30 +5,33 @@ from django.urls import reverse_lazy, reverse
 from .forms import UserCreationForm, NewEntryForm, UserForm, ProfileForm, ShippingAddressForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from coreapp.models import Book, Profile, UserCollection , ShippingAddress
+from coreapp.models import Book, Profile, UserCollection, ShippingAddress
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ObjectDoesNotExist
+
 
 @login_required
 def profile(request):
     profile = get_object_or_404(Profile, user=request.user)
     try:
         address = ShippingAddress.objects.get(profile=profile)
-        print("Address",address)
+        print("Address", address)
     except ObjectDoesNotExist:
         address = None
 
-    return render(request, 'profile.html', {'profile': profile,'address':address})
+    return render(request, 'profile.html', {'profile': profile, 'address': address})
 
-class SignUp(SuccessMessageMixin,generic.CreateView):
+
+class SignUp(SuccessMessageMixin, generic.CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
     success_message = 'Account Created! You can now Login!'
 
-class BookListView(LoginRequiredMixin,generic.ListView):
+
+class BookListView(LoginRequiredMixin, generic.ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
@@ -40,6 +43,7 @@ class BookListView(LoginRequiredMixin,generic.ListView):
         #     return Book.objects.exclude(user=self.request.user).order_by('?')
         # else:
         #     return Book.objects.all().order_by('?')
+
 
 class UserBookListView(generic.ListView):
     model = Book
@@ -53,7 +57,7 @@ class UserBookListView(generic.ListView):
         return collection_items.get_collection_items()
 
 
-class UserBookListViewForUser(LoginRequiredMixin,generic.ListView):
+class UserBookListViewForUser(LoginRequiredMixin, generic.ListView):
     model = Book
     template_name = 'collection_user_entries.html'
     context_object_name = 'books'
@@ -62,13 +66,13 @@ class UserBookListViewForUser(LoginRequiredMixin,generic.ListView):
     def get_queryset(self):
         user = self.kwargs['username']
 
-        user_profile = get_object_or_404(Profile,user__username=user)
+        user_profile = get_object_or_404(Profile, user__username=user)
         collection_items = UserCollection.objects.get(
             owner=user_profile)
         return collection_items.get_collection_items()
 
 
-class NewEntry(LoginRequiredMixin,generic.CreateView):
+class NewEntry(LoginRequiredMixin, generic.CreateView):
     form_class = NewEntryForm
     success_url = reverse_lazy('coreapp:userbooks')
     template_name = 'new_entry.html'
@@ -80,7 +84,7 @@ class NewEntry(LoginRequiredMixin,generic.CreateView):
 
         collection, status = UserCollection.objects.get_or_create(
             owner=self.request.user.profile)
-        
+
         collection.books.add(book)
         collection.save()
 
@@ -141,7 +145,8 @@ def update_profile(request):
 @login_required
 def update_address(request):
     if request.method == 'POST':
-        address_form = ShippingAddressForm(request.POST,instance=request.user.profile.address)
+        address_form = ShippingAddressForm(
+            request.POST, instance=request.user.profile.address)
         if address_form.is_valid():
             address_form.save()
             messages.success(request, ('Address successfully updated!'))
@@ -153,4 +158,3 @@ def update_address(request):
     return render(request, 'address_edit.html', {
         'address_form': address_form
     })
-
