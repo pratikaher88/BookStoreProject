@@ -47,6 +47,13 @@ class Book(models.Model):
 
     def __str__(self):
         return self.book_name
+    
+    def save(self, *args, **kwargs):
+        super(Book, self).save(*args, **kwargs)
+        img = Image.open(self.image.path)
+        output_size = (120, 120)
+        img.thumbnail(output_size)
+        img.save(self.image.path)
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
