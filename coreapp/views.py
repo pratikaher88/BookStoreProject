@@ -45,6 +45,23 @@ class BookListView(LoginRequiredMixin, generic.ListView):
         #     return Book.objects.all().order_by('?')
 
 
+class BuyListView(LoginRequiredMixin, generic.ListView):
+    model = Book
+    template_name = 'list_entries.html'
+    context_object_name = 'books'
+    
+    def get_queryset(self):
+        return Book.objects.exclude(user=self.request.user).filter(sell_or_exchange='Sell').order_by('-created_at')
+
+
+class ExchangeListView(LoginRequiredMixin, generic.ListView):
+    model = Book
+    template_name = 'list_entries.html'
+    context_object_name = 'books'
+
+    def get_queryset(self):
+        return Book.objects.exclude(user=self.request.user).filter(sell_or_exchange='Exchange').order_by('-created_at')
+
 class UserBookListView(generic.ListView):
     model = Book
     template_name = 'user_books_list_entries.html'
@@ -78,6 +95,14 @@ class NewEntry(LoginRequiredMixin, generic.CreateView):
     template_name = 'new_entry.html'
 
     def form_valid(self, form):
+
+        user_profile = get_object_or_404(Profile, user=self.request.user)
+        address = get_object_or_404(ShippingAddress, profile=user_profile)
+
+        if address.address1 == '':
+            messages.info(self.request,'You need to update Address in profile to make a Sell request!')
+            return redirect('coreapp:new_entry')
+
         book = form.save(commit=False)
         book.user = self.request.user
         book.save()
@@ -89,13 +114,15 @@ class NewEntry(LoginRequiredMixin, generic.CreateView):
         collection.save()
 
         return super(NewEntry, self).form_valid(form)
+    
+    
 
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Book
     template_name = 'new_entry.html'
     success_url = reverse_lazy('userbooks')
-    fields = ['book_name', 'description', 'price', 'condition']
+    fields = ['book_name','author_name', 'description', 'condition']
 
     def form_valid(self, form):
         form.instance.user = self.request.user

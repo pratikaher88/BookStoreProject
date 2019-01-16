@@ -24,7 +24,6 @@
 {% endblock %}
 
 {% block content %}
-<!-- {{ books | length }} -->
 
 {% if messages %}
 {% for message in messages %}
@@ -33,6 +32,14 @@
 </div>
 {% endfor %}
 {% endif %}
+<br/>
+
+<div class="btn-group container-fluid">
+  <a href="{% url 'coreapp:list_entries' %}" class="btn btn-success">All</a>
+  <a href="{% url 'coreapp:buy_entries' %}" class="btn btn-success">Buy</a>
+  <a href="{% url 'coreapp:exchange_entries' %}" class="btn btn-success">Exchange</a>
+</div>
+<br />
 
 <br/>
 
@@ -46,12 +53,31 @@
         Seller: <a href="{% url 'coreapp:userbooksforuser' book.user %}" style="color:black">{{ book.user.username }}</a>
       </div>
       <div class="card-body">
-        <h5 class="card-title">{{ book.book_name }}</h5>
-        <p class="card-text">{{ book.description }}</p>
-        <p class="card-text">Condition : {{ book.condition }} </p>
+        
+
+      <div class="d-flex justify-content-between">
+        <div>
+          <h5 class="card-title">{{ book.book_name }}</h5>
+          <p class="card-text">{{ book.description }}</p>
+          <p class="card-text">Condition : {{ book.condition }} </p>
+        </div>
+        <div class="mr-3">
+          {% if book.image %}
+          <img src="{{ book.image.url }}">
+          {% endif %}
+      
+        </div>
+      </div>
+
+        
       </div>
       <div class="card-footer text-mutxed">
-        {{ book.created_at }} <a href="{% url 'wishlist:add_to_list' book.id %}" class="btn btn-primary float-right">ADD FOR EXCHANGE</a>
+        {{ book.created_at }} 
+        {% if book.sell_or_exchange == 'Sell' %}
+
+        <a href="{% url 'wishlist:add_to_list' book.id %}" class="btn btn-primary float-right">BUY FOR {{ book.price }}</a>
+
+        {% else %}
         <a href="{% url 'transaction:add_request' book.id %}" class="btn btn-primary mr-2 float-right">MAKE A REQUEST</a>
         
         <!-- <button type="button" class="mr-2 btn btn-info float-right" data-toggle="modal" data-target="#requestmodal">Request for Exchange</a> -->
@@ -76,6 +102,8 @@
             </div>
           </div>
         </div>
+
+        {% endif %}
 
 
       </div>

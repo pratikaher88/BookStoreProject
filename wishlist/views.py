@@ -4,9 +4,12 @@ from django.views import generic
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from coreapp.models import Book, Profile,Order
+from coreapp.models import Book, Profile, Order, ShippingAddress
+from coreapp.forms import ShippingAddressForm
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
+
 
 @login_required
 def add_to_list(request, item_id):
@@ -41,12 +44,55 @@ def delete_from_list(request, item_id):
     return redirect(reverse('wishlist:wish_list'))
 
 
-class WishListView(LoginRequiredMixin,generic.ListView):
-    model = Order
-    template_name = 'wish_list_entries.html'
-    context_object_name = 'orders'
-    ordering = ['-date_ordered']
+# class WishListView(LoginRequiredMixin,generic.ListView):
+#     model = Order
+#     template_name = 'wish_list_entries.html'
+#     context_object_name = 'orders'
+#     ordering = ['-date_ordered']
 
-    def get_queryset(self):
-        orders=Order.objects.get(owner=self.request.user.profile)
-        return orders.get_cart_items()
+#     # def get_context_data(self, **kwargs):
+#     #     context = super(WishListView, self).get_context_data(**kwargs)
+#     #     context['total_price'] = Order.objects.aggregate(Sum('items__price'))
+
+
+#     def get_queryset(self):
+#         orders=Order.objects.get(owner=self.request.user.profile)
+#         return orders.get_cart_items()
+
+
+@login_required
+def wish_list_entries_view(request):
+    orders = Order.objects.get(owner=request.user.profile)
+
+    address_form = ShippingAddressForm(
+        request.POST, instance=request.user.profile.address)
+
+    if request.method == "POST" and 'Yes' in request.POST:
+        print("POST REQUEST")
+        # delete entry from requests
+        # new_request.delete()
+        # save old request
+        # save new order
+        # new_order.save()
+        # old_request.save()
+        return redirect('transaction:orders_view')
+
+    if request.method == 'POST' and 'updateadd' in request.POST:
+        if address_form.is_valid():
+            address_form.save()
+            messages.success(request, ('Address successfully updated!'))
+
+    user_profile = get_object_or_404(Profile, user=request.user)
+    address = get_object_or_404(ShippingAddress, profile=user_profile)
+    orderitems = Order.objects.get(owner=request.user.profile)
+    orders = orderitems.get_cart_items()
+    total_price = Order.objects.filter(
+        owner=request.user.profile).aggregate(Sum('items__price'))
+    # total_price = 0
+    # for item in orders:
+    #     total_price+=item.price
+
+    total_price=(list(total_price.values())[0])
+
+    context = {'orders': orders, 'address': address, 'address_form': address_form,'total_price':total_price }
+    return render(request, 'wish_list_entries.html', context)

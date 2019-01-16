@@ -19,7 +19,7 @@ class SearchListView(generic.ListView):
 
     def get_queryset(self):
         book_name = self.request.GET.get('search')
-        return Book.objects.filter(Q(book_name__icontains=book_name))
+        return Book.objects.filter(Q(book_name__icontains=book_name)) | Book.objects.filter(Q(author_name__icontains=book_name))
 
 # def search_form(request):
 

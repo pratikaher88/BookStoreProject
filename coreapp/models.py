@@ -22,6 +22,11 @@ ZIP_CHOICES = (
     ('421201', '421201'),
     ('421203', '421203'),
 )
+BUY_OR_EXCHANGE = (
+    ('Sell', 'Sell'),
+ ('Exchange', 'Exchange'), 
+ )
+
 
 
 def random_img():
@@ -34,9 +39,12 @@ class Book(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     book_name = models.CharField(max_length=100)
-    description = models.CharField(max_length=2000)
+    author_name = models.CharField(max_length=100, blank=True, null=True)
+    description = models.CharField(max_length=2000,blank=True,null=True)
     image = models.ImageField(null=True, blank=True, upload_to="book_images/")
-    price = models.IntegerField()
+    price = models.IntegerField(null=True,blank=True)
+    sell_or_exchange = models.CharField(
+        max_length=100, choices=BUY_OR_EXCHANGE, default='Exchange')
     condition = models.CharField(
         max_length=100, choices=CONITION_CHOICES, default='Acceptable')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -50,10 +58,11 @@ class Book(models.Model):
     
     def save(self, *args, **kwargs):
         super(Book, self).save(*args, **kwargs)
-        img = Image.open(self.image.path)
-        output_size = (120, 120)
-        img.thumbnail(output_size)
-        img.save(self.image.path)
+        if self.image:
+            img = Image.open(self.image.path)
+            output_size = (120, 120)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

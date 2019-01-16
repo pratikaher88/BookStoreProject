@@ -21,8 +21,10 @@
         <h5 class="card-title">{{ book.book_name }}</h5>
         <p class="card-text">{{ book.description }}</p>
         <p class="card-text">Condition : {{ book.condition }} </p>
+        {% if book.price %}
         <p class="card-text">Price : {{ book.price }} </p>
-    </div>
+        {% endif %}
+        </div>
     <div class="card-footer text-mutxed">
         {{ book.created_at }} 
     </div>

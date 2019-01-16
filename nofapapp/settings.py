@@ -73,6 +73,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'nofapapp.context_processors.add_variable_to_context',
+
             ],
             'libraries':{
                 'user_books_tag': 'transaction.transaction.templatetags.user_books_tag',

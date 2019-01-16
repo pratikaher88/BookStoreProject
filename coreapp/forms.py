@@ -23,10 +23,22 @@ class UserCreationForm(UserCreationForm):
 class NewEntryForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ['book_name', 'description', 'image', 'price', 'condition']
+        fields = ['book_name','author_name', 'description', 'image',
+                  'sell_or_exchange', 'price', 'condition']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4, 'cols': 15}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(NewEntryForm, self).__init__(*args, **kwargs)
+        # self.fields['sell_or_exchange'].widget = forms.ChoiceField(attrs={
+        #         'id': 'sellorexchangeid',
+        # })
+
+        self.fields['price'].widget = forms.TextInput(attrs={
+                'type': 'number',
+                'id': 'priceid',
+        })
 
 class ShippingAddressForm(forms.ModelForm):
     class Meta:

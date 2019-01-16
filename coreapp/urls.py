@@ -7,6 +7,8 @@ app_name='coreapp'
 urlpatterns = [
     
     path('', views.BookListView.as_view(), name='list_entries'),
+    path('buy/', views.BuyListView.as_view(), name='buy_entries'),
+    path('exchange/', views.ExchangeListView.as_view(), name='exchange_entries'),
     path('newentry/',views.NewEntry.as_view(),name='new_entry'),
     path('profile/',views.profile,name='profile'),
     path('profile/edit',views.update_profile,name='profile_edit'),
