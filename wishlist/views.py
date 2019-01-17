@@ -44,6 +44,7 @@ def delete_from_list(request, item_id):
     return redirect(reverse('wishlist:wish_list'))
 
 
+
 # class WishListView(LoginRequiredMixin,generic.ListView):
 #     model = Order
 #     template_name = 'wish_list_entries.html'
@@ -69,13 +70,26 @@ def wish_list_entries_view(request):
 
     if request.method == "POST" and 'Yes' in request.POST:
         print("POST REQUEST")
+        orderitems = Order.objects.get(owner=request.user.profile)
+        orders = orderitems.get_cart_items()
+        
+        for order in orders:
+            user_profile = get_object_or_404(Profile, user=request.user)
+            user_address = get_object_or_404(
+                ShippingAddress, profile=user_profile)
+            seller_profile = get_object_or_404(Profile, user=order.user)
+            seller_address = get_object_or_404(
+                ShippingAddress, profile=seller_profile)
+            print(user_address)
+            print(seller_address)
+            # FinalBuyOrder.create(user=request.user,book=order, seller=order.user ,useraddress=user_address,selleraddres=seller_address )
         # delete entry from requests
         # new_request.delete()
         # save old request
         # save new order
         # new_order.save()
         # old_request.save()
-        return redirect('transaction:orders_view')
+        # return redirect('transaction:orders_view')
 
     if request.method == 'POST' and 'updateadd' in request.POST:
         if address_form.is_valid():

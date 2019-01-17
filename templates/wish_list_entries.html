@@ -22,6 +22,7 @@
         <!-- {{ order.user.username }} -->
     </div>
     <div class="card-body">
+        <p class="card-text">Seller: {{ book.user }}</p>
         <h5 class="card-title">{{ book.book_name }}</h5>
         {% if book.author_name %}
         <p class="card-text">{{ book.author_name }}</p>

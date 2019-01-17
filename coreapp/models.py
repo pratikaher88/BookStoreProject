@@ -161,6 +161,15 @@ class OldRequests(models.Model):
 	def __str__(self):
 	    return "From {}, to {} ,with Book {}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name)
 
+class FinalBuyOrder(models.Model):
+    user = models.OneToOneField(User, related_name='user', on_delete=models.CASCADE)
+    Book = models.OneToOneField(Book , on_delete=models.CASCADE)
+    seller = models.OneToOneField(
+        User, related_name='seller',  on_delete=models.CASCADE)
+    useraddress = models.OneToOneField(
+        ShippingAddress, related_name='address', on_delete=models.CASCADE)
+    selleraddres = models.OneToOneField(ShippingAddress, related_name='selleraddress', on_delete=models.CASCADE)
+
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
@@ -168,7 +177,6 @@ def create_profile(sender, instance, created, **kwargs):
         Order.objects.create(owner=instance.profile)
         ShippingAddress.objects.create(profile=instance.profile)
         UserCollection.objects.create(owner=instance.profile)
-
 
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
