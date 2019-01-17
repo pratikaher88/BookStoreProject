@@ -19,7 +19,6 @@
 
 <div class="card text-left">
     <div class="card-header">
-        <!-- {{ order.user.username }} -->
     </div>
     <div class="card-body">
         <p class="card-text">Seller: {{ book.user }}</p>
@@ -32,8 +31,6 @@
         {% endif %}
         <p class="card-text">Price: {{ book.price }}</p>
 
-        <!-- <p class="card-text">Condition : {{ book.condition }} </p>
-        <p class="card-text">Price : {{ book.price }} </p> -->
     </div>
     <div class="card-footer text-mutxed">
         <a href="{% url 'wishlist:delete_item' book.id %}" class="mr-2 btn btn-info float-right">Delete Item</a>
