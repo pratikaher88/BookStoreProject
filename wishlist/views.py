@@ -43,24 +43,6 @@ def delete_from_list(request, item_id):
     messages.info(request, "Item has been deleted")
     return redirect(reverse('wishlist:wish_list'))
 
-
-
-# class WishListView(LoginRequiredMixin,generic.ListView):
-#     model = Order
-#     template_name = 'wish_list_entries.html'
-#     context_object_name = 'orders'
-#     ordering = ['-date_ordered']
-
-#     # def get_context_data(self, **kwargs):
-#     #     context = super(WishListView, self).get_context_data(**kwargs)
-#     #     context['total_price'] = Order.objects.aggregate(Sum('items__price'))
-
-
-#     def get_queryset(self):
-#         orders=Order.objects.get(owner=self.request.user.profile)
-#         return orders.get_cart_items()
-
-
 @login_required
 def wish_list_entries_view(request):
     orders = Order.objects.get(owner=request.user.profile)
