@@ -1,3 +1,4 @@
+{% load crispy_forms_tags %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -73,7 +74,7 @@
                     {% block search %}
                     {% endblock %}
                     <br/>
-                    <h3>Django Books</h3>
+                    <h3>Cadabra Books</h3>
                       <ul class="list-group">
                         <a class="list-group-item list-group-item-action" href="{% url 'coreapp:list_entries' %}" > Home </a>                      
                         <a class="list-group-item list-group-item-action" href="{% url 'coreapp:new_entry' %}" > Add Book</a>
@@ -83,8 +84,22 @@
                         <a class="list-group-item list-group-item-action" href="{% url 'transaction:requests_view' %}" >Requests<span class="badge badge-primary badge-pill float-right mt-1">{{ requestscount }}</span></a>
                         <a class="list-group-item list-group-item-action" href="{% url 'transaction:orders_view' %}" >Orders <span class="badge badge-primary badge-pill float-right mt-1">{{ orderscount }}</span></a>
                         <a class="list-group-item list-group-item-action" href="{% url 'transaction:offers_view' %}" >Offers <span class="badge badge-primary badge-pill float-right mt-1">{{ offercount }}</span></a>
-
                       </ul>
+                      <br/>
+                      {% if addresscheck == "" %}
+                      <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title">Update Address</h5>
+                      <p class="card-text">
+                        You need to add address and phone number in profile settings, it is a one time process</p>
+                      <a class="btn btn-success" style="color: white" href="{% url 'coreapp:address_edit' %}">Update</a>
+                      
+
+
+                      </div>
+                      </div>
+
+                      {% endif %}
                     </p>
                   </div>
                 </div>

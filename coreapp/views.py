@@ -17,7 +17,6 @@ def profile(request):
     profile = get_object_or_404(Profile, user=request.user)
     try:
         address = ShippingAddress.objects.get(profile=profile)
-        print("Address", address)
     except ObjectDoesNotExist:
         address = None
 

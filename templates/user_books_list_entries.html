@@ -5,7 +5,6 @@
 <h2 >My Collection:</h2>
 <br/>
 
-{{ user }}
 
 {% if books %}
 
@@ -35,7 +34,19 @@
 
 {% else %}
 
+<br/>
+
 <div class="text-center"><h1>No Books Found ! Add Books ! </h1></div>
+
+<br/>
+
+<div class="container">
+    <div class="row">
+        <div class="col text-center">
+            <a class="btn btn-success btn-lg center" href="{% url 'coreapp:new_entry' %}"> Add Books</a>
+        </div>
+    </div>
+</div>
 
 
 {% endif %}

@@ -4,10 +4,10 @@ from django.views import generic
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from coreapp.models import Book, Profile, Order, ShippingAddress
+from coreapp.models import Book, Profile, Order, ShippingAddress, FinalBuyOrder
 from coreapp.forms import ShippingAddressForm
 from django.db.models import Q
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Sum
 
 
@@ -21,7 +21,7 @@ def add_to_list(request, item_id):
     user_order, status = Order.objects.get_or_create(
         owner=user_profile)
     if book in user_order.get_cart_items():
-        messages.warning(request, 'Item Already in Wishlist!')
+        messages.warning(request, 'Item Already in Cart!')
         return redirect(reverse('coreapp:list_entries'))
     # # create orderItem of the selected product
     user_order.items.add(book)
@@ -35,7 +35,7 @@ def delete_from_list(request, item_id):
     book = get_object_or_404(Book,id=item_id)
     orders = Order.objects.get(owner=request.user.profile)
     # final remove item
-    # orders.items.remove(book)
+    orders.items.remove(book)
 
     messages.info(request, "Item has been deleted")
     return redirect(reverse('wishlist:wish_list'))
@@ -48,7 +48,6 @@ def wish_list_entries_view(request):
         request.POST, instance=request.user.profile.address)
 
     if request.method == "POST" and 'Yes' in request.POST:
-        print("POST REQUEST")
         orderitems = Order.objects.get(owner=request.user.profile)
         orders = orderitems.get_cart_items()
         
@@ -59,9 +58,14 @@ def wish_list_entries_view(request):
             seller_profile = get_object_or_404(Profile, user=order.user)
             seller_address = get_object_or_404(
                 ShippingAddress, profile=seller_profile)
-            print(user_address)
-            print(seller_address)
-            # FinalBuyOrder.create(user=request.user,book=order, seller=order.user ,useraddress=user_address,selleraddres=seller_address )
+
+            print(order)
+            # final remove item
+            # orderitems.items.remove(order)
+            # FinalBuyOrder.objects.create(user=request.user,book=order, seller=order.user ,useraddress=user_address,selleraddress =seller_address )
+
+            messages.success(request, ('Item successfully Ordered!'))
+
         # delete entry from requests
         # new_request.delete()
         # save old request
@@ -89,3 +93,24 @@ def wish_list_entries_view(request):
 
     context = {'orders': orders, 'address': address, 'address_form': address_form,'total_price':total_price }
     return render(request, 'wish_list_entries.html', context)
+
+
+class FinalBuyOrderListView(LoginRequiredMixin, generic.ListView):
+    model = FinalBuyOrder
+    template_name = 'final_buy_order.html'
+    context_object_name = 'final_buy_order'
+
+    def get_queryset(self):
+        return FinalBuyOrder.objects.filter(user=self.request.user).order_by('-date_ordered')
+
+
+class FinalBuyOrderDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = FinalBuyOrder
+    success_url = reverse_lazy('wishlist:final_order')
+    template_name = 'final_order_confirm_delete.html'
+
+    def test_func(self):
+        order = self.get_object()
+        if self.request.user == order.user:
+            return True
+        return False

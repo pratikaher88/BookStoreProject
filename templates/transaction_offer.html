@@ -27,7 +27,6 @@
     </div>
     <div class="card-footer text-mutxed">
         <a href="{% url 'transaction:offer-delete' offer.id %}" class="mr-2 btn btn-info float-right">Decline Transaction</a>
-        <a href="#" class="mr-2 btn btn-danger float-right">Make Transaction</a>
         
         <p>
             <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
@@ -43,7 +42,7 @@
                 <div class="card text-left">
                     <div class="card-header">
                         Seller: {{ book.user }}
-                        <a class="btn btn-info float-right" href="{% url 'transaction:final-transaction' offer_id=offer.id book_id=book.id %}">Make Request</a>
+                        <a class="mr-2 btn btn-danger float-right" href="{% url 'transaction:final-transaction' offer_id=offer.id book_id=book.id %}">Make Transaction</a>
 
                     </div>
                     <div class="card-body">

@@ -27,8 +27,6 @@ BUY_OR_EXCHANGE = (
  ('Exchange', 'Exchange'), 
  )
 
-
-
 def random_img():
     dir_path = os.path.join(BASE_DIR, 'media')
     files = [content for content in listdir(
@@ -163,12 +161,13 @@ class OldRequests(models.Model):
 
 class FinalBuyOrder(models.Model):
     user = models.OneToOneField(User, related_name='user', on_delete=models.CASCADE)
-    Book = models.OneToOneField(Book , on_delete=models.CASCADE)
+    book = models.OneToOneField(Book , on_delete=models.CASCADE)
     seller = models.OneToOneField(
         User, related_name='seller',  on_delete=models.CASCADE)
     useraddress = models.OneToOneField(
         ShippingAddress, related_name='address', on_delete=models.CASCADE)
-    selleraddres = models.OneToOneField(ShippingAddress, related_name='selleraddress', on_delete=models.CASCADE)
+    selleraddress = models.OneToOneField(ShippingAddress, related_name='selleraddress', on_delete=models.CASCADE)
+    date_ordered = models.DateTimeField(auto_now=True)
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
