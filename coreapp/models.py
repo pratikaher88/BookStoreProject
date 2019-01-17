@@ -67,7 +67,7 @@ class Book(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(
-        default='default.png', upload_to="profile_images/")
+        default=random_img , upload_to="profile_images/")
 
     def __str__(self):
         return self.user.username
