@@ -9,6 +9,7 @@ from django.views import generic
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 from coreapp.forms import ShippingAddressForm
+from django.db.models import Q
 
 @login_required
 def final_transaction(request, offer_id, book_id):
@@ -105,7 +106,9 @@ class OfferListView(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['collection_all'] = UserCollection.objects.all()
+        context['collection_all'] = UserCollection.objects.filter(
+            books__sell_or_exchange="Exchange")
+
         return context
 
         # user_profile = get_object_or_404(Profile, user__username=user)
@@ -136,7 +139,7 @@ class TransactionListView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'orders'
 
     def get_queryset(self):
-        return Transaction.objects.filter(offerrer=self.request.user).order_by('timestamp')
+        return Transaction.objects.filter(Q(offerrer=self.request.user) | Q(requester=self.request.user)).order_by('timestamp')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

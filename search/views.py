@@ -6,7 +6,7 @@ from django.urls import reverse_lazy, reverse
 from search.forms import SearchForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from coreapp.models import Book, Profile
+from coreapp.models import Book, Profile, Transaction, FinalBuyOrder
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
@@ -19,7 +19,14 @@ class SearchListView(generic.ListView):
 
     def get_queryset(self):
         book_name = self.request.GET.get('search')
-        return Book.objects.filter(Q(book_name__icontains=book_name)) | Book.objects.filter(Q(author_name__icontains=book_name))
+
+        ordered_books = FinalBuyOrder.objects.values_list('book')
+        requester_books = Transaction.objects.values_list('requester_book')
+        offerrer_books = Transaction.objects.values_list('offerrer_book')
+
+        return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).exclude(id__in=requester_books).exclude(id__in=offerrer_books).filter(Q(book_name__icontains=book_name)) | Book.objects.filter(Q(author_name__icontains=book_name))
+
+        # return Book.objects.filter(Q(book_name__icontains=book_name)) | Book.objects.filter(Q(author_name__icontains=book_name))
 
 # def search_form(request):
 
