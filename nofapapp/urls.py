@@ -8,7 +8,7 @@ urlpatterns = [
     url('', include('coreapp.urls')),
     url('transaction/', include('transaction.urls', namespace='transaction')),
     url('search/',include('search.urls',namespace='search')),
-    url('list/',include('wishlist.urls', namespace='wishlist')),
+    url('cartitems/',include('cart.urls', namespace='cart')),
     url(r'^login/$', LoginView.as_view(), name='login'),
     url(r'^logout/$', LogoutView.as_view(), name='logout'),
     url('^', include('django.contrib.auth.urls')),

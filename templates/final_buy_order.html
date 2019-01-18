@@ -26,7 +26,7 @@
         <p class="card-text">Condition : {{ order.book.condition }} </p>
     </div>
     <div class="card-footer text-mutxed">
-        <a href="{% url 'wishlist:finalorder-delete' order.id %}" class="mr-2 btn btn-danger float-right">Cancel Order</a>
+        <a href="{% url 'cart:finalorder-delete' order.id %}" class="mr-2 btn btn-danger float-right">Cancel Order</a>
 
     </div>
 </div>

@@ -34,7 +34,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'coreapp',
-    'wishlist',
+    'cart',
     'transaction',
     'dal',
     'dal_select2',

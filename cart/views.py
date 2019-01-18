@@ -12,7 +12,7 @@ from django.db.models import Sum
 
 
 @login_required
-def add_to_list(request, item_id):
+def add_to_cart(request, item_id):
     # get the user profile
     user_profile = get_object_or_404(Profile, user=request.user)
     # filter products by id
@@ -31,68 +31,57 @@ def add_to_list(request, item_id):
     return redirect(reverse('coreapp:list_entries'))
 
 @login_required
-def delete_from_list(request, item_id):
+def delete_from_cart(request, item_id):
     book = get_object_or_404(Book,id=item_id)
     orders = Order.objects.get(owner=request.user.profile)
     # final remove item
     orders.items.remove(book)
 
     messages.info(request, "Item has been deleted")
-    return redirect(reverse('wishlist:wish_list'))
+    return redirect(reverse('cart:cart_items'))
 
 @login_required
-def wish_list_entries_view(request):
+def cart_list_entries_view(request):
     orders = Order.objects.get(owner=request.user.profile)
 
     address_form = ShippingAddressForm(
         request.POST, instance=request.user.profile.address)
 
+    user_profile = get_object_or_404(
+            Profile, user=request.user)
+    user_address = get_object_or_404(
+        ShippingAddress, profile=user_profile)
+    orderitems = Order.objects.get(owner=request.user.profile)
+    orders = orderitems.get_cart_items()
+
     if request.method == "POST" and 'Yes' in request.POST:
-        orderitems = Order.objects.get(owner=request.user.profile)
-        orders = orderitems.get_cart_items()
-        
+
         for order in orders:
-            user_profile = get_object_or_404(Profile, user=request.user)
-            user_address = get_object_or_404(
-                ShippingAddress, profile=user_profile)
+
             seller_profile = get_object_or_404(Profile, user=order.user)
             seller_address = get_object_or_404(
                 ShippingAddress, profile=seller_profile)
 
-            print(order)
-            # final remove item
-            # orderitems.items.remove(order)
-            FinalBuyOrder.objects.create(user=request.user,book=order, seller=order.user ,useraddress=user_address,selleraddress =seller_address )
+            FinalBuyOrder.objects.create(user=request.user,book=order, seller=order.user ,useraddress=user_address, selleraddress =seller_address )
+            orderitems.items.remove(order)
 
-            messages.success(request, ('Item successfully Ordered!'))
-
-        # delete entry from requests
-        # new_request.delete()
-        # save old request
-        # save new order
-        # new_order.save()
-        # old_request.save()
-        # return redirect('transaction:orders_view')
+        messages.success(request, ('Item successfully Ordered!'))
+        return redirect('transaction:orders_view')
 
     if request.method == 'POST' and 'updateadd' in request.POST:
         if address_form.is_valid():
             address_form.save()
             messages.success(request, ('Address successfully updated!'))
 
-    user_profile = get_object_or_404(Profile, user=request.user)
-    address = get_object_or_404(ShippingAddress, profile=user_profile)
-    orderitems = Order.objects.get(owner=request.user.profile)
-    orders = orderitems.get_cart_items()
+
     total_price = Order.objects.filter(
         owner=request.user.profile).aggregate(Sum('items__price'))
-    # total_price = 0
-    # for item in orders:
-    #     total_price+=item.price
 
     total_price=(list(total_price.values())[0])
 
-    context = {'orders': orders, 'address': address, 'address_form': address_form,'total_price':total_price }
-    return render(request, 'wish_list_entries.html', context)
+    context = {'orders': orders, 'address': user_address,
+               'address_form': address_form, 'total_price': total_price}
+    return render(request, 'cart_list_entries.html', context)
 
 
 class FinalBuyOrderListView(LoginRequiredMixin, generic.ListView):
@@ -106,7 +95,7 @@ class FinalBuyOrderListView(LoginRequiredMixin, generic.ListView):
 
 class FinalBuyOrderDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     model = FinalBuyOrder
-    success_url = reverse_lazy('wishlist:final_order')
+    success_url = reverse_lazy('cart:final_order')
     template_name = 'final_order_confirm_delete.html'
 
     def test_func(self):

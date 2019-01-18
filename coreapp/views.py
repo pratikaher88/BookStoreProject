@@ -5,7 +5,7 @@ from django.urls import reverse_lazy, reverse
 from .forms import UserCreationForm, NewEntryForm, UserForm, ProfileForm, ShippingAddressForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from coreapp.models import Book, Profile, UserCollection, ShippingAddress
+from coreapp.models import Book, Profile, UserCollection, ShippingAddress, FinalBuyOrder
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
@@ -37,7 +37,10 @@ class BookListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 15
 
     def get_queryset(self):
-        return Book.objects.exclude(user=self.request.user).order_by('-created_at')
+        ordered_books = FinalBuyOrder.objects.only('book').filter(
+            user=self.request.user).values_list('book')
+        print("Ordered Book",ordered_books)
+        return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).order_by('-created_at')
         # if self.request.user.is_authenticated:
         #     return Book.objects.exclude(user=self.request.user).order_by('?')
         # else:
@@ -51,7 +54,9 @@ class BuyListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 15
     
     def get_queryset(self):
-        return Book.objects.exclude(user=self.request.user).filter(sell_or_exchange='Sell').order_by('-created_at')
+        ordered_books = FinalBuyOrder.objects.filter(user=self.request.user).values_list('book')
+        print("Ordered Book",ordered_books)
+        return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).filter(sell_or_exchange='Sell').order_by('-created_at')
 
 
 class ExchangeListView(LoginRequiredMixin, generic.ListView):

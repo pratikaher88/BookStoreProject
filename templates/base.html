@@ -80,7 +80,7 @@
                         <a class="list-group-item list-group-item-action" href="{% url 'coreapp:new_entry' %}" > Add Book</a>
                         <a class="list-group-item list-group-item-action" href="{% url 'coreapp:profile' %}" >Profile</a>
                         <a class="list-group-item list-group-item-action" href="{% url 'coreapp:userbooks' %}" >My Books</a>
-                        <a class="list-group-item list-group-item-action" href="{% url 'wishlist:wish_list' %}" >Cart<span class="badge badge-primary badge-pill float-right mt-1">{{ cartitemscount }}</span> </a>
+                        <a class="list-group-item list-group-item-action" href="{% url 'cart:cart_items' %}" >Cart<span class="badge badge-primary badge-pill float-right mt-1">{{ cartitemscount }}</span> </a>
                         <a class="list-group-item list-group-item-action" href="{% url 'transaction:requests_view' %}" >Requests<span class="badge badge-primary badge-pill float-right mt-1">{{ requestscount }}</span></a>
                         <a class="list-group-item list-group-item-action" href="{% url 'transaction:orders_view' %}" >Orders <span class="badge badge-primary badge-pill float-right mt-1">{{ orderscount }}</span></a>
                         <a class="list-group-item list-group-item-action" href="{% url 'transaction:offers_view' %}" >Offers <span class="badge badge-primary badge-pill float-right mt-1">{{ offercount }}</span></a>
@@ -110,7 +110,7 @@
     </div>
 
 <footer class="site-footer mr-3 mb-2" style="position:fixed;right:0;bottom:0;font-family: 'Courier';font-style: bold;">
-  Made with <span style="color: #e25555;">&hearts;</span> in Dombivli!
+  Made with <span style="color: #e25555;">&hearts;</span> !
 </footer>  
 
 </body>

@@ -58,14 +58,18 @@ def add_request(request,book_id):
         messages.info(request, "You need to  address in profile to make request")
     else:
 
-        if (UserCollection.objects.get(owner=request.user.profile).get_collection_items()):
+        print("Collection items",UserCollection.objects.filter(
+            owner=request.user.profile, books__sell_or_exchange="Exchange").exists())
+
+        if (UserCollection.objects.filter(
+                owner=request.user.profile, books__sell_or_exchange="Exchange").exists()):
             if Requests.objects.filter(requester=request.user, offerrer=book.user, requester_book=book).exists():
                 messages.info(request,"Requests already made!")
             else:
                 messages.info(request,"New Request")
-                # new_request.save()
+                new_request.save()
         else:
-            messages.info(request, ('You need to add items to your collection to make a request!'))
+            messages.info(request, ('You need to add "Exchange" items to your collection to make a request!'))
 
     return redirect('coreapp:list_entries')
 

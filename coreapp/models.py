@@ -79,7 +79,6 @@ class Profile(models.Model):
             img.thumbnail(output_size)
             img.save(self.profile_pic.path)
 
-
 class ShippingAddress(models.Model):
     profile = models.OneToOneField(
         Profile, on_delete=models.CASCADE,related_name='address')
@@ -160,14 +159,15 @@ class OldRequests(models.Model):
 	    return "From {}, to {} ,with Book {}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name)
 
 class FinalBuyOrder(models.Model):
-    user = models.OneToOneField(User, related_name='user', on_delete=models.CASCADE)
-    book = models.OneToOneField(Book , on_delete=models.CASCADE)
-    seller = models.OneToOneField(
+    user = models.ForeignKey(User, related_name='user', on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    seller = models.ForeignKey(
         User, related_name='seller',  on_delete=models.CASCADE)
-    useraddress = models.OneToOneField(
+    useraddress = models.ForeignKey(
         ShippingAddress, related_name='address', on_delete=models.CASCADE)
-    selleraddress = models.OneToOneField(ShippingAddress, related_name='selleraddress', on_delete=models.CASCADE)
-    date_ordered = models.DateTimeField(auto_now=True)
+    selleraddress = models.ForeignKey(
+        ShippingAddress, related_name='selleraddress', on_delete=models.CASCADE)
+    date_ordered = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.book.book_name

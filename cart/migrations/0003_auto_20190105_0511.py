@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('wishlist', '0002_auto_20190105_0448'),
+        ('cart', '0002_auto_20190105_0448'),
     ]
 
     operations = [
