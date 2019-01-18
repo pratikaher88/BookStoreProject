@@ -10,6 +10,8 @@ import os
 from os.path import isfile
 from nofapapp.settings import BASE_DIR
 from django.core.validators import RegexValidator
+from django.core.mail import EmailMessage
+
 
 
 CONITION_CHOICES = (
