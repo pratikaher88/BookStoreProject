@@ -9,21 +9,69 @@
 
 {% for book in books %}
 
-<div class="card text-left">
-    <div class="card-header">
-        {{ book.user.username }}
+    <div class="card text-left">
+        <div class="card-header">
+            Seller: <a href="{% url 'coreapp:userbooksforuser' book.user %}" style="color:black">{{ book.user.username }}</a>
+        </div>
+        <div class="card-body">
+    
+    
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h5 class="card-title">{{ book.book_name }}</h5>
+                    <p class="card-text">{{ book.description }}</p>
+                    <p class="card-text">Condition : {{ book.condition }} </p>
+                </div>
+                <div class="mr-3">
+                    {% if book.image %}
+                    <img src="{{ book.image.url }}">
+                    {% endif %}
+    
+                </div>
+            </div>
+    
+    
+        </div>
+        <div class="card-footer text-mutxed">
+            {{ book.created_at }}
+            {% if book.sell_or_exchange == 'Sell' %}
+    
+            <a href="{% url 'wishlist:add_to_list' book.id %}" class="btn btn-primary float-right">BUY FOR {{ book.price }}</a>
+    
+            {% else %}
+            <a href="{% url 'transaction:add_request' book.id %}" class="btn btn-primary mr-2 float-right">MAKE A REQUEST</a>
+    
+            <!-- <button type="button" class="mr-2 btn btn-info float-right" data-toggle="modal" data-target="#requestmodal">Request for Exchange</a> -->
+    
+            <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Small Modal</button> -->
+    
+            <div class="modal fade" id="requestmodal" role="dialog">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Modal Header</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>This is a small modal.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-default" href="#">Are you sure you want to request {{
+                                book.book_name }} ?</button>
+    
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            {% endif %}
+    
+    
+        </div>
     </div>
-    <div class="card-body">
-        <h5 class="card-title">{{ book.book_name }}</h5>
-        <p class="card-text">{{ book.description }}</p>
-        <p class="card-text">Condition : {{ book.condition }} </p>
-        <p class="card-text">Price : {{ book.price }} </p>
-    </div>
-    <div class="card-footer text-mutxed">
-        {{ book.created_at }} <a href="{% url 'wishlist:add_to_list' book.id %}" class="btn btn-primary float-right">ADD FOR EXCHANGE</a>
-    </div>
-</div>
-</br>
+    </br>
+
 
 {% endfor %}
 

@@ -86,7 +86,7 @@
                 <h5 class="card-title">Payment</h5>
                  <p>Price : {{ total_price }}</p>
                 <p class="card-text">You need to pay additional 20 rupees at the time of pickup or delivery.</p>
-
+                <p class="card-text"> Total Price : {{ total_price | add:20 }} </p>
             </div>
         </div>
     </div>

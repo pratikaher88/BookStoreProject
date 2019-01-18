@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^login/$', LoginView.as_view(), name='login'),
     url(r'^logout/$', LogoutView.as_view(), name='logout'),
     url('^', include('django.contrib.auth.urls')),
-    url(r'^admin/', admin.site.urls),
+    url(r'^cadabraadmin/', admin.site.urls),
     url(r'^password_reset/$', PasswordResetView.as_view() , name='password_reset'),
     url(r'^password_reset/done/$', PasswordResetDoneView.as_view(),
         name='password_reset_done'),
