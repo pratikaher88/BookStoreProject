@@ -48,6 +48,7 @@ class BuyListView(LoginRequiredMixin, generic.ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
+    paginate_by = 15
     
     def get_queryset(self):
         return Book.objects.exclude(user=self.request.user).filter(sell_or_exchange='Sell').order_by('-created_at')
@@ -57,6 +58,7 @@ class ExchangeListView(LoginRequiredMixin, generic.ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
+    paginate_by = 15
 
     def get_queryset(self):
         return Book.objects.exclude(user=self.request.user).filter(sell_or_exchange='Exchange').order_by('-created_at')
@@ -120,7 +122,7 @@ class NewEntry(LoginRequiredMixin, generic.CreateView):
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Book
     template_name = 'new_entry.html'
-    success_url = reverse_lazy('userbooks')
+    success_url = reverse_lazy('coreapp:userbooks')
     fields = ['book_name','author_name', 'description', 'condition']
 
     def form_valid(self, form):

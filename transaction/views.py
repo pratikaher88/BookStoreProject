@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from coreapp.models import Book, Requests, Transaction, UserCollection, OldRequests, Profile, ShippingAddress
+from coreapp.models import Book, Requests, Transaction, UserCollection, FinalBuyOrder, OldRequests, Profile, ShippingAddress
 from coreapp.models import Requests
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import generic
@@ -27,11 +27,11 @@ def final_transaction(request, offer_id, book_id):
         old_request = OldRequests(requester=new_request.requester, offerrer=new_request.offerrer,
                                   requester_book=new_request.requester_book)
         # delete entry from requests
-        # new_request.delete()
+        new_request.delete()
         # save old request
         # save new order
-        # new_order.save()
-        # old_request.save()
+        new_order.save()
+        old_request.save()
         return redirect('transaction:orders_view')
 
     if request.method == 'POST' and 'updateadd' in request.POST:
@@ -133,6 +133,13 @@ class TransactionListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         return Transaction.objects.filter(offerrer=self.request.user).order_by('timestamp')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['buy_order'] = FinalBuyOrder.objects.filter(
+            user=self.request.user).order_by('-date_ordered')
+        return context
 
 
 class TransactionDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):

@@ -169,6 +169,9 @@ class FinalBuyOrder(models.Model):
     selleraddress = models.OneToOneField(ShippingAddress, related_name='selleraddress', on_delete=models.CASCADE)
     date_ordered = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.book.book_name
+
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:

@@ -62,7 +62,7 @@ def wish_list_entries_view(request):
             print(order)
             # final remove item
             # orderitems.items.remove(order)
-            # FinalBuyOrder.objects.create(user=request.user,book=order, seller=order.user ,useraddress=user_address,selleraddress =seller_address )
+            FinalBuyOrder.objects.create(user=request.user,book=order, seller=order.user ,useraddress=user_address,selleraddress =seller_address )
 
             messages.success(request, ('Item successfully Ordered!'))
 

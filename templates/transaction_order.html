@@ -12,7 +12,12 @@
 {% endfor %}
 {% endif %}
 
+
+{% if orders or buy_order %}
+
 {% if orders %}
+
+<h2 align="left">Exchange Orders:</h2>
 
 {% for order in orders %}
 
@@ -38,8 +43,37 @@
 </br>
 {% endfor %}
 
-{% else %}
+{% endif %}
 
+{% if buy_order %}
+
+<h2 align="left">Buy Orders:</h2>
+<br/>
+
+
+{% for order in buy_order %}
+
+<div class="card text-left">
+    <div class="card-header">
+        Seller: {{ order.seller.user_name }}</a>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ order.book.book_name }}</h5>
+        <p class="card-text">{{ order.book.description }}</p>
+        <p class="card-text">Condition : {{ order.book.condition }} </p>
+    </div>
+    <div class="card-footer text-mutxed">
+        <a href="{% url 'wishlist:finalorder-delete' order.id %}" class="mr-2 btn btn-danger float-right">Cancel Order</a>
+
+    </div>
+</div>
+</br>
+{% endfor %}
+
+
+{% endif %}
+
+{% else %}
 <h2 align="center">No Order Found! Make a request !</h2>
 
 {% endif %}
