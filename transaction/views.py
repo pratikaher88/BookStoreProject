@@ -56,7 +56,7 @@ def add_request(request,book_id):
 
     address = ShippingAddress.objects.get(profile=request.user.profile)
     if address.status():
-        messages.info(request, "You need to  address in profile to make request")
+        messages.info(request, "You need to add  address in profile to make request")
     else:
 
         print("Collection items",UserCollection.objects.filter(
