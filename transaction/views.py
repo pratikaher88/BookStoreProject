@@ -52,8 +52,6 @@ def add_request(request,book_id):
     book = get_object_or_404(Book, id=book_id)
     new_request = Requests(requester=request.user, offerrer=book.user , requester_book=book)
 
-    #If address in null, send a prompt to update address 
-
     address = ShippingAddress.objects.get(profile=request.user.profile)
     if address.status():
         messages.info(request, "You need to add  address in profile to make request")
