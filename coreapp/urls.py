@@ -15,6 +15,7 @@ urlpatterns = [
     path('profile/address/edit', views.update_address,name='address_edit'),
     path('signup/',views.SignUp.as_view(),name='signup'),
     path('userbooks/', views.UserBookListView.as_view(),name='userbooks'),
+    path('userbooks/sold/',views.UserBookSoldItemsView.as_view(),name='sold-books'),
     path('userbooks/<str:username>', views.UserBookListViewForUser.as_view(),name='userbooksforuser'),
     path('userbooks/<int:pk>/update',views.PostUpdateView.as_view(),name='post-update'),
     path('userbooks/<int:pk>/delete',views.PostDeleteView.as_view(),name='post-delete'),

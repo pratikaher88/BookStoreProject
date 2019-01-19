@@ -2,15 +2,15 @@
 
 {% block content %}
 
-<h2 >My Collection:</h2>
-<br/>
+<h2>My Collection:</h2>
+<br />
 <div class="btn-group container-fluid">
     <a href="{% url 'coreapp:userbooks' %}" class="btn btn-success">Active Items</a>
     <a href="{% url 'coreapp:sold-books' %}" class="btn btn-success">Sold Items</a>
 </div>
 
-<br/>
-<br/>
+<br />
+<br />
 
 {% if books %}
 
@@ -18,9 +18,8 @@
 
 <div class="card text-left">
     <div class="card-header">
-        {{ book.user.username }} 
-        <a href="{% url 'coreapp:post-delete' book.id %}" class="btn btn-danger float-right">Delete</a>
-        <a href="{% url 'coreapp:post-update' book.id %}" class="mr-2 btn btn-info float-right" >Edit</a>
+        {{ book.user.username }}
+
     </div>
     <div class="card-body">
         <h5 class="card-title">{{ book.book_name }}</h5>
@@ -29,9 +28,9 @@
         {% if book.price %}
         <p class="card-text">Price : {{ book.price }} </p>
         {% endif %}
-        </div>
+    </div>
     <div class="card-footer text-mutxed">
-        {{ book.created_at }} 
+        {{ book.created_at }}
     </div>
 </div>
 </br>
@@ -40,19 +39,13 @@
 
 {% else %}
 
-<br/>
+<br />
 
-<div class="text-center"><h1>No Books Found ! Add Books ! </h1></div>
-
-<br/>
-
-<div class="container">
-    <div class="row">
-        <div class="col text-center">
-            <a class="btn btn-success btn-lg center" href="{% url 'coreapp:new_entry' %}"> Add Books</a>
-        </div>
-    </div>
+<div class="text-center">
+    <h1>No sold books ! </h1>
 </div>
+
+<br />
 
 
 {% endif %}

@@ -40,13 +40,14 @@ def random_img():
 class Book(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    book_name = models.CharField(max_length=100)
+    book_name = models.CharField(
+        max_length=100, help_text="We only deal with original books with ISBN codes, pirated books will not be accepted.")
     author_name = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=2000,blank=True,null=True)
     image = models.ImageField(null=True, blank=True, upload_to="book_images/")
     price = models.IntegerField(null=True,blank=True)
     sell_or_exchange = models.CharField(
-        max_length=100, choices=BUY_OR_EXCHANGE, default='Exchange')
+        max_length=100, choices=BUY_OR_EXCHANGE, default='Exchange', help_text="By adding items to exchange you can make requests to other users for exchange.")
     condition = models.CharField(
         max_length=100, choices=CONITION_CHOICES, default='Acceptable')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -94,7 +95,7 @@ class ShippingAddress(models.Model):
     address1 = models.CharField("Address line 1", max_length=500,)
     address2 = models.CharField("Address line 2", max_length=500,blank=True,null=True)
     zip_code = models.CharField(
-        max_length=100, choices=ZIP_CHOICES ,default='421202')
+        max_length=100, choices=ZIP_CHOICES, default='421202', help_text="We only operate in these locations for now!")
     city = models.CharField("City", max_length=100,)
 
     class Meta:
@@ -149,9 +150,13 @@ class Transaction(models.Model):
 	timestamp = models.DateTimeField(auto_now_add=True)
 	requester_book = models.ForeignKey(Book, related_name='requested_book_from_user', on_delete=models.CASCADE)
 	offerrer_book = models.ForeignKey(Book, related_name='offerrer_book_from_user', on_delete=models.CASCADE)
+	requester_address = models.ForeignKey(
+	    ShippingAddress, related_name='user_address',null=True, on_delete=models.CASCADE)
+	offerrer_address = models.ForeignKey(
+	    ShippingAddress, related_name='seller_address',null=True, on_delete=models.CASCADE)
 
 	def __str__(self):
-		return "From {}, to {} Book1 is {} Book2 is{}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name, self.offerrer_book.book_name)
+			return "From {}, to {} Book1 is {} Book2 is{}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name, self.offerrer_book.book_name)
 
 class OldRequests(models.Model):
 

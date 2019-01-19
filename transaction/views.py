@@ -23,8 +23,16 @@ def final_transaction(request, offer_id, book_id):
     # new_order.save()
     if request.method == "POST" and 'Yes' in request.POST:
         print("POST REQUEST")
+        user_profile = get_object_or_404(Profile, user=request.user)
+        offerrer_address = get_object_or_404(ShippingAddress, profile=user_profile)
+
+        requester_profile = get_object_or_404(
+            Profile, user=new_request.requester)
+        requester_address = get_object_or_404(
+            ShippingAddress, profile=requester_profile)
+
         new_order = Transaction(requester=new_request.requester, offerrer=new_request.offerrer,
-                                requester_book=new_request.requester_book, offerrer_book=offerrer_book)
+                                requester_book=new_request.requester_book, offerrer_book=offerrer_book, requester_address=requester_address, offerrer_address=offerrer_address)
         old_request = OldRequests(requester=new_request.requester, offerrer=new_request.offerrer,
                                   requester_book=new_request.requester_book)
         # delete entry from requests
@@ -106,15 +114,8 @@ class OfferListView(LoginRequiredMixin, generic.ListView):
 
         context['collection_all'] = UserCollection.objects.all()
 
-        # context['collection_all'] = UserCollection.objects.filter(
-        #     books__sell_or_exchange="Exchange")
-
-
         return context
 
-        # user_profile = get_object_or_404(Profile, user__username=user)
-        # collection_items = UserCollection.objects.get(
-        #     owner=user_profile)
 
 
 class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
@@ -130,7 +131,7 @@ class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteVie
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        # self.object.delete()
+        self.object.delete()
         print(self.object)
         return redirect(self.get_success_url())
 
