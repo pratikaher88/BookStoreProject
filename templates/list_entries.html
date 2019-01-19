@@ -58,8 +58,13 @@
       <div class="d-flex justify-content-between">
         <div>
           <h5 class="card-title">{{ book.book_name }}</h5>
-          <p class="card-text">{{ book.description }}</p>
-          <p class="card-text">Condition : {{ book.condition }} </p>
+        {% if book.author_name %}
+        <p class="card-text">Author name: {{ book.author_name }}</p>
+        {% endif %}
+        {% if book.description %}
+        <p class="card-text">Description: {{ book.description }}</p>
+        {% endif %}          
+        <p class="card-text">Condition : {{ book.condition }} </p>
         </div>
         <div class="mr-3">
           {% if book.image %}

@@ -12,22 +12,21 @@
 {% endfor %}
 {% endif %}
 
-<h2>WISHLIST:</h2>
+<h2>WISHLIST ITEMS :</h2>
 <br/>
-{{ orders }}
 {% for book in orders %}
 
 <div class="card text-left">
     <div class="card-header">
+                <p class="card-text">Seller Name : {{ book.user }}</p>
     </div>
     <div class="card-body">
-        <p class="card-text">Seller: {{ book.user }}</p>
         <h5 class="card-title">{{ book.book_name }}</h5>
         {% if book.author_name %}
-        <p class="card-text">{{ book.author_name }}</p>
+        <p class="card-text">Author name: {{ book.author_name }}</p>
         {% endif %}
         {% if book.description %}
-        <p class="card-text">{{ book.description }}</p>
+        <p class="card-text">Description: {{ book.description }}</p>
         {% endif %}
         <p class="card-text">Price: {{ book.price }}</p>
 

@@ -54,6 +54,11 @@ def cart_list_entries_view(request):
     orderitems = Order.objects.get(owner=request.user.profile)
     orders = orderitems.get_cart_items()
 
+    total_price = Order.objects.filter(
+        owner=request.user.profile).aggregate(Sum('items__price'))
+
+    total_price = (list(total_price.values())[0])
+
     if request.method == "POST" and 'Yes' in request.POST:
 
         for order in orders:
@@ -62,7 +67,8 @@ def cart_list_entries_view(request):
             seller_address = get_object_or_404(
                 ShippingAddress, profile=seller_profile)
 
-            FinalBuyOrder.objects.create(user=request.user,book=order, seller=order.user ,useraddress=user_address, selleraddress =seller_address )
+            FinalBuyOrder.objects.create(user=request.user, book=order, seller=order.user,
+                                         useraddress=user_address, selleraddress=seller_address, total_price=total_price+20)
             orderitems.items.remove(order)
 
         messages.success(request, ('Item successfully Ordered!'))
@@ -75,10 +81,7 @@ def cart_list_entries_view(request):
             return redirect('cart:cart_items')
 
 
-    total_price = Order.objects.filter(
-        owner=request.user.profile).aggregate(Sum('items__price'))
 
-    total_price=(list(total_price.values())[0])
 
     context = {'orders': orders, 'address': user_address,
                'address_form': address_form, 'total_price': total_price}

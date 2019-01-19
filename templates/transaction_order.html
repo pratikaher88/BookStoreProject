@@ -18,22 +18,37 @@
 {% if orders %}
 
 <h2 align="left">Exchange Orders:</h2>
+<br/>
 
 {% for order in orders %}
 
 <div class="card text-left">
     <div class="card-header">
-        Request User: <a style="color:black">{{ order.requester }}</a>
-        Offerer User: <a style="color:black">{{ order.offerrer }}</a>
+        <p class="card-text">Request User: {{ order.requester }}</p>
+        <hr/>
+                <h5 class="card-title">{{ order.offerrer_book.book_name }}</h5>
+                {% if book.author_name %}
+                <p class="card-text">Author name: {{ order.offerrer_book.author_name }}</p>
+                {% endif %}
+                {% if book.description %}
+                <p class="card-text">Description: {{ order.offerrer_book.description }}</p>
+                {% endif %}
+                <p class="card-text">Condition : {{ order.offerrer_book.condition }} </p>
+
 
     </div>
     <div class="card-body">
-        <h5 class="card-title">{{ order.requester_book.book_name }}</h5>
-        <p class="card-text">{{ order.requester_book.description }}</p>
-        <p class="card-text">Condition : {{ order.requester_book.condition }} </p>
-        <h5 class="card-title">{{ order.offerrer_book.book_name }}</h5>
-        <p class="card-text">{{ order.offerrer_book.description }}</p>
-        <p class="card-text">Condition : {{ order.offerrer_book.condition }} </p>
+        <p class="card-text">Offerer User: {{ order.offerrer }}</p>
+        <hr/>
+                <h5 class="card-title">{{ order.requester_book.book_name }}</h5>
+                {% if book.author_name %}
+                <p class="card-text">Author name: {{ order.requester_book.author_name }}</p>
+                {% endif %}
+                {% if book.description %}
+                <p class="card-text">Description: {{ order.requester_book.description }}</p>
+                {% endif %}
+                <p class="card-text">Condition : {{ order.requester_book.condition }} </p>
+
     </div>
     <div class="card-footer text-mutxed">
 
@@ -59,10 +74,16 @@
     </div>
     <div class="card-body">
         <h5 class="card-title">{{ order.book.book_name }}</h5>
-        <p class="card-text">{{ order.book.description }}</p>
+        {% if book.author_name %}
+        <p class="card-text">Author name: {{ order.book.author_name }}</p>
+        {% endif %}
+        {% if book.description %}
+        <p class="card-text">Description: {{ order.book.description }}</p>
+        {% endif %}
         <p class="card-text">Condition : {{ order.book.condition }} </p>
     </div>
     <div class="card-footer text-mutxed">
+        Price : {{ order.total_price }}
         <a href="{% url 'cart:finalorder-delete' order.id %}" class="mr-2 btn btn-danger float-right">Cancel Order</a>
 
     </div>

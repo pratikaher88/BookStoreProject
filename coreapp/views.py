@@ -82,8 +82,6 @@ class UserBookListView(generic.ListView):
         collection_items = UserCollection.objects.get(
             owner=self.request.user.profile)
         
-        print("sold items",collection_items.books.filter(id__in=ordered_books))
-
         return collection_items.books.exclude(id__in=ordered_books).exclude(
             id__in=requester_books).exclude(id__in=offerrer_books)
 

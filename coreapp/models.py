@@ -177,6 +177,7 @@ class FinalBuyOrder(models.Model):
     selleraddress = models.ForeignKey(
         ShippingAddress, related_name='selleraddress', on_delete=models.CASCADE)
     date_ordered = models.DateTimeField(auto_now_add=True)
+    total_price = models.IntegerField(null=True)
 
     def __str__(self):
         return self.book.book_name
