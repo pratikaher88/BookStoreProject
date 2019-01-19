@@ -72,6 +72,7 @@ def cart_list_entries_view(request):
         if address_form.is_valid():
             address_form.save()
             messages.success(request, ('Address successfully updated!'))
+            return redirect('cart:cart_items')
 
 
     total_price = Order.objects.filter(

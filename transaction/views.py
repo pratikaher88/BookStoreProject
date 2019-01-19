@@ -106,8 +106,11 @@ class OfferListView(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['collection_all'] = UserCollection.objects.filter(
-            books__sell_or_exchange="Exchange")
+        context['collection_all'] = UserCollection.objects.all()
+
+        # context['collection_all'] = UserCollection.objects.filter(
+        #     books__sell_or_exchange="Exchange")
+
 
         return context
 
