@@ -11,8 +11,7 @@ from os.path import isfile
 from nofapapp.settings import BASE_DIR
 from django.core.validators import RegexValidator
 from django.core.mail import EmailMessage
-
-
+from django.db.models.signals import pre_delete
 
 CONITION_CHOICES = (
     ('Acceptable', 'Acceptable'),
@@ -186,3 +185,58 @@ def create_profile(sender, instance, created, **kwargs):
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
+
+@receiver(post_save, sender=Requests)
+def send_request_email(sender, instance, created, **kwargs):
+
+	if created:
+		email = EmailMessage('Order created for book '+instance.requester_book,
+		                     'from user '+instance.requester +'to user'+ instance.offerrer+'with book' + instance.requester_book,
+                              to=[instance.offerrer.email])
+		email.send()
+
+
+@receiver(post_save, sender=Transaction)
+def send_transaction_email(sender, instance, created, **kwargs):
+
+	if created:
+        email = EmailMessage('Request for book '+instance.requester_book,
+		                     'from user '+instance.requester + 'to user' + instance.offerrer, to=[instance.offerrer.email])
+		email.send()
+
+
+@receiver(post_save, sender=FinalBuyOrder)
+def send_buyorder_email(sender, instance, created, **kwargs):
+
+	if created:
+        email = EmailMessage('buy order for book from user '+instance.seller.user_name + 'with price' + instance.book.price, to=[instance.user.email])
+	    email.send()
+
+
+@receiver(pre_delete, sender=Requests)
+def send_buyorder_email(sender, instance, created, **kwargs):
+
+	if created:
+		email = EmailMessage('Request cancelled for book '+instance.requester_book,
+		                     'from user '+instance.requester + 'to user' +
+                       instance.offerrer+'with book' + instance.requester_book,
+                       to=[instance.offerrer.email])
+        email.send()
+
+
+@receiver(pre_delete, sender=Transaction)
+def send_transaction_email(sender, instance, created, **kwargs):
+
+	if created:
+        email = EmailMessage('Order cancelled for book '+instance.requester_book,
+                             'from user '+instance.requester + 'to user' + instance.offerrer, to=[instance.offerrer.email])
+	    email.send()
+
+
+@receiver(pre_delete, sender=FinalBuyOrder)
+def send_buyorder_email(sender, instance, created, **kwargs):
+
+	if created:
+        email = EmailMessage('Buy order cancelled for book from user '+instance.seller.user_name +
+                             'with price' + instance.book.price, to=[instance.user.email])
+        email.send()
