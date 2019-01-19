@@ -35,7 +35,8 @@
             </a>
 
         </p>
-        Select a book from the below collection 
+        Select a book from the below collection :
+        <hr/>
         <div class="collapse" id="offermodal{{ offer.id }}">
             <div class="card card-body">
                 {% for book in collection_all|user_books_for_user:offer.requester %}
