@@ -18,7 +18,7 @@
 
 <div class="card text-left">
     <div class="card-header">
-        {{ book.user.username }} 
+        Username: {{ book.user.username }} 
         <a href="{% url 'coreapp:post-delete' book.id %}" class="btn btn-danger float-right">Delete</a>
         <a href="{% url 'coreapp:post-update' book.id %}" class="mr-2 btn btn-info float-right" >Edit</a>
     </div>

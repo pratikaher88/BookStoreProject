@@ -44,7 +44,7 @@ class Book(models.Model):
         max_length=100, help_text="We only deal with original books with ISBN codes, pirated books will not be accepted.")
     author_name = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=2000,blank=True,null=True)
-    image = models.ImageField(null=True, blank=True, upload_to="book_images/")
+    image = models.ImageField('Book Image',null=True, blank=True, upload_to="book_images/")
     price = models.IntegerField(null=True,blank=True)
     sell_or_exchange = models.CharField(
         max_length=100, choices=BUY_OR_EXCHANGE, default='Exchange', help_text="By adding items to exchange you can make requests to other users for exchange.")
@@ -88,7 +88,7 @@ class ShippingAddress(models.Model):
     profile = models.OneToOneField(
         Profile, on_delete=models.CASCADE,related_name='address')
     phone_regex = RegexValidator(
-        regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+        regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+9999999999'. Up to 15 digits allowed.")
     phone_number = models.CharField(
         validators=[phone_regex], max_length=17)
     flatnumber = models.CharField("Flat Number", max_length=100)

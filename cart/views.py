@@ -13,20 +13,15 @@ from django.db.models import Sum
 
 @login_required
 def add_to_cart(request, item_id):
-    # get the user profile
     user_profile = get_object_or_404(Profile, user=request.user)
-    # filter products by id
     book = get_object_or_404(Book,id=item_id)
-    # create order associated with the user
     user_order, status = Order.objects.get_or_create(
         owner=user_profile)
     if book in user_order.get_cart_items():
         messages.warning(request, 'Item Already in Cart!')
         return redirect(reverse('coreapp:list_entries'))
-    # # create orderItem of the selected product
     user_order.items.add(book)
     user_order.save()
-    # show confirmation message and redirect back to the same page
     messages.info(request, "item added to cart")
     return redirect(reverse('coreapp:list_entries'))
 
@@ -34,7 +29,6 @@ def add_to_cart(request, item_id):
 def delete_from_cart(request, item_id):
     book = get_object_or_404(Book,id=item_id)
     orders = Order.objects.get(owner=request.user.profile)
-    # final remove item
     orders.items.remove(book)
 
     messages.info(request, "Item has been deleted")
@@ -88,18 +82,11 @@ def cart_list_entries_view(request):
     return render(request, 'cart_list_entries.html', context)
 
 
-class FinalBuyOrderListView(LoginRequiredMixin, generic.ListView):
-    model = FinalBuyOrder
-    template_name = 'final_buy_order.html'
-    context_object_name = 'final_buy_order'
-
-    def get_queryset(self):
-        return FinalBuyOrder.objects.filter(user=self.request.user).order_by('-date_ordered')
 
 
 class FinalBuyOrderDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     model = FinalBuyOrder
-    success_url = reverse_lazy('cart:final_order')
+    success_url = reverse_lazy('transaction:orders_view')
     template_name = 'final_order_confirm_delete.html'
 
     def test_func(self):

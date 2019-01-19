@@ -88,7 +88,7 @@ class UserBookListView(generic.ListView):
 
 class UserBookSoldItemsView(generic.ListView):
     model = Book
-    template_name = 'user_books_old_list_entries.html'
+    template_name = 'user_books_sold_list_entries.html'
     context_object_name = 'books'
     ordering = ['-created_at']
 
@@ -134,7 +134,7 @@ class NewEntry(LoginRequiredMixin, generic.CreateView):
         address = get_object_or_404(ShippingAddress, profile=user_profile)
 
         if address.address1 == '':
-            messages.info(self.request,'You need to update Address in profile to make a Sell request!')
+            messages.info(self.request,'You need to update address in profile to make a Sell request!')
             return redirect('coreapp:new_entry')
 
         book = form.save(commit=False)
