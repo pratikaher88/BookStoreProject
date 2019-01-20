@@ -1,7 +1,7 @@
 from coreapp.models import Transaction, ShippingAddress, Requests, Profile, Order, FinalBuyOrder
 from django.shortcuts import get_object_or_404
 from coreapp.forms import ShippingAddressForm
-
+from django.db.models import Q
 
 
 def add_variable_to_context(request):
@@ -12,7 +12,7 @@ def add_variable_to_context(request):
         return {
             'requestscount': Requests.objects.filter(requester=request.user).count(),
             'offercount' : Requests.objects.filter(offerrer=request.user).count(),
-            'orderscount': Transaction.objects.filter(offerrer=request.user).count()+FinalBuyOrder.objects.filter(user=request.user).count(),
+            'orderscount': Transaction.objects.filter(Q(offerrer=request.user) | Q(requester=request.user)).count()+FinalBuyOrder.objects.filter(user=request.user).count(),
             'cartitemscount': orderitems.items.count(),
             'addresscheck': get_object_or_404(ShippingAddress, profile=get_object_or_404(Profile, user=request.user)).address1,
             # 'addressformcontext':  addressformcontext

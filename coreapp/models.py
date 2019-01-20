@@ -28,8 +28,9 @@ ZIP_CHOICES = (
 )
 BUY_OR_EXCHANGE = (
     ('Sell', 'Sell'),
- ('Exchange', 'Exchange'), 
- )
+    ('Exchange', 'Exchange'),
+)
+
 
 def random_img():
     dir_path = os.path.join(BASE_DIR, 'media')
@@ -37,15 +38,18 @@ def random_img():
         dir_path) if isfile(path_join(dir_path, content))]
     return str(choice(files))
 
+
 class Book(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     book_name = models.CharField(
         max_length=100, help_text="We only deal with original books with ISBN codes, pirated books will not be accepted.")
     author_name = models.CharField(max_length=100, blank=True, null=True)
-    description = models.CharField(max_length=2000,blank=True,null=True)
-    image = models.ImageField('Book Image',null=True, blank=True, upload_to="book_images/")
-    price = models.IntegerField(null=True,blank=True)
+    description = models.CharField(max_length=2000, blank=True, null=True)
+    image = models.ImageField('Book Image', null=True,
+                              blank=True, upload_to="book_images/")
+    price = models.IntegerField(
+        null=True, blank=True, help_text="We would be deducting 20 rupees from item price for delivery purposes.")
     sell_or_exchange = models.CharField(
         max_length=100, choices=BUY_OR_EXCHANGE, default='Exchange', help_text="By adding items to exchange you can make requests to other users for exchange.")
     condition = models.CharField(
@@ -58,7 +62,7 @@ class Book(models.Model):
 
     def __str__(self):
         return self.book_name
-    
+
     def save(self, *args, **kwargs):
         super(Book, self).save(*args, **kwargs)
         if self.image:
@@ -67,10 +71,11 @@ class Book(models.Model):
             img.thumbnail(output_size)
             img.save(self.image.path)
 
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(
-        default=random_img , upload_to="profile_images/")
+        default=random_img, upload_to="profile_images/")
 
     def __str__(self):
         return self.user.username
@@ -84,16 +89,18 @@ class Profile(models.Model):
             img.thumbnail(output_size)
             img.save(self.profile_pic.path)
 
+
 class ShippingAddress(models.Model):
     profile = models.OneToOneField(
-        Profile, on_delete=models.CASCADE,related_name='address')
+        Profile, on_delete=models.CASCADE, related_name='address')
     phone_regex = RegexValidator(
         regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+9999999999'. Up to 15 digits allowed.")
     phone_number = models.CharField(
         validators=[phone_regex], max_length=17)
     flatnumber = models.CharField("Flat Number", max_length=100)
     address1 = models.CharField("Address line 1", max_length=500,)
-    address2 = models.CharField("Address line 2", max_length=500,blank=True,null=True)
+    address2 = models.CharField(
+        "Address line 2", max_length=500, blank=True, null=True)
     zip_code = models.CharField(
         max_length=100, choices=ZIP_CHOICES, default='421202', help_text="We only operate in these locations for now!")
     city = models.CharField("City", max_length=100,)
@@ -108,6 +115,7 @@ class ShippingAddress(models.Model):
     def __str__(self):
         return "{},{},{},{},{}".format(self.flatnumber, self.address1, self.address2, self.zip_code, self.city)
 
+
 class Order(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     items = models.ManyToManyField(Book)
@@ -118,6 +126,7 @@ class Order(models.Model):
 
     def __str__(self):
         return self.owner.user.username
+
 
 class UserCollection(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
@@ -130,45 +139,60 @@ class UserCollection(models.Model):
     def __str__(self):
         return self.owner.user.username
 
+
 class Requests(models.Model):
 
-	requester = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE)
-	offerrer = models.ForeignKey(User, related_name='from_user', on_delete=models.CASCADE)
-	timestamp = models.DateTimeField(auto_now_add=True)
-	requester_book = models.ForeignKey(Book, related_name='requester_book_from_user', on_delete=models.CASCADE)
+    requester = models.ForeignKey(
+        User, related_name='to_user', on_delete=models.CASCADE)
+    offerrer = models.ForeignKey(
+        User, related_name='from_user', on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    requester_book = models.ForeignKey(
+        Book, related_name='requester_book_from_user', on_delete=models.CASCADE)
 
-	def __str__(self):
-	    return "Request from {}, to {} ,with Book {}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name)
+    def __str__(self):
+        return "Request from {}, to {} ,with Book {}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name)
 
     # class Meta:
     #     verbose_name_plural = "Requests"
 
+
 class Transaction(models.Model):
 
-	requester = models.ForeignKey(User, related_name='requester', on_delete=models.CASCADE)
-	offerrer = models.ForeignKey(User, related_name='offerrer', on_delete=models.CASCADE)
-	timestamp = models.DateTimeField(auto_now_add=True)
-	requester_book = models.ForeignKey(Book, related_name='requested_book_from_user', on_delete=models.CASCADE)
-	offerrer_book = models.ForeignKey(Book, related_name='offerrer_book_from_user', on_delete=models.CASCADE)
-	requester_address = models.ForeignKey(
-	    ShippingAddress, related_name='user_address',null=True, on_delete=models.CASCADE)
-	offerrer_address = models.ForeignKey(
-	    ShippingAddress, related_name='seller_address',null=True, on_delete=models.CASCADE)
+    requester = models.ForeignKey(
+        User, related_name='requester', on_delete=models.CASCADE)
+    offerrer = models.ForeignKey(
+        User, related_name='offerrer', on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    requester_book = models.ForeignKey(
+        Book, related_name='requested_book_from_user', on_delete=models.CASCADE)
+    offerrer_book = models.ForeignKey(
+        Book, related_name='offerrer_book_from_user', on_delete=models.CASCADE)
+    requester_address = models.ForeignKey(
+        ShippingAddress, related_name='user_address', null=True, on_delete=models.CASCADE)
+    offerrer_address = models.ForeignKey(
+        ShippingAddress, related_name='seller_address', null=True, on_delete=models.CASCADE)
 
-	def __str__(self):
-			return "From {}, to {} Book1 is {} Book2 is{}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name, self.offerrer_book.book_name)
+    def __str__(self):
+        return "From {}, to {} Book1 is {} Book2 is{}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name, self.offerrer_book.book_name)
+
 
 class OldRequests(models.Model):
 
-	requester = models.ForeignKey(User, related_name='old_to_user', on_delete=models.CASCADE)
-	offerrer = models.ForeignKey(User, related_name='old_from_user', on_delete=models.CASCADE)
-	requester_book = models.ForeignKey( Book, related_name='old_requester_book_from_user', on_delete=models.CASCADE, )
+    requester = models.ForeignKey(
+        User, related_name='old_to_user', on_delete=models.CASCADE)
+    offerrer = models.ForeignKey(
+        User, related_name='old_from_user', on_delete=models.CASCADE)
+    requester_book = models.ForeignKey(
+        Book, related_name='old_requester_book_from_user', on_delete=models.CASCADE, )
 
-	def __str__(self):
-	    return "From {}, to {} ,with Book {}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name)
+    def __str__(self):
+        return "From {}, to {} ,with Book {}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name)
+
 
 class FinalBuyOrder(models.Model):
-    user = models.ForeignKey(User, related_name='user', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='user',
+                             on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     seller = models.ForeignKey(
         User, related_name='seller',  on_delete=models.CASCADE)
@@ -182,6 +206,7 @@ class FinalBuyOrder(models.Model):
     def __str__(self):
         return self.book.book_name
 
+
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
@@ -189,6 +214,7 @@ def create_profile(sender, instance, created, **kwargs):
         Order.objects.create(owner=instance.profile)
         ShippingAddress.objects.create(profile=instance.profile)
         UserCollection.objects.create(owner=instance.profile)
+
 
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
@@ -198,53 +224,54 @@ def save_profile(sender, instance, **kwargs):
 # @receiver(post_save, sender=Requests)
 # def send_request_email(sender, instance, created, **kwargs):
 
-	# if created:
-		# email = EmailMessage('Order created for book '+instance.requester_book.book_name,
-		#                      'from user '+instance.requester +'to user'+ instance.offerrer+'with book' + instance.offerrer_book.book_name,
-        #                       to=[instance.offerrer.email])
-		# email.send()
+#     if created:
+#         email = EmailMessage('Order created for book '+instance.requester_book.book_name,
+#                              'from user '+instance.requester.username + 'to user' +
+#                              instance.offerrer.username ,
+#                              to=[instance.offerrer.email])
+#     email.send()
 
 
 # @receiver(post_save, sender=Transaction)
 # def send_transaction_email(sender, instance, created, **kwargs):
 
-	# if created:
-		# email = EmailMessage('Request for book '+instance.requester_book.book_name +'from user' +
-		#                     instance.requester + 'to user' + instance.offerrer, to=[instance.offerrer.email])
-		# email.send()
+    # if created:
+    # email = EmailMessage('Request for book '+instance.requester_book.book_name +'from user' +
+    #                     instance.requester + 'to user' + instance.offerrer, to=[instance.offerrer.email])
+    # email.send()
 
 
 # @receiver(post_save, sender=FinalBuyOrder)
 # def send_buyorder_email(sender, instance, created, **kwargs):
 
-	# if created:
-		# email = EmailMessage('buy order for book from user '+instance.seller.user_name +
-		#                      'with price' + instance.book.price, to=[instance.user.email])
-	    # email.send()
+    # if created:
+    # email = EmailMessage('buy order for book from user '+instance.seller.user_name +
+    #                      'with price' + instance.book.price, to=[instance.user.email])
+    # email.send()
 
 # @receiver(pre_delete, sender=Requests)
 # def send_buyorder_email(sender, instance, created, **kwargs):
 
-	# if created:
-		# email = EmailMessage('Request cancelled for book '+ instance.requester_book.book_name,
-		#                      'from user '+instance.requester + 'to user' +
-        #                instance.offerrer+'with book' + instance.requester_book.book_name,
-        #                to=[instance.offerrer.email])
-        # email.send()
+    # if created:
+    # email = EmailMessage('Request cancelled for book '+ instance.requester_book.book_name,
+    #                      'from user '+instance.requester + 'to user' +
+    #                instance.offerrer+'with book' + instance.requester_book.book_name,
+    #                to=[instance.offerrer.email])
+    # email.send()
 
 # @receiver(pre_delete, sender=Transaction)
 # def send_transaction_email(sender, instance, created, **kwargs):
 
-	# if created:
-		# email = EmailMessage('Order cancelled for book '+ instance.requester_book.book_name,
-        #                'from user '+instance.requester + 'to user' + instance.offerrer, to=[instance.offerrer.email])
-	    # email.send()
+    # if created:
+    # email = EmailMessage('Order cancelled for book '+ instance.requester_book.book_name,
+    #                'from user '+instance.requester + 'to user' + instance.offerrer, to=[instance.offerrer.email])
+    # email.send()
 
 
 # @receiver(pre_delete, sender=FinalBuyOrder)
 # def send_buyorder_email(sender, instance, created, **kwargs):
 
-	# if created:
-		# email = EmailMessage('Buy order cancelled for book from user '+instance.seller.user_name +
-        #                'with price' + instance.book.price, to=[instance.user.email])
-        # email.send()
+    # if created:
+    # email = EmailMessage('Buy order cancelled for book from user '+instance.seller.user_name +
+    #                'with price' + instance.book.price, to=[instance.user.email])
+    # email.send()

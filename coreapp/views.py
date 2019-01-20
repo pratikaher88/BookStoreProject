@@ -133,8 +133,7 @@ class NewEntry(LoginRequiredMixin, generic.CreateView):
 
     def form_valid(self, form):
 
-        user_profile = get_object_or_404(Profile, user=self.request.user)
-        address = get_object_or_404(ShippingAddress, profile=user_profile)
+        address = get_object_or_404(ShippingAddress, profile=self.request.user.profile)
 
         if address.address1 == '':
             messages.info(self.request,'You need to update address in profile to make a Sell request!')

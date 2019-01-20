@@ -13,10 +13,9 @@ from django.db.models import Sum
 
 @login_required
 def add_to_cart(request, item_id):
-    user_profile = get_object_or_404(Profile, user=request.user)
     book = get_object_or_404(Book,id=item_id)
     user_order, status = Order.objects.get_or_create(
-        owner=user_profile)
+        owner=request.user.profile)
     if book in user_order.get_cart_items():
         messages.warning(request, 'Item Already in Cart!')
         return redirect(reverse('coreapp:list_entries'))
@@ -41,10 +40,8 @@ def cart_list_entries_view(request):
     address_form = ShippingAddressForm(
         request.POST, instance=request.user.profile.address)
 
-    user_profile = get_object_or_404(
-            Profile, user=request.user)
     user_address = get_object_or_404(
-        ShippingAddress, profile=user_profile)
+        ShippingAddress, profile=request.user.profile)
     orderitems = Order.objects.get(owner=request.user.profile)
     orders = orderitems.get_cart_items()
 

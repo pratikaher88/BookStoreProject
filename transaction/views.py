@@ -20,18 +20,13 @@ def final_transaction(request, offer_id, book_id):
     address_form = ShippingAddressForm(
         request.POST, instance=request.user.profile.address)
 
-    # create new order
-    # save new order
-    # new_order.save()
     if request.method == "POST" and 'Yes' in request.POST:
-        print("POST REQUEST")
-        user_profile = get_object_or_404(Profile, user=request.user)
-        offerrer_address = get_object_or_404(ShippingAddress, profile=user_profile)
+        offerrer_address = get_object_or_404(ShippingAddress, profile=request.user.profile)
 
-        requester_profile = get_object_or_404(
-            Profile, user=new_request.requester)
+        # requester_profile = get_object_or_404(
+        #     Profile, user=new_request.requester)
         requester_address = get_object_or_404(
-            ShippingAddress, profile=requester_profile)
+            ShippingAddress, profile=new_request.requester.profile)
 
         new_order = Transaction(requester=new_request.requester, offerrer=new_request.offerrer,
                                 requester_book=new_request.requester_book, offerrer_book=offerrer_book, requester_address=requester_address, offerrer_address=offerrer_address)
@@ -51,8 +46,7 @@ def final_transaction(request, offer_id, book_id):
             messages.success(request, ('Address successfully updated!'))
 
     offer = get_object_or_404(Requests,id=offer_id)
-    user_profile = get_object_or_404(Profile ,user=request.user )
-    address = get_object_or_404(ShippingAddress,profile=user_profile)
+    address = get_object_or_404(ShippingAddress, profile=request.user.profile)
     context = {'offer': offer, 'book': offerrer_book,
                'address': address, 'address_form': address_form}
     return render(request,'transaction_final.html',context)
@@ -66,8 +60,6 @@ def add_request(request,book_id):
     if address.status():
         messages.info(request, "You need to add  address in profile to make request")
     else:
-
-
         if (UserCollection.objects.filter(
                 owner=request.user.profile, books__sell_or_exchange="Exchange").exists()):
             if Requests.objects.filter(requester=request.user, offerrer=book.user, requester_book=book).exists():
@@ -142,7 +134,6 @@ class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteVie
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()
-        print(self.object)
         return redirect(self.get_success_url())
 
 class TransactionListView(LoginRequiredMixin, generic.ListView):
