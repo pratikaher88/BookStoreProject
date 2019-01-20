@@ -10,6 +10,8 @@ from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 from coreapp.forms import ShippingAddressForm
 from django.db.models import Q
+from django.utils import timezone
+import datetime
 
 @login_required
 def final_transaction(request, offer_id, book_id):
@@ -65,16 +67,24 @@ def add_request(request,book_id):
         messages.info(request, "You need to add  address in profile to make request")
     else:
 
-        print("Collection items",UserCollection.objects.filter(
-            owner=request.user.profile, books__sell_or_exchange="Exchange").exists())
 
         if (UserCollection.objects.filter(
                 owner=request.user.profile, books__sell_or_exchange="Exchange").exists()):
             if Requests.objects.filter(requester=request.user, offerrer=book.user, requester_book=book).exists():
                 messages.info(request,"Requests already made!")
             else:
-                messages.info(request,"New Request")
-                new_request.save()
+                date_from = datetime.datetime.now(
+                    tz=timezone.utc) - datetime.timedelta(days=1)
+
+                no_of_requests_made_in_one_day = Requests.objects.filter(requester=request.user, timestamp__gte=date_from).count()
+
+                if no_of_requests_made_in_one_day>9:
+                    messages.warning(request,"Maximum requests exceeded for one day : you can make maximum of 10 requests")
+                else:
+                    messages.info(
+                        request, "New Request made!")
+
+                    new_request.save()
         else:
             messages.info(request, ('You need to add "Exchange" items to your collection to make a request!'))
 

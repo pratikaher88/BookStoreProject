@@ -11,6 +11,9 @@ from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ObjectDoesNotExist
 
+ordered_books = FinalBuyOrder.objects.values_list('book')
+requester_books = Transaction.objects.values_list('requester_book')
+offerrer_books = Transaction.objects.values_list('offerrer_book')
 
 @login_required
 def profile(request):
@@ -37,9 +40,9 @@ class BookListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 15
 
     def get_queryset(self):
-        ordered_books = FinalBuyOrder.objects.values_list('book')
-        requester_books = Transaction.objects.values_list('requester_book')
-        offerrer_books = Transaction.objects.values_list('offerrer_book')
+        # ordered_books = FinalBuyOrder.objects.values_list('book')
+        # requester_books = Transaction.objects.values_list('requester_book')
+        # offerrer_books = Transaction.objects.values_list('offerrer_book')
         return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).exclude(id__in=requester_books).exclude(id__in=offerrer_books).order_by('-created_at')
         # if self.request.user.is_authenticated:
         #     return Book.objects.exclude(user=self.request.user).order_by('?')
@@ -54,7 +57,7 @@ class BuyListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 15
     
     def get_queryset(self):
-        ordered_books = FinalBuyOrder.objects.values_list('book')
+        # ordered_books = FinalBuyOrder.objects.values_list('book')
         return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).filter(sell_or_exchange='Sell').order_by('-created_at')
 
 
@@ -65,8 +68,8 @@ class ExchangeListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 15
 
     def get_queryset(self):
-        requester_books = Transaction.objects.values_list('requester_book')
-        offerrer_books = Transaction.objects.values_list('offerrer_book')
+        # requester_books = Transaction.objects.values_list('requester_book')
+        # offerrer_books = Transaction.objects.values_list('offerrer_book')
         return Book.objects.exclude(user=self.request.user).exclude(id__in=requester_books).exclude(id__in=offerrer_books).filter(sell_or_exchange='Exchange').order_by('-created_at')
 
 class UserBookListView(generic.ListView):
@@ -76,9 +79,9 @@ class UserBookListView(generic.ListView):
     ordering = ['-created_at']
 
     def get_queryset(self):
-        ordered_books = FinalBuyOrder.objects.values_list('book')
-        requester_books = Transaction.objects.values_list('requester_book')
-        offerrer_books = Transaction.objects.values_list('offerrer_book')
+        # ordered_books = FinalBuyOrder.objects.values_list('book')
+        # requester_books = Transaction.objects.values_list('requester_book')
+        # offerrer_books = Transaction.objects.values_list('offerrer_book')
         collection_items = UserCollection.objects.get(
             owner=self.request.user.profile)
         
@@ -93,9 +96,9 @@ class UserBookSoldItemsView(generic.ListView):
     ordering = ['-created_at']
 
     def get_queryset(self):
-        ordered_books = FinalBuyOrder.objects.values_list('book')
-        requester_books = Transaction.objects.values_list('requester_book')
-        offerrer_books = Transaction.objects.values_list('offerrer_book')
+        # ordered_books = FinalBuyOrder.objects.values_list('book')
+        # requester_books = Transaction.objects.values_list('requester_book')
+        # offerrer_books = Transaction.objects.values_list('offerrer_book')
         collection_items = UserCollection.objects.get(
             owner=self.request.user.profile)
         
@@ -116,9 +119,9 @@ class UserBookListViewForUser(LoginRequiredMixin, generic.ListView):
         collection_items = UserCollection.objects.get(
             owner=user_profile)
         
-        ordered_books = FinalBuyOrder.objects.values_list('book')
-        requester_books = Transaction.objects.values_list('requester_book')
-        offerrer_books = Transaction.objects.values_list('offerrer_book')
+        # ordered_books = FinalBuyOrder.objects.values_list('book')
+        # requester_books = Transaction.objects.values_list('requester_book')
+        # offerrer_books = Transaction.objects.values_list('offerrer_book')
         return collection_items.books.exclude(id__in=ordered_books).exclude(
             id__in=requester_books).exclude(id__in=offerrer_books)
 
