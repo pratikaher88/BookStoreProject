@@ -19,4 +19,5 @@ urlpatterns = [
     path('userbooks/<str:username>', views.UserBookListViewForUser.as_view(),name='userbooksforuser'),
     path('userbooks/<int:pk>/update',views.PostUpdateView.as_view(),name='post-update'),
     path('userbooks/<int:pk>/delete',views.PostDeleteView.as_view(),name='post-delete'),
+    path('aboutus/',views.aboutus,name='aboutus')
 ]

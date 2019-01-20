@@ -219,3 +219,7 @@ def update_address(request):
     return render(request, 'address_edit.html', {
         'address_form': address_form
     })
+
+@login_required
+def aboutus(request):
+    return render(request,'aboutus.html')

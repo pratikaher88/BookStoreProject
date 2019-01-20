@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} About Us {% endblock %}
+
+{% block content %}
+
+
+
+<h2>About us :</h2>
+
+<br/>
+
+<div class="card border-secondary mb-3 ">
+
+    <div class="card-header"> Suyog
+    </div>
+    <div class="card-body text-secondary">
+        <img class="rounded-circle account-img" src="{% static 'img/suyog1.jpg' %}" style="max-width:100px;max-height:110px;" />
+        <hr />
+
+        <h5 class="card-title">Management ,Delivery and all things in between!</h5>
+    </div>
+</div>
+
+<br/>
+
+<div class="card border-secondary mb-3 ">
+
+    <div class="card-header"> Mayur
+    </div>
+    <div class="card-body text-secondary">
+        <img class="rounded-circle account-img" src="{% static 'img/mayur.jpg' %}" style="max-width:100px;max-height:110px;" />
+        <hr />
+
+        <h5 class="card-title">Does everything boh of them cant do!</h5>
+    </div>
+</div>
+
+<br/>
+
+<div class="card border-secondary mb-3 ">
+
+    <div class="card-header"> Pratik
+    </div>
+    <div class="card-body text-secondary">
+        <img class="rounded-circle account-img" src="{% static 'img/pratik1.jpg' %}" style="max-width:100px;max-height:110px;" />
+        <hr />
+
+        <h5 class="card-title">Everything that has to do with tech and the geeky stuff! </h5>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -9,12 +9,11 @@ def add_variable_to_context(request):
         # addressformcontext=ShippingAddressForm(
         #     request.POST, instance=request.user.profile.address)
         orderitems = Order.objects.get(owner=request.user.profile)
-        orders = orderitems.get_cart_items()
         return {
             'requestscount': Requests.objects.filter(requester=request.user).count(),
             'offercount' : Requests.objects.filter(offerrer=request.user).count(),
             'orderscount': Transaction.objects.filter(offerrer=request.user).count()+FinalBuyOrder.objects.filter(user=request.user).count(),
-            'cartitemscount': len(orders),
+            'cartitemscount': orderitems.items.count(),
             'addresscheck': get_object_or_404(ShippingAddress, profile=get_object_or_404(Profile, user=request.user)).address1,
             # 'addressformcontext':  addressformcontext
             

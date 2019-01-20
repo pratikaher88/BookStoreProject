@@ -2,8 +2,6 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-{% if orders %}
-
 {% if messages %}
 {% for message in messages %}
 <div class="alert alert-{{ message.tags }}">
@@ -11,6 +9,8 @@
 </div>
 {% endfor %}
 {% endif %}
+
+{% if orders %}
 
 <h2>WISHLIST ITEMS :</h2>
 <br/>
@@ -126,7 +126,17 @@
 {% else %}
 
 <div class="text-center">
-    <h1>WishList Empty ! Add Books to Wishlist ! </h1>
+    <h1>Cart Empty ! Add Books to Cart ! </h1>
+
+    <hr/>
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <a class="btn btn-success btn-lg center" href="{% url 'coreapp:list_entries' %}"> Home </a>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
