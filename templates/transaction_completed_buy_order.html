@@ -12,8 +12,6 @@
 {% endfor %}
 {% endif %}
 
-<h2>My Orders :</h2>
-<br />
 <div class="btn-group container-fluid">
     <a href="{% url 'transaction:orders_view' %}" class="btn btn-success">Active Orders</a>
     <a href="{% url 'transaction:exchange-order' %}" class="btn btn-success">Completed Exchange Orders</a>
@@ -22,7 +20,7 @@
 
 <br />
 <br />
-<br />
+
 
 {% if buy_order %}
 
