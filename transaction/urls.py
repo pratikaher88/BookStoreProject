@@ -14,5 +14,8 @@ urlpatterns = [
     path('offers/<int:offer_id>/<int:book_id>/finaltransaction', views.final_transaction ,name='final-transaction'),
     path('orders/', views.TransactionListView.as_view(), name='orders_view'),
     path('orders/<int:pk>/delete', views.TransactionDeleteView.as_view(),name='order-delete'),
+    path('orders/exchange-orders',
+         views.TransactionCompletedExchangeOrder.as_view(), name='exchange-order'),
+    path('orders/buy-orders', views.TransactionCompletedBuyOrder.as_view(), name='buy-order'),
 
 ]

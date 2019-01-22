@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from coreapp.models import Book, Requests, Transaction, UserCollection, FinalBuyOrder, OldRequests, Profile, ShippingAddress
+from coreapp.models import Book, Requests, Transaction, UserCollection, FinalBuyOrder, OldRequests, Profile, ShippingAddress, CompletedTransaction, CompletedBuyOrder
 from coreapp.models import Requests
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import generic
@@ -162,3 +162,21 @@ class TransactionDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.Del
         if self.request.user == transaction.requester or self.request.user == transaction.offerrer:
             return True
         return False    
+
+
+class TransactionCompletedExchangeOrder(LoginRequiredMixin, generic.ListView):
+    model = CompletedTransaction
+    template_name = 'transaction_completed_exchange_order.html'
+    context_object_name = 'orders'
+
+    def get_queryset(self):
+        return CompletedTransaction.objects.filter(Q(offerrer=self.request.user) | Q(requester=self.request.user)).order_by('timestamp')
+
+
+class TransactionCompletedBuyOrder(LoginRequiredMixin, generic.ListView):
+    model = CompletedBuyOrder
+    template_name = 'transaction_completed_buy_order.html'
+    context_object_name = 'buy_order'
+
+    def get_queryset(self):
+        return CompletedBuyOrder.objects.filter(user=self.request.user).order_by('date_ordered')

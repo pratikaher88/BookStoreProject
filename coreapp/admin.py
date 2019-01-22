@@ -1,7 +1,7 @@
 from django.contrib.admin.actions import delete_selected as django_delete_selected
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.contrib import admin
-from coreapp.models import Book, Profile, UserCollection, Order, Requests, Transaction, ShippingAddress, FinalBuyOrder, OldRequests
+from coreapp.models import Book, Profile, UserCollection, Order, Requests, Transaction, ShippingAddress, FinalBuyOrder, OldRequests, CompletedBuyOrder, CompletedTransaction
 # Register your models here.
 
 admin.site.register(Book)
@@ -13,6 +13,8 @@ admin.site.register(Requests)
 admin.site.register(Transaction)
 admin.site.register(ShippingAddress)
 admin.site.register(FinalBuyOrder)
+admin.site.register(CompletedBuyOrder)
+admin.site.register(CompletedTransaction)
 
 
 class SystemAdmin(admin.ModelAdmin):

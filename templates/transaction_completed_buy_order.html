@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %} Orders {% endblock %}
+
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+<h2>My Orders :</h2>
+<br />
+<div class="btn-group container-fluid">
+    <a href="{% url 'transaction:orders_view' %}" class="btn btn-success">Active Orders</a>
+    <a href="{% url 'transaction:exchange-order' %}" class="btn btn-success">Completed Exchange Orders</a>
+    <a href="{% url 'transaction:buy-order' %}" class="btn btn-success">Completed Buy Orders</a>
+</div>
+
+<br />
+<br />
+<br />
+
+{% if buy_order %}
+
+{% for order in buy_order %}
+
+<div class="card text-left">
+    <div class="card-header">
+        Seller: {{ order.seller }}</a>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ order.book.book_name }}</h5>
+        {% if book.author_name %}
+        <p class="card-text">Author name: {{ order.book.author_name }}</p>
+        {% endif %}
+        {% if book.description %}
+        <p class="card-text">Description: {{ order.book.description }}</p>
+        {% endif %}
+        <p class="card-text">Condition : {{ order.book.condition }} </p>
+    </div>
+    <div class="card-footer text-mutxed">
+        Price : {{ order.total_price }}
+
+    </div>
+</div>
+</br>
+{% endfor %}
+
+
+{% else %}
+
+<h2 align="center">No Completed Buy Orders Found! </h2>
+
+{% endif %}
+
+{% endblock %}
