@@ -71,14 +71,9 @@ def cart_list_entries_view(request):
             messages.success(request, ('Address successfully updated!'))
             return redirect('cart:cart_items')
 
-
-
-
     context = {'orders': orders, 'address': user_address,
                'address_form': address_form, 'total_price': total_price}
     return render(request, 'cart_list_entries.html', context)
-
-
 
 
 class FinalBuyOrderDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):

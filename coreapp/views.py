@@ -17,13 +17,13 @@ offerrer_books = Transaction.objects.values_list('offerrer_book')
 
 @login_required
 def profile(request):
-    profile = get_object_or_404(Profile, user=request.user)
-    try:
-        address = ShippingAddress.objects.get(profile=profile)
-    except ObjectDoesNotExist:
-        address = None
+    # profile = get_object_or_404(Profile, user=request.user)
+    # try:
+    address = ShippingAddress.objects.get(profile=request.user.profile)
+    # except ObjectDoesNotExist:
+    #     address = None
 
-    return render(request, 'profile.html', {'profile': profile, 'address': address})
+    return render(request, 'profile.html', {'profile': request.user.profile, 'address': address})
 
 
 class SignUp(SuccessMessageMixin, generic.CreateView):
@@ -189,19 +189,16 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
 def update_profile(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, instance=request.user.profile)
-        if user_form.is_valid() and profile_form.is_valid():
+        if user_form.is_valid() :
             user_form.save()
-            profile_form.save()
             messages.success(request, (
                 'Your profile was successfully updated!'))
             return redirect('coreapp:profile')
     else:
         user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.profile)
     return render(request, 'profile_edit.html', {
         'user_form': user_form,
-        'profile_form': profile_form
+
     })
 
 

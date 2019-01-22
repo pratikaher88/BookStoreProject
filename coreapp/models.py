@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from PIL import Image
 from random import choice
@@ -11,7 +11,6 @@ from os.path import isfile
 from nofapapp.settings import BASE_DIR
 from django.core.validators import RegexValidator
 from django.core.mail import EmailMessage
-from django.db.models.signals import pre_delete
 
 CONITION_CHOICES = (
     ('Acceptable', 'Acceptable'),
@@ -207,6 +206,7 @@ class FinalBuyOrder(models.Model):
         return self.book.book_name
 
 
+
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
@@ -220,6 +220,11 @@ def create_profile(sender, instance, created, **kwargs):
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
+
+# @receiver(post_delete, sender=Transaction)
+# def post_delete_transaction(sender, instance, **kwargs ):
+#     print(sender)
+    # print(sender.is_superuser)
 
 # @receiver(post_save, sender=Requests)
 # def send_request_email(sender, instance, created, **kwargs):
