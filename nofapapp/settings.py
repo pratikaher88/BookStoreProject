@@ -27,6 +27,8 @@ SECRET_KEY = '4t_gqc(-($+!3$1#5(z8(4ef3d)77#qvh!yaq934!loh5pa*a$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+IMPORT_EXPORT_USE_TRANSACTIONS = True
+
 ALLOWED_HOSTS = []
 
 
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'dal',
     'dal_select2',
     'search',
+    'import_export',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
