@@ -14,23 +14,23 @@
 
 {% if books %}
 
-{% for book in books %}
+{% for order in books %}
 
 <div class="card text-left">
     <div class="card-header">
-        {{ book.user.username }}
+        {{ order.user.username }}
 
     </div>
     <div class="card-body">
-        <h5 class="card-title">{{ book.book_name }}</h5>
-        <p class="card-text">{{ book.description }}</p>
-        <p class="card-text">Condition : {{ book.condition }} </p>
+        <h5 class="card-title">{{ order.book.book_name }}</h5>
+        <p class="card-text">{{ order.book..description }}</p>
+        <p class="card-text">Condition : {{ order.book.condition }} </p>
         {% if book.price %}
-        <p class="card-text">Price : {{ book.price }} </p>
+        <p class="card-text">Price : {{ order.book..price }} </p>
         {% endif %}
     </div>
     <div class="card-footer text-mutxed">
-        {{ book.created_at }}
+        {{ order.book.created_at }}
     </div>
 </div>
 </br>

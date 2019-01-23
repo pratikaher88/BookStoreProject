@@ -13,17 +13,17 @@ from coreapp.models import Book, Profile, UserCollection, Order, Requests, Trans
 #         obj.delete()
 
 
-def delete_selected(modeladmin, request, queryset):
+def delete_selected_exchange_order(modeladmin, request, queryset):
     for obj in queryset:
         print("Request", obj)
         CompletedTransaction.objects.create(requester=obj.requester, offerrer=obj.offerrer, requester_book=obj.requester_book, offerrer_book=obj.offerrer_book, requester_address=obj.requester_address, offerrer_address=obj.offerrer_address)
         # obj.requester_book.delete()
         # obj.offerrer_book.delete()
         obj.delete()
-delete_selected.short_description = "Delete Exchange Order"
+delete_selected_exchange_order.short_description = "Delete Exchange Order(Select This)"
 
 class TransactionAdmin(admin.ModelAdmin):
-    actions = [delete_selected]
+    actions = [delete_selected_exchange_order]
 
 admin.site.register(Transaction, TransactionAdmin)
 
@@ -36,7 +36,7 @@ def delete_selected_buy_order(modeladmin, request, queryset):
         # obj.requester_book.delete()
         # obj.offerrer_book.delete()
         obj.delete()
-delete_selected_buy_order.short_description = "Delete Selected Buy Order"
+delete_selected_buy_order.short_description = "Delete Selected Buy Order(Select This)"
 
 
 class FinalBuyOrderAdmin(admin.ModelAdmin):

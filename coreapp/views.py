@@ -5,7 +5,7 @@ from django.urls import reverse_lazy, reverse
 from .forms import UserCreationForm, NewEntryForm, UserForm, ProfileForm, ShippingAddressForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from coreapp.models import Book, Profile, UserCollection, ShippingAddress, FinalBuyOrder, Transaction
+from coreapp.models import Book, Profile, UserCollection, ShippingAddress, FinalBuyOrder, Transaction, CompletedBuyOrder
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
@@ -99,11 +99,12 @@ class UserBookSoldItemsView(generic.ListView):
         # ordered_books = FinalBuyOrder.objects.values_list('book')
         # requester_books = Transaction.objects.values_list('requester_book')
         # offerrer_books = Transaction.objects.values_list('offerrer_book')
-        collection_items = UserCollection.objects.get(
-            owner=self.request.user.profile)
+        # collection_items = UserCollection.objects.get(
+        #     owner=self.request.user.profile)
         
-        return collection_items.books.filter(id__in=ordered_books).exclude(
-            id__in=requester_books).exclude(id__in=offerrer_books)
+        # return collection_items.books.filter(id__in=ordered_books).exclude(
+        #     id__in=requester_books).exclude(id__in=offerrer_books)
+        return CompletedBuyOrder.objects.filter(seller=self.request.user).order_by('date_ordered')
 
 
 class UserBookListViewForUser(LoginRequiredMixin, generic.ListView):
