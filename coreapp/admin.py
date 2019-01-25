@@ -5,14 +5,15 @@ from import_export.admin import ImportExportModelAdmin
 from django.contrib import admin
 # Register your models here.
 
+admin.site.register(CompletedBuyOrder)
+admin.site.register(CompletedTransaction)
 
 # class TransactionAdmin(ImportExportModelAdmin):
 #     pass
 
 def delete_selected_exchange_order(modeladmin, request, queryset):
     for obj in queryset:
-        print("Request", obj)
-        CompletedTransaction.objects.create(requester=obj.requester, offerrer=obj.offerrer, requester_book=obj.requester_book, offerrer_book=obj.offerrer_book, requester_address=obj.requester_address, offerrer_address=obj.offerrer_address)
+        CompletedTransaction.objects.create(requester=obj.requester, offerrer=obj.offerrer, requester_book_name=obj.requester_book.book_name, offerrer_book_name=obj.offerrer_book.book_name, requester_author_name=obj.requester_book.author_name, offerrer_author_name=obj.offerrer_book.author_name, requester_address=obj.requester_address, offerrer_address=obj.offerrer_address)
         obj.requester_book.delete()
         obj.offerrer_book.delete()
         obj.delete()
@@ -28,9 +29,8 @@ admin.site.register(Transaction, TransactionAdmin)
 
 def delete_selected_buy_order(modeladmin, request, queryset):
     for obj in queryset:
-        print("Request", obj)
-        CompletedBuyOrder.objects.create(user=obj.user, book=obj.book,
-                                         seller=obj.seller, useraddress=obj.useraddress, selleraddress=obj.selleraddress, total_price=obj.total_price)
+        CompletedBuyOrder.objects.create(user=obj.user,book_name=obj.book.book_name, author_name=obj.book.author_name, seller=obj.seller,
+                                         useraddress=obj.useraddress, selleraddress=obj.selleraddress, total_price=obj.total_price)
         obj.book.delete()
         obj.delete()
 delete_selected_buy_order.short_description = "Delete Selected Buy Order(Select This)"
@@ -51,5 +51,4 @@ admin.site.register(Requests)
 # admin.site.register(Transaction)
 admin.site.register(ShippingAddress)
 # admin.site.register(FinalBuyOrder)
-admin.site.register(CompletedBuyOrder)
-admin.site.register(CompletedTransaction)
+

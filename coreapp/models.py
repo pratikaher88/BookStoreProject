@@ -213,35 +213,60 @@ class CompletedTransaction(models.Model):
     offerrer = models.ForeignKey(
         User, related_name='completed_offerrer', on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
-    requester_book = models.ForeignKey(
-        Book, related_name='completed_requested_book_from_user', on_delete=models.CASCADE)
-    offerrer_book = models.ForeignKey(
-        Book, related_name='completed_offerrer_book_from_user', on_delete=models.CASCADE)
+
+    requester_book_name = models.CharField(max_length=100, blank=True, null=True)
+
+    offerrer_book_name = models.CharField(
+        max_length=100, blank=True, null=True)
+    
+    requester_author_name = models.CharField(
+        max_length=100, blank=True, null=True)
+
+    offerrer_author_name = models.CharField(
+        max_length=100, blank=True, null=True)
+    
     requester_address = models.ForeignKey(
         ShippingAddress, related_name='completed_user_address', null=True, on_delete=models.CASCADE)
     offerrer_address = models.ForeignKey(
         ShippingAddress, related_name='completed_seller_address', null=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "From {}, to {} Book1 is {} Book2 is{}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name, self.offerrer_book.book_name)
+        return "From {}, to {} Book1 is {} Book2 is{}".format(self.requester.username, self.offerrer.username, self.requester_book_name, self.offerrer_book_name)
+
+
+# class CompletedBuyOrder(models.Model):
+#     user = models.ForeignKey(User, related_name='completed_user',
+#                              on_delete=models.CASCADE)
+#     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+#     seller = models.ForeignKey(
+#         User, related_name='completed_seller',  on_delete=models.CASCADE)
+#     useraddress = models.ForeignKey(
+#         ShippingAddress, related_name='completed_address', on_delete=models.CASCADE)
+#     selleraddress = models.ForeignKey(
+#         ShippingAddress, related_name='completed_selleraddress', on_delete=models.CASCADE)
+#     date_ordered = models.DateTimeField(auto_now_add=True)
+#     total_price = models.IntegerField(null=True)
+
+#     def __str__(self):
+#         return self.book.book_name
 
 
 class CompletedBuyOrder(models.Model):
-    user = models.ForeignKey(User, related_name='completed_user',
-                             on_delete=models.CASCADE)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    seller = models.ForeignKey(
-        User, related_name='completed_seller',  on_delete=models.CASCADE)
-    useraddress = models.ForeignKey(
-        ShippingAddress, related_name='completed_address', on_delete=models.CASCADE)
-    selleraddress = models.ForeignKey(
-        ShippingAddress, related_name='completed_selleraddress', on_delete=models.CASCADE)
-    date_ordered = models.DateTimeField(auto_now_add=True)
-    total_price = models.IntegerField(null=True)
+	user = models.ForeignKey(User, related_name='completed_user',
+	                         blank=True, null=True, on_delete=models.CASCADE)
+	book_name = models.CharField(max_length=100, blank=True, null=True)
+	author_name = models.CharField(max_length=100, blank=True, null=True)
+	seller = models.ForeignKey(
+		User, related_name='completed_seller', blank=True, null=True,  on_delete=models.CASCADE)
+	useraddress = models.ForeignKey(
+		ShippingAddress, related_name='completed_address', blank=True, null=True, on_delete=models.CASCADE)
+	selleraddress = models.ForeignKey(
+		ShippingAddress, related_name='completed_selleraddress', blank=True, null=True, on_delete=models.CASCADE)
+	date_ordered = models.DateTimeField(auto_now_add=True)
+	total_price = models.IntegerField(null=True)
 
-    def __str__(self):
-        return self.book.book_name
-
+	def __str__(self):
+		return self.book_name
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):

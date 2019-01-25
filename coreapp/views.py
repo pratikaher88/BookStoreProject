@@ -133,6 +133,9 @@ class NewEntry(LoginRequiredMixin, generic.CreateView):
     template_name = 'new_entry.html'
 
     def form_valid(self, form):
+        # if self.request.method == 'POST' and 'check' in self.request.POST:
+        #     print("POST request")
+        #     return red
 
         address = get_object_or_404(ShippingAddress, profile=self.request.user.profile)
 

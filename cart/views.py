@@ -18,11 +18,11 @@ def add_to_cart(request, item_id):
         owner=request.user.profile)
     if book in user_order.get_cart_items():
         messages.warning(request, 'Item Already in Cart!')
-        return redirect(reverse('coreapp:list_entries'))
+        return redirect(reverse('coreapp:buy_entries'))
     user_order.items.add(book)
     user_order.save()
     messages.info(request, "item added to cart")
-    return redirect(reverse('coreapp:list_entries'))
+    return redirect(reverse('coreapp:buy_entries'))
 
 @login_required
 def delete_from_cart(request, item_id):

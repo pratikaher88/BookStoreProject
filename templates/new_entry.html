@@ -19,7 +19,32 @@
             <h3 class="card-title">New Entry</h3>
             <form method="post" novalidate>
               {% csrf_token %}
-              {{ form|crispy}}
+
+              {{ form.non_field_errors }}
+              <div class="fieldWrapper">
+                {{ form.book_name | as_crispy_field }}
+              </div>
+              <button type="submit" class="btn btn-primary btn-block" name="check">Check</button>
+
+              <div class="fieldWrapper">
+                {{ form.author_name | as_crispy_field }}
+              </div>
+              <div class="fieldWrapper">
+                {{ form.description | as_crispy_field }}
+              </div>
+              <div class="fieldWrapper">
+                {{ form.image | as_crispy_field }}
+              </div>
+              <div class="fieldWrapper">
+                {{ form.sell_or_exchange | as_crispy_field }}
+              </div>
+              <div class="fieldWrapper">
+                {{ form.price | as_crispy_field }}
+              </div>
+
+              <div class="fieldWrapper">
+                {{ form.condition | as_crispy_field }}
+              </div>
 
               <script type="text/javascript">
 
