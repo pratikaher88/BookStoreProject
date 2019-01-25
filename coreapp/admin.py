@@ -48,7 +48,5 @@ admin.site.register(Order)
 admin.site.register(OldRequests)
 admin.site.register(UserCollection)
 admin.site.register(Requests)
-# admin.site.register(Transaction)
 admin.site.register(ShippingAddress)
-# admin.site.register(FinalBuyOrder)
 

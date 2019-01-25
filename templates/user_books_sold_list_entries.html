@@ -22,19 +22,11 @@
 
     </div>
     <div class="card-body">
-        {% if order.book.author_name %}
-        <p class="card-text">Author name: {{ order.book.author_name }}</p>
+        {{ order.book_name }}
+        {% if order.author_name %}
+        <p class="card-text">Author name: {{ order.author_name }}</p>
         {% endif %}
-        {% if order.book.description %}
-        <p class="card-text">Description: {{ order.book.description }}</p>
-        {% endif %}
-        <p class="card-text">Condition : {{ order.book.condition }} </p>
-        {% if book.price %}
-        <p class="card-text">Price : {{ order.book..price }} </p>
-        {% endif %}
-    </div>
-    <div class="card-footer text-mutxed">
-        {{ order.book.created_at }}
+        <p class="card-text">Price : {{ order.total_price }} </p>
     </div>
 </div>
 </br>

@@ -29,28 +29,20 @@
     <div class="card-header">
         <p class="card-text">Request User: {{ order.requester }}</p>
         <hr />
-        <h5 class="card-title">{{ order.offerrer_book.book_name }}</h5>
-        {% if book.author_name %}
-        <p class="card-text">Author name: {{ order.offerrer_book.author_name }}</p>
+        <h5 class="card-title">{{ order.offerrer_book_name }}</h5>
+        {% if order.offerrer_author_name %}
+        <p class="card-text">Author name: {{ order.offerrer_author_name }}</p>
         {% endif %}
-        {% if book.description %}
-        <p class="card-text">Description: {{ order.offerrer_book.description }}</p>
-        {% endif %}
-        <p class="card-text">Condition : {{ order.offerrer_book.condition }} </p>
 
 
     </div>
     <div class="card-body">
         <p class="card-text">Offerer User: {{ order.offerrer }}</p>
         <hr />
-        <h5 class="card-title">{{ order.requester_book.book_name }}</h5>
-        {% if book.author_name %}
-        <p class="card-text">Author name: {{ order.requester_book.author_name }}</p>
+        <h5 class="card-title">{{ order.requester_book_name }}</h5>
+        {% if book.requester_author_name %}
+        <p class="card-text">Author name: {{ order.requester_author_name }}</p>
         {% endif %}
-        {% if book.description %}
-        <p class="card-text">Description: {{ order.requester_book.description }}</p>
-        {% endif %}
-        <p class="card-text">Condition : {{ order.requester_book.condition }} </p>
 
     </div>
 
