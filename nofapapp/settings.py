@@ -24,6 +24,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '4t_gqc(-($+!3$1#5(z8(4ef3d)77#qvh!yaq934!loh5pa*a$'
 
+GOOGLE_BOOKS_URL = 'https://www.googleapis.com/books/v1/volumes'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

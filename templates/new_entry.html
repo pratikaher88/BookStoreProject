@@ -13,8 +13,6 @@
 {% endfor %}
 {% endif %}
 
-{{ address }}
-
 
             <h3 class="card-title">New Entry</h3>
             <form method="post" novalidate>
@@ -25,19 +23,49 @@
                 {{ form.book_name | as_crispy_field }}
               </div>
               <button type="submit" class="btn btn-primary btn-block" name="check">Check</button>
+              <hr/>
+              {% if items %}
 
+              {% for obj in items|slice:":5" %}
+
+              <button type="button" id="book_{{ forloop.counter }}" class="btn btn-warning">{{ obj.volumeInfo.title }} . Authors: {{ obj.volumeInfo.authors | safe }}</button>
+              {{ obj.volumeInfo.imageLinks.thumbnail }}
+
+              <hr/>
+              
+              <script type="text/javascript">
+                $("#book_{{ forloop.counter }}").click(function () {
+                  $("#id_author_name").val("{{ obj.volumeInfo.authors | escapejs }}");
+                  $("#id_description").val("{{ obj.volumeInfo.description | escapejs }}");
+                  $("#id_book_name").val("{{ obj.volumeInfo.title | escapejs }}");
+                  // $("#imageid").attr("src", "{{ volumeInfo.imageLinks.thumbnail | escapejs }}");
+                });
+
+
+              </script>
+
+              {% endfor %}
+
+              {% endif %}
+
+              <img id="imageid"/>
+              
               <div class="fieldWrapper">
                 {{ form.author_name | as_crispy_field }}
               </div>
+
               <div class="fieldWrapper">
                 {{ form.description | as_crispy_field }}
               </div>
+
               <div class="fieldWrapper">
                 {{ form.image | as_crispy_field }}
               </div>
+              
               <div class="fieldWrapper">
                 {{ form.sell_or_exchange | as_crispy_field }}
               </div>
+
               <div class="fieldWrapper">
                 {{ form.price | as_crispy_field }}
               </div>
@@ -69,7 +97,7 @@
 
               </script>
 
-              <button type="submit" class="btn btn-primary btn-block">SUBMIT</button>
+              <button type="submit" class="btn btn-primary btn-block" name="submitentry">SUBMIT</button>
             </form>
 
 

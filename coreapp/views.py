@@ -10,19 +10,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ObjectDoesNotExist
+import requests
+import json
+from nofapapp.settings import GOOGLE_BOOKS_URL
 
 ordered_books = FinalBuyOrder.objects.values_list('book')
 requester_books = Transaction.objects.values_list('requester_book')
 offerrer_books = Transaction.objects.values_list('offerrer_book')
 
+
 @login_required
 def profile(request):
-    # profile = get_object_or_404(Profile, user=request.user)
-    # try:
     address = ShippingAddress.objects.get(profile=request.user.profile)
-    # except ObjectDoesNotExist:
-    #     address = None
-
     return render(request, 'profile.html', {'profile': request.user.profile, 'address': address})
 
 
@@ -55,7 +54,7 @@ class BuyListView(LoginRequiredMixin, generic.ListView):
     template_name = 'list_entries.html'
     context_object_name = 'books'
     paginate_by = 15
-    
+
     def get_queryset(self):
         # ordered_books = FinalBuyOrder.objects.values_list('book')
         return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).filter(sell_or_exchange='Sell').order_by('-created_at')
@@ -72,7 +71,8 @@ class ExchangeListView(LoginRequiredMixin, generic.ListView):
         # offerrer_books = Transaction.objects.values_list('offerrer_book')
         return Book.objects.exclude(user=self.request.user).exclude(id__in=requester_books).exclude(id__in=offerrer_books).filter(sell_or_exchange='Exchange').order_by('-created_at')
 
-class UserBookListView(generic.ListView):
+
+class UserBookListView(LoginRequiredMixin, generic.ListView):
     model = Book
     template_name = 'user_books_list_entries.html'
     context_object_name = 'books'
@@ -84,12 +84,12 @@ class UserBookListView(generic.ListView):
         # offerrer_books = Transaction.objects.values_list('offerrer_book')
         collection_items = UserCollection.objects.get(
             owner=self.request.user.profile)
-        
+
         return collection_items.books.exclude(id__in=ordered_books).exclude(
             id__in=requester_books).exclude(id__in=offerrer_books)
 
 
-class UserBookSoldItemsView(generic.ListView):
+class UserBookSoldItemsView(LoginRequiredMixin, generic.ListView):
     model = Book
     template_name = 'user_books_sold_list_entries.html'
     context_object_name = 'books'
@@ -101,7 +101,7 @@ class UserBookSoldItemsView(generic.ListView):
         # offerrer_books = Transaction.objects.values_list('offerrer_book')
         # collection_items = UserCollection.objects.get(
         #     owner=self.request.user.profile)
-        
+
         # return collection_items.books.filter(id__in=ordered_books).exclude(
         #     id__in=requester_books).exclude(id__in=offerrer_books)
         return CompletedBuyOrder.objects.filter(seller=self.request.user).order_by('date_ordered')
@@ -119,7 +119,7 @@ class UserBookListViewForUser(LoginRequiredMixin, generic.ListView):
         user_profile = get_object_or_404(Profile, user__username=user)
         collection_items = UserCollection.objects.get(
             owner=user_profile)
-        
+
         # ordered_books = FinalBuyOrder.objects.values_list('book')
         # requester_books = Transaction.objects.values_list('requester_book')
         # offerrer_books = Transaction.objects.values_list('offerrer_book')
@@ -133,14 +133,17 @@ class NewEntry(LoginRequiredMixin, generic.CreateView):
     template_name = 'new_entry.html'
 
     def form_valid(self, form):
+
         # if self.request.method == 'POST' and 'check' in self.request.POST:
         #     print("POST request")
         #     return red
 
-        address = get_object_or_404(ShippingAddress, profile=self.request.user.profile)
+        address = get_object_or_404(
+            ShippingAddress, profile=self.request.user.profile)
 
         if address.address1 == '':
-            messages.info(self.request,'You need to update address in profile to make a Sell request!')
+            messages.info(
+                self.request, 'You need to update address in profile to make a Sell request!')
             return redirect('coreapp:new_entry')
 
         book = form.save(commit=False)
@@ -154,15 +157,58 @@ class NewEntry(LoginRequiredMixin, generic.CreateView):
         collection.save()
 
         return super(NewEntry, self).form_valid(form)
-    
-    
+
+
+@login_required
+def new_entry(request):
+    if request.method == 'POST' and 'check' in request.POST:
+        new_entry_form = NewEntryForm(request.POST, instance=request.user)
+        book_name = new_entry_form.data['book_name']
+        parms = {"q": book_name, "printType": "books", "projection": "lite"}
+        r = requests.get(
+            url=GOOGLE_BOOKS_URL, params=parms)
+        items = json.loads(r.text)
+        return render(request, 'new_entry.html', {'form': new_entry_form, 'items': items['items']})
+
+    if request.method == 'POST' and 'submitentry' in request.POST:
+        new_entry_form = NewEntryForm(request.POST, instance=request.user)
+        if new_entry_form.is_valid():
+
+            address = get_object_or_404(
+                ShippingAddress, profile=request.user.profile)
+            if address.address1 == '':
+                messages.info(
+                    request, 'You need to update address in profile to make a Sell request!')
+                return redirect('coreapp:new_entry')
+            
+            book = Book()
+            book.user = request.user
+            book.book_name = new_entry_form.cleaned_data['book_name']
+            book.author_name = new_entry_form.cleaned_data['author_name']
+            book.description = new_entry_form.cleaned_data['author_name']
+            book.save()
+            # book = new_entry_form.save()
+            # book.user = request.user
+            # book.save()
+            # print(book)
+            collection, status = UserCollection.objects.get_or_create(
+                owner=request.user.profile)
+            collection.books.add(book)
+            collection.save()
+            return redirect('coreapp:userbooks')
+
+    new_entry_form = NewEntryForm(instance=request.user)
+
+    return render(request, 'new_entry.html', {
+        'form': new_entry_form,
+    })
 
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Book
     template_name = 'new_entry.html'
     success_url = reverse_lazy('coreapp:userbooks')
-    fields = ['book_name','author_name', 'description', 'condition']
+    fields = ['book_name', 'author_name', 'description', 'condition']
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -193,7 +239,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
 def update_profile(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)
-        if user_form.is_valid() :
+        if user_form.is_valid():
             user_form.save()
             messages.success(request, (
                 'Your profile was successfully updated!'))
@@ -223,6 +269,7 @@ def update_address(request):
         'address_form': address_form
     })
 
+
 @login_required
 def aboutus(request):
-    return render(request,'aboutus.html')
+    return render(request, 'aboutus.html')
