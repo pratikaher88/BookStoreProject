@@ -24,7 +24,7 @@ class NewEntryForm(forms.ModelForm):
     class Meta:
         model = Book
         fields = ['book_name','author_name', 'description', 'image',
-                  'sell_or_exchange', 'price', 'condition']
+                  'sell_or_exchange', 'price', 'condition','image_url']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4, 'cols': 15}),
         }

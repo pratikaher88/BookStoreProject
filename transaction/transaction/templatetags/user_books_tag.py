@@ -12,3 +12,14 @@ def user_books_for_user(collection_all, user_username):
     
     return collection_items.books.filter(
         sell_or_exchange='Exchange')
+
+@register.filter
+def author_list(authors):
+
+    if authors:
+        author_name = ",".join(authors)
+
+        return author_name + '.'
+    else:
+        return authors
+

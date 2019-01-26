@@ -164,11 +164,14 @@ def new_entry(request):
     if request.method == 'POST' and 'check' in request.POST:
         new_entry_form = NewEntryForm(request.POST, instance=request.user)
         book_name = new_entry_form.data['book_name']
-        parms = {"q": book_name, "printType": "books", "projection": "lite"}
-        r = requests.get(
-            url=GOOGLE_BOOKS_URL, params=parms)
-        items = json.loads(r.text)
-        return render(request, 'new_entry.html', {'form': new_entry_form, 'items': items['items']})
+        if book_name:
+            parms = {"q": book_name, "printType": "books", "projection": "lite"}
+            r = requests.get(
+                url=GOOGLE_BOOKS_URL, params=parms)
+            items = json.loads(r.text)
+            return render(request, 'new_entry.html', {'form': new_entry_form, 'items': items['items']})
+        else:
+           return render(request, 'new_entry.html', {'form': new_entry_form})
 
     if request.method == 'POST' and 'submitentry' in request.POST:
         new_entry_form = NewEntryForm(request.POST, instance=request.user)
@@ -185,17 +188,16 @@ def new_entry(request):
             book.user = request.user
             book.book_name = new_entry_form.cleaned_data['book_name']
             book.author_name = new_entry_form.cleaned_data['author_name']
-            book.description = new_entry_form.cleaned_data['author_name']
+            # book.description = new_entry_form.cleaned_data['description']
+            book.image_url = new_entry_form.cleaned_data['image_url']
             book.save()
-            # book = new_entry_form.save()
-            # book.user = request.user
-            # book.save()
-            # print(book)
             collection, status = UserCollection.objects.get_or_create(
                 owner=request.user.profile)
             collection.books.add(book)
             collection.save()
             return redirect('coreapp:userbooks')
+        else:
+           return render(request, 'new_entry.html', {'form': new_entry_form})
 
     new_entry_form = NewEntryForm(instance=request.user)
 

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load user_books_tag %}
 {% load crispy_forms_tags %}
 {% load static %}
 {% block title %}New Entry{% endblock %}
@@ -18,27 +19,31 @@
             <form method="post" novalidate>
               {% csrf_token %}
 
-              {{ form.non_field_errors }}
+
               <div class="fieldWrapper">
                 {{ form.book_name | as_crispy_field }}
               </div>
-              <button type="submit" class="btn btn-primary btn-block" name="check">Check</button>
+
+              <button type="submit" class="btn btn-primary btn-block" name="check">Check for Book Details</button>
               <hr/>
               {% if items %}
 
               {% for obj in items|slice:":5" %}
 
-              <button type="button" id="book_{{ forloop.counter }}" class="btn btn-warning">{{ obj.volumeInfo.title }} . Authors: {{ obj.volumeInfo.authors | safe }}</button>
-              {{ obj.volumeInfo.imageLinks.thumbnail }}
+              <button type="button" id="book_{{ forloop.counter }}" class="btn btn-outline-success">{{ obj.volumeInfo.title }} .
+                {% if obj.volumeInfo.authors %}
+                 Authors: {{ obj.volumeInfo.authors | author_list }}
+                {% endif %}
+              </button>              
+              <hr />
 
-              <hr/>
-              
               <script type="text/javascript">
                 $("#book_{{ forloop.counter }}").click(function () {
-                  $("#id_author_name").val("{{ obj.volumeInfo.authors | escapejs }}");
+
+                  $("#id_author_name").val("{{ obj.volumeInfo.authors | author_list }}");
                   $("#id_description").val("{{ obj.volumeInfo.description | escapejs }}");
                   $("#id_book_name").val("{{ obj.volumeInfo.title | escapejs }}");
-                  // $("#imageid").attr("src", "{{ volumeInfo.imageLinks.thumbnail | escapejs }}");
+                  $("#id_image_url").val("{{ obj.volumeInfo.imageLinks.thumbnail | escapejs }}");
                 });
 
 
@@ -47,10 +52,9 @@
               {% endfor %}
 
               {% endif %}
-
-              <img id="imageid"/>
               
               <div class="fieldWrapper">
+                
                 {{ form.author_name | as_crispy_field }}
               </div>
 
@@ -58,9 +62,9 @@
                 {{ form.description | as_crispy_field }}
               </div>
 
-              <div class="fieldWrapper">
+              <!-- <div class="fieldWrapper">
                 {{ form.image | as_crispy_field }}
-              </div>
+              </div> -->
               
               <div class="fieldWrapper">
                 {{ form.sell_or_exchange | as_crispy_field }}
@@ -71,12 +75,17 @@
               </div>
 
               <div class="fieldWrapper">
+                {{ form.image_url | as_crispy_field }}
+              </div>
+
+              <div class="fieldWrapper">
                 {{ form.condition | as_crispy_field }}
               </div>
 
               <script type="text/javascript">
 
                 document.getElementById("priceid").disabled = true;
+                document.getElementById("id_image_url").readOnly = true;
 
                 var sell_or_exchange = $("#id_sell_or_exchange");
 
