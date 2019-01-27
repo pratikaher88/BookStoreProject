@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}New Entry{% endblock %}
+
+{% block content %}
+
+
+    <div class="card text-left">
+        <div class="card-header">
+            Seller : {{ object.user.username }}
+        </div>
+        <div class="card-body">
+    
+    
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h5 class="card-title">{{ object.book_name }}</h5>
+                    {% if book.author_name %}
+                    <p class="card-text">Author name: {{ object.author_name }}</p>
+                    {% endif %}
+                    {% if book.description %}
+                    <p class="card-text">Description: {{ object.description }}</p>
+                    {% endif %}
+                    <p class="card-text">Condition : {{ object.condition }} </p>
+                    {% if book.price %}
+                    <p class="card-text">Price : {{ object.price }} </p>
+                    {% endif %}
+                </div>
+                <div class="mr-3">
+                    {% if object.image_url %}
+                    <img src="{{ object.image_url }}">
+                    {% endif %}
+    
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer text-mutxed">
+            {{ object.created_at }}
+
+
+                    {% if object.sell_or_exchange == 'Sell' %}
+                    
+                    <a href="{% url 'cart:add_to_cart' object.id %}" class="btn btn-primary float-right">BUY FOR {{ object.price }}</a>
+                    
+                    {% else %}
+                    
+                    <button type="button" class="mr-2 btn btn-info float-right" data-toggle="modal" data-target="#requestmodal{{ object.id }}">Request
+                        for Exchange</button>
+                    
+                    
+                    
+                    <div class="modal fade" id="requestmodal{{ object.id }}" role="dialog">
+                        <div class="modal-dialog ">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Confirm Selection</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to request "{{ object.book_name }}" ?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <a href="{% url 'transaction:add_request' object.id %}" class="btn btn-success">Yes</a>
+                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% endif %}
+        </div>
+    </div>
+
+    
+{% endblock %}

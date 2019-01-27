@@ -40,7 +40,7 @@
               <script type="text/javascript">
                 $("#book_{{ forloop.counter }}").click(function () {
 
-                  $("#id_author_name").val("{{ obj.volumeInfo.authors | author_list }}");
+                  $("#id_author_name").val("{{ obj.volumeInfo.authors | author_list | escapejs }}");
                   $("#id_description").val("{{ obj.volumeInfo.description | escapejs }}");
                   $("#id_book_name").val("{{ obj.volumeInfo.title | escapejs }}");
                   $("#id_image_url").val("{{ obj.volumeInfo.imageLinks.thumbnail | escapejs }}");
@@ -62,9 +62,6 @@
                 {{ form.description | as_crispy_field }}
               </div>
 
-              <!-- <div class="fieldWrapper">
-                {{ form.image | as_crispy_field }}
-              </div> -->
               
               <div class="fieldWrapper">
                 {{ form.sell_or_exchange | as_crispy_field }}

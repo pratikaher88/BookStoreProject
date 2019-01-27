@@ -21,14 +21,28 @@
                 <p class="card-text">Seller Name : {{ book.user }}</p>
     </div>
     <div class="card-body">
-        <h5 class="card-title">{{ book.book_name }}</h5>
-        {% if book.author_name %}
-        <p class="card-text">Author name: {{ book.author_name }}</p>
-        {% endif %}
-        {% if book.description %}
-        <p class="card-text">Description: {{ book.description }}</p>
-        {% endif %}
-        <p class="card-text">Price: {{ book.price }}</p>
+
+        <div class="d-flex justify-content-between">
+            <div>
+                <h5 class="card-title">{{ book.book_name }}</h5>
+                {% if book.author_name %}
+                <p class="card-text">Author name: {{ book.author_name }}</p>
+                {% endif %}
+                {% if book.description %}
+                <p class="card-text">Description: {{ book.description }}</p>
+                {% endif %}
+                <p class="card-text">Condition : {{ book.condition }} </p>
+                {% if book.price %}
+                <p class="card-text">Price : {{ book.price }} </p>
+                {% endif %}
+            </div>
+            <div class="mr-3">
+                {% if book.image_url %}
+                <img src="{{ book.image_url }}">
+                {% endif %}
+        
+            </div>
+        </div>
 
     </div>
     <div class="card-footer text-mutxed">

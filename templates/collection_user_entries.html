@@ -22,12 +22,12 @@
                     <p class="card-text">{{ book.description }}</p>
                     <p class="card-text">Condition : {{ book.condition }} </p>
                 </div>
-                <div class="mr-3">
-                    {% if book.image %}
-                    <img src="{{ book.image.url }}">
-                    {% endif %}
-    
-                </div>
+            <div class="mr-3">
+                {% if book.image_url %}
+                <img src="{{ book.image_url }}">
+                {% endif %}
+            
+            </div>
             </div>
     
     

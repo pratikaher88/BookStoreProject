@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load user_books_tag %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}New Entry{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+
+<h3 class="card-title">New Entry</h3>
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form | crispy }}
+
+    <script type="text/javascript">
+
+        document.getElementById("priceid").disabled = true;
+        document.getElementById("id_image_url").readOnly = true;
+
+        var sell_or_exchange = $("#id_sell_or_exchange");
+
+        function refreshOptions() {
+            if (sell_or_exchange.val() === "Sell") {
+                document.getElementById("priceid").disabled = false;
+            } else {
+                if (sell_or_exchange.val() === "Exchange") {
+                    document.getElementById("priceid").value = '';
+                    document.getElementById("priceid").disabled = true;
+                }
+            }
+        }
+        refreshOptions();
+
+        sell_or_exchange.on("change", refreshOptions);
+
+
+    </script>
+
+    <button type="submit" class="btn btn-primary btn-block" name="submitentry">SUBMIT</button>
+</form>
+
+
+{% endblock %}

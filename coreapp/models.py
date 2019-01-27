@@ -283,20 +283,16 @@ def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 
-# @receiver(post_delete, sender=Transaction)
-# def post_delete_transaction(sender, instance, **kwargs ):
-#     print(sender)
-    # print(sender.is_superuser)
-
-# @receiver(post_save, sender=Requests)
-# def send_request_email(sender, instance, created, **kwargs):
-
-#     if created:
-#         email = EmailMessage('Order created for book '+instance.requester_book.book_name,
-#                              'from user '+instance.requester.username + 'to user' +
-#                              instance.offerrer.username ,
-#                              to=[instance.offerrer.email])
-#     email.send()
+@receiver(post_save, sender=Requests)
+def send_request_email(sender, instance, created, **kwargs):
+    
+    if created:
+        print("Email", instance.offerrer.email)
+        # email = EmailMessage('New order for book '+instance.requester_book.book_name,
+        #                      'from user '+instance.requester.username + 'to user' +
+        #                      instance.offerrer.username ,
+        #                      to=[instance.offerrer.email])
+        # email.send()
 
 
 # @receiver(post_save, sender=Transaction)

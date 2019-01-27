@@ -127,6 +127,11 @@ class UserBookListViewForUser(LoginRequiredMixin, generic.ListView):
             id__in=requester_books).exclude(id__in=offerrer_books)
 
 
+class BookDetailView(generic.DetailView):
+    model = Book
+    template_name = 'book_detail_view.html'
+
+
 class NewEntry(LoginRequiredMixin, generic.CreateView):
     form_class = NewEntryForm
     success_url = reverse_lazy('coreapp:userbooks')
@@ -188,7 +193,9 @@ def new_entry(request):
             book.user = request.user
             book.book_name = new_entry_form.cleaned_data['book_name']
             book.author_name = new_entry_form.cleaned_data['author_name']
-            # book.description = new_entry_form.cleaned_data['description']
+            book.price = new_entry_form.cleaned_data['price']
+            book.description = new_entry_form.cleaned_data['description']
+            book.sell_or_exchange = new_entry_form.cleaned_data['description']
             book.image_url = new_entry_form.cleaned_data['image_url']
             book.save()
             collection, status = UserCollection.objects.get_or_create(
@@ -208,9 +215,9 @@ def new_entry(request):
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Book
-    template_name = 'new_entry.html'
+    form_class = NewEntryForm
+    template_name = 'new_entry_update.html'
     success_url = reverse_lazy('coreapp:userbooks')
-    fields = ['book_name', 'author_name', 'description', 'condition']
 
     def form_valid(self, form):
         form.instance.user = self.request.user
