@@ -34,28 +34,43 @@
     <div class="card-header">
         <p class="card-text">Request User: {{ order.requester }}</p>
         <hr/>
-                <h5 class="card-title">{{ order.offerrer_book.book_name }}</h5>
-                {% if book.author_name %}
-                <p class="card-text">Author name: {{ order.offerrer_book.author_name }}</p>
-                {% endif %}
-                {% if book.description %}
-                <p class="card-text">Description: {{ order.offerrer_book.description }}</p>
-                {% endif %}
-                <p class="card-text">Condition : {{ order.offerrer_book.condition }} </p>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">{{ order.offerrer_book.book_name }}</h5>
+                        {% if order.offerrer_book.author_name %}
+                        <p class="card-text">Author name: {{ order.offerrer_book.author_name }}</p>
+                        {% endif %}
+                        <p class="card-text">Condition : {{ order.offerrer_book.condition }} </p>
+                    </div>
+                    <div class="mr-3">
+                        {% if order.offerrer_book.image_url %}
+                        <img src="{{ order.offerrer_book.image_url }}">
+                        {% endif %}
+                
+                    </div>
+                </div>
 
 
     </div>
     <div class="card-body">
         <p class="card-text">Offerer User: {{ order.offerrer }}</p>
         <hr/>
-                <h5 class="card-title">{{ order.requester_book.book_name }}</h5>
-                {% if book.author_name %}
-                <p class="card-text">Author name: {{ order.requester_book.author_name }}</p>
-                {% endif %}
-                {% if book.description %}
-                <p class="card-text">Description: {{ order.requester_book.description }}</p>
-                {% endif %}
-                <p class="card-text">Condition : {{ order.requester_book.condition }} </p>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">{{ order.requester_book.book_name }}</h5>
+                        {% if order.requester_book.author_name %}
+                        <p class="card-text">Author name: {{ order.requester_book.author_name }}</p>
+                        {% endif %}
+                        <p class="card-text">Condition : {{ order.requester_book.condition }} </p>
+                    </div>
+                    <div class="mr-3">
+                        {% if order.requester_book.image_url %}
+                        <img src="{{ order.requester_book.image_url }}">
+                        {% endif %}
+                
+                    </div>
+                </div>
+
 
     </div>
     <div class="card-footer text-mutxed">
@@ -81,14 +96,25 @@
         Seller: {{ order.seller }}</a>
     </div>
     <div class="card-body">
-        <h5 class="card-title">{{ order.book.book_name }}</h5>
-        {% if book.author_name %}
-        <p class="card-text">Author name: {{ order.book.author_name }}</p>
-        {% endif %}
-        {% if book.description %}
-        <p class="card-text">Description: {{ order.book.description }}</p>
-        {% endif %}
-        <p class="card-text">Condition : {{ order.book.condition }} </p>
+
+        <div class="d-flex justify-content-between">
+            <div>
+                <h5 class="card-title">{{ order.book.book_name }}</h5>
+                {% if order.book.author_name %}
+                <p class="card-text">Author name: {{ order.book.author_name }}</p>
+                {% endif %}
+                <p class="card-text">Condition : {{ order.book.condition }} </p>
+            </div>
+            <div class="mr-3">
+                {% if order.book.image_url %}
+                <img src="{{ order.book.image_url }}">
+                {% endif %}
+        
+            </div>
+        </div>
+
+
+
     </div>
     <div class="card-footer text-mutxed">
         Price : {{ order.total_price }}

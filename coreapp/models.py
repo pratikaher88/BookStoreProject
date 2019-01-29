@@ -235,22 +235,6 @@ class CompletedTransaction(models.Model):
         return "From {}, to {} Book1 is {} Book2 is{}".format(self.requester.username, self.offerrer.username, self.requester_book_name, self.offerrer_book_name)
 
 
-# class CompletedBuyOrder(models.Model):
-#     user = models.ForeignKey(User, related_name='completed_user',
-#                              on_delete=models.CASCADE)
-#     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-#     seller = models.ForeignKey(
-#         User, related_name='completed_seller',  on_delete=models.CASCADE)
-#     useraddress = models.ForeignKey(
-#         ShippingAddress, related_name='completed_address', on_delete=models.CASCADE)
-#     selleraddress = models.ForeignKey(
-#         ShippingAddress, related_name='completed_selleraddress', on_delete=models.CASCADE)
-#     date_ordered = models.DateTimeField(auto_now_add=True)
-#     total_price = models.IntegerField(null=True)
-
-#     def __str__(self):
-#         return self.book.book_name
-
 
 class CompletedBuyOrder(models.Model):
 	user = models.ForeignKey(User, related_name='completed_user',
@@ -295,32 +279,33 @@ def send_request_email(sender, instance, created, **kwargs):
         # email.send()
 
 
-# @receiver(post_save, sender=Transaction)
-# def send_transaction_email(sender, instance, created, **kwargs):
+@receiver(post_save, sender=Transaction)
+def send_transaction_email(sender, instance, created, **kwargs):
 
-    # if created:
-    # email = EmailMessage('Request for book '+instance.requester_book.book_name +'from user' +
-    #                     instance.requester + 'to user' + instance.offerrer, to=[instance.offerrer.email])
-    # email.send()
+    if created:
+            
+        email = EmailMessage('Transasction created for book ' + instance.requester_book.book_name +'from user' +
+                            instance.requester + 'to user' + instance.offerrer +'with book '+ instance.offerrer_book.book_name, to=[instance.offerrer.email, instance.requester.email])
+        email.send()
 
 
-# @receiver(post_save, sender=FinalBuyOrder)
-# def send_buyorder_email(sender, instance, created, **kwargs):
+@receiver(post_save, sender=FinalBuyOrder)
+def send_buyorder_email(sender, instance, created, **kwargs):
 
-    # if created:
-    # email = EmailMessage('buy order for book from user '+instance.seller.user_name +
-    #                      'with price' + instance.book.price, to=[instance.user.email])
-    # email.send()
+    if created:
+        email = EmailMessage('buy order for book from user '+instance.seller.user_name +
+                            'with price' + instance.book.price, to=[instance.user.email,instance.seller.email] )
+        email.send()
 
 # @receiver(pre_delete, sender=Requests)
 # def send_buyorder_email(sender, instance, created, **kwargs):
 
-    # if created:
-    # email = EmailMessage('Request cancelled for book '+ instance.requester_book.book_name,
-    #                      'from user '+instance.requester + 'to user' +
-    #                instance.offerrer+'with book' + instance.requester_book.book_name,
-    #                to=[instance.offerrer.email])
-    # email.send()
+#     if created:
+#         email = EmailMessage('Request cancelled for book '+ instance.requester_book.book_name,
+#                             'from user '+instance.requester + 'to user' +
+#                     instance.offerrer+'with book' + instance.requester_book.book_name,
+#                     to=[instance.offerrer.email])
+#         email.send()
 
 # @receiver(pre_delete, sender=Transaction)
 # def send_transaction_email(sender, instance, created, **kwargs):

@@ -195,7 +195,7 @@ def new_entry(request):
             book.author_name = new_entry_form.cleaned_data['author_name']
             book.price = new_entry_form.cleaned_data['price']
             book.description = new_entry_form.cleaned_data['description']
-            book.sell_or_exchange = new_entry_form.cleaned_data['description']
+            book.sell_or_exchange = new_entry_form.cleaned_data['sell_or_exchange']
             book.image_url = new_entry_form.cleaned_data['image_url']
             book.save()
             collection, status = UserCollection.objects.get_or_create(

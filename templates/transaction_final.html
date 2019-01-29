@@ -20,9 +20,24 @@
         Seller: {{ offer.offerrer }}</a>
     </div>
     <div class="card-body">
-        <h5 class="card-title">{{ offer.requester_book.book_name }}</h5>
-        <p class="card-text">{{ offer.requester_book.description }}</p>
-        <p class="card-text">Condition : {{ offer.requester_book.condition }} </p>
+
+        <div class="d-flex justify-content-between">
+            <div>
+                <h5 class="card-title">{{ offer.requester_book.book_name }}</h5>
+                {% if offer.requester_book.author_name %}
+                <p class="card-text">Author name: {{ offer.requester_book.author_name }}</p>
+                {% endif %}
+                <p class="card-text">Condition : {{ offer.requester_book.condition }} </p>
+            </div>
+            <div class="mr-3">
+                {% if offer.requester_book.image_url %}
+                <img src="{{ offer.requester_book.image_url }}">
+                {% endif %}
+        
+            </div>
+        </div>
+
+
     </div>
 
 </div>
@@ -34,9 +49,23 @@
         Seller: {{ offer.requester }}</a>
     </div>
     <div class="card-body">
-        <h5 class="card-title">{{ book.book_name }}</h5>
-        <p class="card-text">{{ book.description }}</p>
-        <p class="card-text">Condition : {{ book.condition }} </p>
+
+        <div class="d-flex justify-content-between">
+            <div>
+                <h5 class="card-title">{{ book.book_name }}</h5>
+                {% if offer.requester_book.author_name %}
+                <p class="card-text">Author name: {{ book.author_name }}</p>
+                {% endif %}
+                <p class="card-text">Condition : {{ book.condition }} </p>
+            </div>
+            <div class="mr-3">
+                {% if book.image_url %}
+                <img src="{{ book.image_url }}">
+                {% endif %}
+        
+            </div>
+        </div>
+
     </div>
 
 </div>

@@ -31,10 +31,13 @@
         Seller: {{ order.seller }}</a>
     </div>
     <div class="card-body">
+
+        
         <h5 class="card-title">{{ order.book_name }}</h5>
         {% if order.author_name %}
         <p class="card-text">Author name: {{ order.author_name }}</p>
         {% endif %}
+
     </div>
     <div class="card-footer text-mutxed">
         Price : {{ order.total_price }}

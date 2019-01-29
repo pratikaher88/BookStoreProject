@@ -18,12 +18,37 @@
 <h3 class="card-title">New Entry</h3>
 <form method="post" novalidate>
     {% csrf_token %}
-    {{ form | crispy }}
+
+
+        <div class="fieldWrapper">
+            {{ form.book_name | as_crispy_field }}
+        </div>
+
+        <div class="fieldWrapper">
+        
+            {{ form.author_name | as_crispy_field }}
+        </div>
+        
+        <div class="fieldWrapper">
+            {{ form.description | as_crispy_field }}
+        </div>
+        
+        
+        <div class="fieldWrapper">
+            {{ form.sell_or_exchange | as_crispy_field }}
+        </div>
+        
+        <div class="fieldWrapper">
+            {{ form.price | as_crispy_field }}
+        </div>
+        
+        <div class="fieldWrapper">
+            {{ form.condition | as_crispy_field }}
+        </div>
 
     <script type="text/javascript">
 
         document.getElementById("priceid").disabled = true;
-        document.getElementById("id_image_url").readOnly = true;
 
         var sell_or_exchange = $("#id_sell_or_exchange");
 

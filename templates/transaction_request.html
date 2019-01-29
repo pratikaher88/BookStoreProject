@@ -23,18 +23,26 @@
         Seller: {{ request.offerrer }}</a>
     </div>
     <div class="card-body">
-        <h5 class="card-title">{{ request.requester_book.book_name }}</h5>
-        {% if book.author_name %}
-        <p class="card-text">Author name: {{ request.requester_book.author_name }}</p>
-        {% endif %}
-        {% if book.description %}
-        <p class="card-text">Description: {{ request.requester_book.description }}</p>
-        {% endif %}
-        <p class="card-text">Condition : {{ request.requester_book.condition }} </p>
+
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">{{ request.requester_book.book_name }}</h5>
+                        {% if request.requester_book.author_name %}
+                        <p class="card-text">Author name: {{ request.requester_book.author_name }}</p>
+                        {% endif %}
+                        <p class="card-text">Condition : {{ request.requester_book.condition }} </p>
+                    </div>
+                    <div class="mr-3">
+                        {% if request.requester_book.image_url %}
+                        <img src="{{ request.requester_book.image_url }}">
+                        {% endif %}       
+                    </div>
+                </div>
+
     </div>
     <div class="card-footer text-mutxed">
 
-        <a href="{% url 'transaction:request-delete' request.id %}" class="mr-2 btn btn-danger float-right">Decline Request</a>
+        <a href="{% url 'transaction:request-delete' request.id %}" class="mr-2 btn btn-danger float-right">Cancel Request</a>
     </div>
 </div>
 </br>
