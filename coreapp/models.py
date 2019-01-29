@@ -13,9 +13,10 @@ from django.core.validators import RegexValidator
 from django.core.mail import EmailMessage
 
 CONITION_CHOICES = (
+    ('Almost New', 'Almost New'),
     ('Acceptable', 'Acceptable'),
-    ('Bad', 'Bad'),
     ('Good', 'Good'),
+    ('Bad', 'Bad'),
 )
 ZIP_CHOICES = (
     ('421202', '421202'),
@@ -96,7 +97,7 @@ class ShippingAddress(models.Model):
     phone_regex = RegexValidator(
         regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+9999999999'. Up to 15 digits allowed.")
     phone_number = models.CharField(
-        validators=[phone_regex], max_length=17)
+        validators=[phone_regex], max_length=17, help_text="Enter your 10 digit phone number")
     flatnumber = models.CharField("Flat Number", max_length=100)
     address1 = models.CharField("Address line 1", max_length=500,)
     address2 = models.CharField(
@@ -267,7 +268,6 @@ def create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
-
 
 # @receiver(post_save, sender=Requests)
 # def send_request_email(sender, instance, created, **kwargs):

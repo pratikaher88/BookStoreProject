@@ -13,6 +13,10 @@ from django.db.models import Q
 from django.utils import timezone
 import datetime
 
+ordered_books = FinalBuyOrder.objects.values_list('book')
+requester_books = Transaction.objects.values_list('requester_book')
+offerrer_books = Transaction.objects.values_list('offerrer_book')
+
 @login_required
 def final_transaction(request, offer_id, book_id):
     offerrer_book = get_object_or_404(Book, id=book_id)
@@ -32,12 +36,24 @@ def final_transaction(request, offer_id, book_id):
                                 requester_book=new_request.requester_book, offerrer_book=offerrer_book, requester_address=requester_address, offerrer_address=offerrer_address)
         old_request = OldRequests(requester=new_request.requester, offerrer=new_request.offerrer,
                                   requester_book=new_request.requester_book)
+
+
+
+        # print(collection_items.exclude(books__id__in=ordered_books).exclude(books__id__in=requester_books).exclude(books__id__in=offerrer_books))
+
         # delete entry from requests
         new_request.delete()
+        
         # save old request
         # save new order
         new_order.save()
         old_request.save()
+
+        if not UserCollection.objects.get(
+                owner=new_request.requester.profile).books.filter(
+                sell_or_exchange='Exchange').exclude(id__in=offerrer_books).exclude(id__in=requester_books):
+                Requests.objects.filter(requester=new_request.requester).delete()
+
         return redirect('transaction:orders_view')
 
     if request.method == 'POST' and 'updateadd' in request.POST:
@@ -58,25 +74,27 @@ def add_request(request,book_id):
 
     address = ShippingAddress.objects.get(profile=request.user.profile)
     if address.status():
-        messages.info(request, "You need to add  address in profile to make request")
+        messages.info(request, "You need to add  address in profile to make request !")
     else:
-        if (UserCollection.objects.filter(
-                owner=request.user.profile, books__sell_or_exchange="Exchange").exists()):
+        if (UserCollection.objects.get(
+            owner=request.user.profile).books.exclude(
+                id__in=requester_books).exclude(id__in=offerrer_books).filter(sell_or_exchange="Exchange").exists()):
             if Requests.objects.filter(requester=request.user, offerrer=book.user, requester_book=book).exists():
-                messages.info(request,"Requests already made!")
+                messages.info(request,"Request for this book already made!")
             else:
                 date_from = datetime.datetime.now(
                     tz=timezone.utc) - datetime.timedelta(days=1)
 
                 no_of_requests_made_in_one_day = Requests.objects.filter(requester=request.user, timestamp__gte=date_from).count()
 
-                if no_of_requests_made_in_one_day>9:
-                    messages.warning(request,"Maximum requests exceeded for one day : you can make maximum of 10 requests")
+                if no_of_requests_made_in_one_day>6:
+                    messages.warning(request,"Maximum requests exceeded for one day : you can make maximum of 7 requests")
                 else:
                     messages.info(
                         request, "New Request made!")
 
                     new_request.save()
+                    return redirect('transaction:requests_view')
         else:
             messages.info(request, ('You need to add "Exchange" items to your collection to make a request!'))
 

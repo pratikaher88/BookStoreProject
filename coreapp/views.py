@@ -5,7 +5,7 @@ from django.urls import reverse_lazy, reverse
 from .forms import UserCreationForm, NewEntryForm, UserForm, ProfileForm, ShippingAddressForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from coreapp.models import Book, Profile, UserCollection, ShippingAddress, FinalBuyOrder, Transaction, CompletedBuyOrder
+from coreapp.models import Book, Profile, UserCollection, ShippingAddress, FinalBuyOrder, Transaction, CompletedBuyOrder, Requests
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
@@ -132,38 +132,6 @@ class BookDetailView(generic.DetailView):
     template_name = 'book_detail_view.html'
 
 
-class NewEntry(LoginRequiredMixin, generic.CreateView):
-    form_class = NewEntryForm
-    success_url = reverse_lazy('coreapp:userbooks')
-    template_name = 'new_entry.html'
-
-    def form_valid(self, form):
-
-        # if self.request.method == 'POST' and 'check' in self.request.POST:
-        #     print("POST request")
-        #     return red
-
-        address = get_object_or_404(
-            ShippingAddress, profile=self.request.user.profile)
-
-        if address.address1 == '':
-            messages.info(
-                self.request, 'You need to update address in profile to make a Sell request!')
-            return redirect('coreapp:new_entry')
-
-        book = form.save(commit=False)
-        book.user = self.request.user
-        book.save()
-
-        collection, status = UserCollection.objects.get_or_create(
-            owner=self.request.user.profile)
-
-        collection.books.add(book)
-        collection.save()
-
-        return super(NewEntry, self).form_valid(form)
-
-
 @login_required
 def new_entry(request):
     if request.method == 'POST' and 'check' in request.POST:
@@ -241,11 +209,19 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
     template_name = 'book_confirm_delete.html'
 
     def test_func(self):
-
         book = self.get_object()
         if self.request.user == book.user:
             return True
         return False
+
+    def delete(self, *args, **kwargs):
+        reponse = super(PostDeleteView, self).delete(*args, *kwargs)
+        if not (UserCollection.objects.get(
+            owner=self.request.user.profile).books.filter(
+            sell_or_exchange='Exchange').exclude(id__in=offerrer_books).exclude(id__in=requester_books).exists()):
+            Requests.objects.filter(requester=self.request.user).delete()
+
+        return reponse
 
 
 @login_required
