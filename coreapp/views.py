@@ -188,6 +188,10 @@ def new_entry(request):
                 messages.info(
                     request, 'You need to update address in profile to make a Sell request!')
                 return redirect('coreapp:new_entry')
+
+            if new_entry_form.cleaned_data['price'] is None and new_entry_form.cleaned_data['sell_or_exchange'] == 'Sell':
+                messages.info(request,"Price cannot be blank in Sell order")
+                return redirect('coreapp:new_entry')
             
             book = Book()
             book.user = request.user

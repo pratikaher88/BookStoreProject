@@ -167,9 +167,9 @@ STATICFILES_DIRS = [
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_FILE_PATH='pratikaher88@gmail.com'
+EMAIL_FILE_PATH = 'cadabra.care@gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = 'pratikaher88@gmail.com'
-EMAIL_HOST_PASSWORD = 'bruaxgxxypbzwzod'
+EMAIL_HOST_USER = 'cadabrabooks@gmail.com'
+EMAIL_HOST_PASSWORD = '#phantom619'

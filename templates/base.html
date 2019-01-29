@@ -53,7 +53,15 @@
           </div>
         </div>
       </div>
-
+      <!-- {{ user.date_joined }}
+      {{ user.last_login }}
+      {% if user.last_login == user.date_joined %}
+      <script type="text/javascript">
+        $(function () {
+          $('#illustration').modal('show');
+        });
+      </script>
+      {% endif %} -->
 
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle mr-3" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -118,8 +126,6 @@
                       <p class="card-text">
                         You need to add address and phone number in profile settings, it is a one time process</p>
                       <a class="btn btn-success" style="color: white" href="{% url 'coreapp:address_edit' %}">Update</a>
-                      
-
 
                       </div>
                       </div>

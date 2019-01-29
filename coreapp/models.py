@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete ,pre_delete
 from django.dispatch import receiver
 from PIL import Image
 from random import choice
@@ -45,8 +45,8 @@ class Book(models.Model):
         max_length=100, help_text="We only deal with original books with ISBN codes, pirated books will not be accepted.")
     author_name = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=2000, blank=True, null=True)
-    image = models.ImageField('Book Image', null=True,
-                              blank=True, upload_to="book_images/")
+    # image = models.ImageField('Book Image', null=True,
+    #                           blank=True, upload_to="book_images/")
     price = models.IntegerField(
         null=True, blank=True, help_text="We would be deducting 20 rupees from item price for delivery purposes.")
     sell_or_exchange = models.CharField(
@@ -63,13 +63,13 @@ class Book(models.Model):
     def __str__(self):
         return self.book_name
 
-    def save(self, *args, **kwargs):
-        super(Book, self).save(*args, **kwargs)
-        if self.image:
-            img = Image.open(self.image.path)
-            output_size = (120, 120)
-            img.thumbnail(output_size)
-            img.save(self.image.path)
+    # def save(self, *args, **kwargs):
+    #     super(Book, self).save(*args, **kwargs)
+    #     if self.image:
+    #         img = Image.open(self.image.path)
+    #         output_size = (120, 120)
+    #         img.thumbnail(output_size)
+    #         img.save(self.image.path)
 
 
 class Profile(models.Model):
@@ -153,8 +153,8 @@ class Requests(models.Model):
     def __str__(self):
         return "Request from {}, to {} ,with Book {}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name)
 
-    # class Meta:
-    #     verbose_name_plural = "Requests"
+    class Meta:
+        verbose_name_plural = "Requests"
 
 
 class Transaction(models.Model):
@@ -189,6 +189,8 @@ class OldRequests(models.Model):
     def __str__(self):
         return "From {}, to {} ,with Book {}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name)
 
+    class Meta:
+        verbose_name_plural = "Old Requests"
 
 class FinalBuyOrder(models.Model):
     user = models.ForeignKey(User, related_name='user',
@@ -267,45 +269,44 @@ def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 
-@receiver(post_save, sender=Requests)
-def send_request_email(sender, instance, created, **kwargs):
+# @receiver(post_save, sender=Requests)
+# def send_request_email(sender, instance, created, **kwargs):
     
-    if created:
-        print("Email", instance.offerrer.email)
-        # email = EmailMessage('New order for book '+instance.requester_book.book_name,
-        #                      'from user '+instance.requester.username + 'to user' +
-        #                      instance.offerrer.username ,
-        #                      to=[instance.offerrer.email])
-        # email.send()
+#     if created:
+#         print("Email", instance.offerrer.email)
+#         email = EmailMessage('New Request for book '+instance.requester_book.book_name,
+#                              'You have recieved a new request from user '+instance.requester.username + ' for book '+instance.requester_book.book_name,
+#                              to=[instance.offerrer.email])
+#         email.send()
 
 
-@receiver(post_save, sender=Transaction)
-def send_transaction_email(sender, instance, created, **kwargs):
+# @receiver(post_save, sender=Transaction)
+# def send_transaction_email(sender, instance, created, **kwargs):
 
-    if created:
+#     if created:
             
-        email = EmailMessage('Transasction created for book ' + instance.requester_book.book_name +'from user' +
-                            instance.requester + 'to user' + instance.offerrer +'with book '+ instance.offerrer_book.book_name, to=[instance.offerrer.email, instance.requester.email])
-        email.send()
+#         email = EmailMessage('Transasction created for book ' + instance.requester_book.book_name +'from user' +
+#                             instance.requester + 'to user' + instance.offerrer +'with book '+ instance.offerrer_book.book_name, to=[instance.offerrer.email, instance.requester.email])
+#         email.send()
 
 
-@receiver(post_save, sender=FinalBuyOrder)
-def send_buyorder_email(sender, instance, created, **kwargs):
-
-    if created:
-        email = EmailMessage('buy order for book from user '+instance.seller.user_name +
-                            'with price' + instance.book.price, to=[instance.user.email,instance.seller.email] )
-        email.send()
-
-# @receiver(pre_delete, sender=Requests)
+# @receiver(post_save, sender=FinalBuyOrder)
 # def send_buyorder_email(sender, instance, created, **kwargs):
 
 #     if created:
-#         email = EmailMessage('Request cancelled for book '+ instance.requester_book.book_name,
-#                             'from user '+instance.requester + 'to user' +
-#                     instance.offerrer+'with book' + instance.requester_book.book_name,
-#                     to=[instance.offerrer.email])
+#         email = EmailMessage('buy order for book from user '+instance.seller.user_name +
+#                             'with price' + instance.book.price, to=[instance.user.email,instance.seller.email] )
 #         email.send()
+
+# @receiver(pre_delete, sender=Requests)
+# def cancel_requests_email(sender, instance, **kwargs):
+
+#     print("Email", instance.offerrer.email)
+#     email = EmailMessage('Request cancelled for book '+instance.requester_book.book_name,
+#                             'Request fro book from user '+instance.requester.username +
+#                             ' for book '+instance.requester_book.book_name +'is cancelled',
+#                             to=[instance.offerrer.email])
+#     email.send()
 
 # @receiver(pre_delete, sender=Transaction)
 # def send_transaction_email(sender, instance, created, **kwargs):

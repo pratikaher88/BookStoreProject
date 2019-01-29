@@ -21,7 +21,7 @@ def add_to_cart(request, item_id):
         return redirect(reverse('coreapp:buy_entries'))
     user_order.items.add(book)
     user_order.save()
-    messages.info(request, "item added to cart")
+    messages.info(request, "Item added to cart!")
     return redirect(reverse('coreapp:buy_entries'))
 
 @login_required

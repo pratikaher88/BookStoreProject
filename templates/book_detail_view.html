@@ -6,7 +6,7 @@
 
     <div class="card text-left">
         <div class="card-header">
-            Seller : {{ object.user.username }}
+        Seller: <a href="{% url 'coreapp:userbooksforuser' book.user %}" style="color:black">{{ book.user.username }}</a>
         </div>
         <div class="card-body">
     
@@ -25,7 +25,7 @@
                     <p class="card-text">Price : {{ object.price }} </p>
                     {% endif %}
                 </div>
-                <div class="mr-3">
+                <div class="mr-3 ml-1">
                     {% if object.image_url %}
                     <img src="{{ object.image_url }}">
                     {% endif %}
