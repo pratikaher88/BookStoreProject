@@ -11,6 +11,7 @@ from os.path import isfile
 from nofapapp.settings import BASE_DIR
 from django.core.validators import RegexValidator
 from django.core.mail import EmailMessage
+import threading
 
 CONITION_CHOICES = (
     ('Almost New', 'Almost New'),
@@ -265,19 +266,50 @@ def create_profile(sender, instance, created, **kwargs):
         UserCollection.objects.create(owner=instance.profile)
 
 
+# class EmailThread(threading.Thread):
+#     def __init__(self, subject, html_content, recipient_list):
+#         self.subject = subject
+#         self.recipient_list = recipient_list
+#         self.html_content = html_content
+#         threading.Thread.__init__(self)
+
+#     def run(self):
+#         msg = EmailMessage(self.subject, self.html_content, to=self.recipient_list)
+#         msg.send()
+
+
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
-# @receiver(post_save, sender=Requests)
-# def send_request_email(sender, instance, created, **kwargs):
+@receiver(post_save, sender=Requests)
+def send_request_email(sender, instance, created, **kwargs):
     
-#     if created:
-#         print("Email", instance.offerrer.email)
-#         email = EmailMessage('New Request for book '+instance.requester_book.book_name,
-#                              'You have recieved a new request from user '+instance.requester.username + ' for book '+instance.requester_book.book_name,
-#                              to=[instance.offerrer.email])
-#         email.send()
+    if created:
+        print("Email", instance.offerrer.email)
+        # EmailThread('New Request for book '+instance.requester_book.book_name,
+        #             'You have recieved a new request from user '+instance.requester.username + ' for book '+instance.requester_book.book_name,
+        #             [instance.offerrer.email]).start()
+
+        # email = EmailMessage('New Request for book '+instance.requester_book.book_name,
+        #                      'You have recieved a new request from user '+instance.requester.username + ' for book '+instance.requester_book.book_name,
+        #                      to=[instance.offerrer.email])
+        # email.send()
+
+# @receiver(pre_delete, sender=Requests)
+# def cancel_requests_email(sender, instance, **kwargs):
+
+#     print("Email", instance.offerrer.email)
+#     EmailThread('New Request for book '+instance.requester_book.book_name,
+#                 'You have recieved a new request from user '+instance.requester.username +
+#                 ' for book '+instance.requester_book.book_name,
+#                 [instance.offerrer.email]).start()
+
+    # email = EmailMessage('Request cancelled for book '+instance.requester_book.book_name,
+    #                         'Request fro book from user '+instance.requester.username +
+    #                         ' for book '+instance.requester_book.book_name +'is cancelled',
+    #                         to=[instance.offerrer.email])
+    # email.send()
 
 
 # @receiver(post_save, sender=Transaction)
