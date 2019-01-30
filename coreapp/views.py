@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views import generic
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy, reverse
 from .forms import UserCreationForm, NewEntryForm, UserForm, ProfileForm, ShippingAddressForm
@@ -9,7 +9,6 @@ from coreapp.models import Book, Profile, UserCollection, ShippingAddress, Final
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.exceptions import ObjectDoesNotExist
 import requests
 import json
 from nofapapp.settings import GOOGLE_BOOKS_URL
@@ -18,21 +17,19 @@ ordered_books = FinalBuyOrder.objects.values_list('book')
 requester_books = Transaction.objects.values_list('requester_book')
 offerrer_books = Transaction.objects.values_list('offerrer_book')
 
-
 @login_required
 def profile(request):
     address = ShippingAddress.objects.get(profile=request.user.profile)
     return render(request, 'profile.html', {'profile': request.user.profile, 'address': address})
 
 
-class SignUp(SuccessMessageMixin, generic.CreateView):
+class SignUp(SuccessMessageMixin, CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
     success_message = 'Account Created! You can now Login!'
 
-
-class BookListView(LoginRequiredMixin, generic.ListView):
+class BookListView(LoginRequiredMixin, ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
@@ -43,13 +40,9 @@ class BookListView(LoginRequiredMixin, generic.ListView):
         # requester_books = Transaction.objects.values_list('requester_book')
         # offerrer_books = Transaction.objects.values_list('offerrer_book')
         return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).exclude(id__in=requester_books).exclude(id__in=offerrer_books).order_by('-created_at')
-        # if self.request.user.is_authenticated:
-        #     return Book.objects.exclude(user=self.request.user).order_by('?')
-        # else:
-        #     return Book.objects.all().order_by('?')
 
 
-class BuyListView(LoginRequiredMixin, generic.ListView):
+class BuyListView(LoginRequiredMixin, ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
@@ -60,7 +53,7 @@ class BuyListView(LoginRequiredMixin, generic.ListView):
         return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).filter(sell_or_exchange='Sell').order_by('-created_at')
 
 
-class ExchangeListView(LoginRequiredMixin, generic.ListView):
+class ExchangeListView(LoginRequiredMixin, ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
@@ -72,7 +65,7 @@ class ExchangeListView(LoginRequiredMixin, generic.ListView):
         return Book.objects.exclude(user=self.request.user).exclude(id__in=requester_books).exclude(id__in=offerrer_books).filter(sell_or_exchange='Exchange').order_by('-created_at')
 
 
-class UserBookListView(LoginRequiredMixin, generic.ListView):
+class UserBookListView(LoginRequiredMixin, ListView):
     model = Book
     template_name = 'user_books_list_entries.html'
     context_object_name = 'books'
@@ -89,7 +82,7 @@ class UserBookListView(LoginRequiredMixin, generic.ListView):
             id__in=requester_books).exclude(id__in=offerrer_books)
 
 
-class UserBookSoldItemsView(LoginRequiredMixin, generic.ListView):
+class UserBookSoldItemsView(LoginRequiredMixin, ListView):
     model = Book
     template_name = 'user_books_sold_list_entries.html'
     context_object_name = 'books'
@@ -99,15 +92,10 @@ class UserBookSoldItemsView(LoginRequiredMixin, generic.ListView):
         # ordered_books = FinalBuyOrder.objects.values_list('book')
         # requester_books = Transaction.objects.values_list('requester_book')
         # offerrer_books = Transaction.objects.values_list('offerrer_book')
-        # collection_items = UserCollection.objects.get(
-        #     owner=self.request.user.profile)
-
-        # return collection_items.books.filter(id__in=ordered_books).exclude(
-        #     id__in=requester_books).exclude(id__in=offerrer_books)
         return CompletedBuyOrder.objects.filter(seller=self.request.user).order_by('date_ordered')
 
 
-class UserBookListViewForUser(LoginRequiredMixin, generic.ListView):
+class UserBookListViewForUser(LoginRequiredMixin, ListView):
     model = Book
     template_name = 'collection_user_entries.html'
     context_object_name = 'books'
@@ -127,7 +115,7 @@ class UserBookListViewForUser(LoginRequiredMixin, generic.ListView):
             id__in=requester_books).exclude(id__in=offerrer_books)
 
 
-class BookDetailView(generic.DetailView):
+class BookDetailView(DetailView):
     model = Book
     template_name = 'book_detail_view.html'
 
@@ -185,7 +173,7 @@ def new_entry(request):
     })
 
 
-class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Book
     form_class = NewEntryForm
     template_name = 'new_entry_update.html'
@@ -196,14 +184,13 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
         return super().form_valid(form)
 
     def test_func(self):
-
         book = self.get_object()
         if self.request.user == book.user:
             return True
         return False
 
 
-class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Book
     success_url = reverse_lazy('coreapp:userbooks')
     template_name = 'book_confirm_delete.html'

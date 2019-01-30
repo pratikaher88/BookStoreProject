@@ -37,10 +37,6 @@ def final_transaction(request, offer_id, book_id):
         old_request = OldRequests(requester=new_request.requester, offerrer=new_request.offerrer,
                                   requester_book=new_request.requester_book)
 
-
-
-        # print(collection_items.exclude(books__id__in=ordered_books).exclude(books__id__in=requester_books).exclude(books__id__in=offerrer_books))
-
         # delete entry from requests
         new_request.delete()
         
@@ -79,6 +75,7 @@ def add_request(request,book_id):
         if (UserCollection.objects.get(
             owner=request.user.profile).books.exclude(
                 id__in=requester_books).exclude(id__in=offerrer_books).filter(sell_or_exchange="Exchange").exists()):
+
             if Requests.objects.filter(requester=request.user, offerrer=book.user, requester_book=book).exists():
                 messages.info(request,"Request for this book already made!")
             else:
@@ -91,9 +88,10 @@ def add_request(request,book_id):
                     messages.warning(request,"Maximum requests exceeded for one day : you can make maximum of 7 requests")
                 else:
                     messages.info(
-                        request, "New Request made!")
+                        request, "New Request !")
 
                     new_request.save()
+
                     return redirect('transaction:requests_view')
         else:
             messages.info(request, ('You need to add "Exchange" items to your collection to make a request!'))
