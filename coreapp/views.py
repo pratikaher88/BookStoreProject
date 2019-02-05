@@ -11,6 +11,7 @@ from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.cache import cache
 from django.core.paginator import Paginator
+from django.db.models import Case, When
 import random
 import requests
 import json
@@ -19,7 +20,6 @@ from nofapapp.settings import GOOGLE_BOOKS_URL
 ordered_books = FinalBuyOrder.objects.values_list('book')
 requester_books = Transaction.objects.values_list('requester_book')
 offerrer_books = Transaction.objects.values_list('offerrer_book')
-RANDOM_EXPERIENCES = 5
 
 @login_required
 def profile(request):
@@ -37,7 +37,7 @@ class BookListView(LoginRequiredMixin, ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
-    paginate_by = 15
+    paginate_by = 2
 
     def get_queryset(self):
         # ordered_books = FinalBuyOrder.objects.values_list('book')
@@ -45,27 +45,24 @@ class BookListView(LoginRequiredMixin, ListView):
         # offerrer_books = Transaction.objects.values_list('offerrer_book')
 
         if not self.request.session.get('random_exp'):
-            self.request.session['random_exp'] = random.randrange(0, RANDOM_EXPERIENCES)
-
+            self.request.session['random_exp'] = random.randrange(0, 5)
+        
         id_list = cache.get('random_exp_%d' % self.request.session['random_exp'])
+
         if not id_list:
             id_list = [object['id']
                        for object in Book.objects.values('id').all().order_by('?')]
 
             cache.set('random_exp_%d' %
-                    self.request.session['random_exp'], id_list, 10)
+                    self.request.session['random_exp'], id_list, 300)
 
-        print(id_list)
-        paginator = Paginator(id_list, 12)
-        print(paginator.num_pages)
-        page = 1
-        # display_id_list = paginator.page(page)
-        # object_list = Book.objects.filter(id__in=id_list)
+        preserved = Case(*[When(pk=pk, then=pos)
+                           for pos, pk in enumerate(id_list)])
 
-        # print(object_list)
+        book_object_list = (Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).exclude(
+            id__in=requester_books).exclude(id__in=offerrer_books).filter(id__in=id_list).order_by(preserved))
 
-
-        return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).exclude(id__in=requester_books).exclude(id__in=offerrer_books).order_by('-created_at')
+        return book_object_list
 
 
 class BuyListView(LoginRequiredMixin, ListView):
