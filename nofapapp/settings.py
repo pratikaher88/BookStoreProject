@@ -171,5 +171,11 @@ EMAIL_FILE_PATH = 'cadabra.care@gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
+# EMAIL_HOST = 'smtp.mailgun.org'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'postmaster@sandbox9521f5b8de4f4b96be4029b88f03dd8b.mailgun.org'
+# EMAIL_HOST_PASSWORD = '440036e31d2dc476e4e3e48e37b734e5-c8c889c9-55cdd06c'
+# EMAIL_USE_TLS = True
+
 EMAIL_HOST_USER = 'cadabrabooks@gmail.com'
 EMAIL_HOST_PASSWORD = '#phantom619'

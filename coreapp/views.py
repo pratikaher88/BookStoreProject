@@ -9,6 +9,9 @@ from coreapp.models import Book, Profile, UserCollection, ShippingAddress, Final
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.cache import cache
+from django.core.paginator import Paginator
+import random
 import requests
 import json
 from nofapapp.settings import GOOGLE_BOOKS_URL
@@ -16,6 +19,7 @@ from nofapapp.settings import GOOGLE_BOOKS_URL
 ordered_books = FinalBuyOrder.objects.values_list('book')
 requester_books = Transaction.objects.values_list('requester_book')
 offerrer_books = Transaction.objects.values_list('offerrer_book')
+RANDOM_EXPERIENCES = 5
 
 @login_required
 def profile(request):
@@ -39,6 +43,28 @@ class BookListView(LoginRequiredMixin, ListView):
         # ordered_books = FinalBuyOrder.objects.values_list('book')
         # requester_books = Transaction.objects.values_list('requester_book')
         # offerrer_books = Transaction.objects.values_list('offerrer_book')
+
+        if not self.request.session.get('random_exp'):
+            self.request.session['random_exp'] = random.randrange(0, RANDOM_EXPERIENCES)
+
+        id_list = cache.get('random_exp_%d' % self.request.session['random_exp'])
+        if not id_list:
+            id_list = [object['id']
+                       for object in Book.objects.values('id').all().order_by('?')]
+
+            cache.set('random_exp_%d' %
+                    self.request.session['random_exp'], id_list, 10)
+
+        print(id_list)
+        paginator = Paginator(id_list, 12)
+        print(paginator.num_pages)
+        page = 1
+        # display_id_list = paginator.page(page)
+        # object_list = Book.objects.filter(id__in=id_list)
+
+        # print(object_list)
+
+
         return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).exclude(id__in=requester_books).exclude(id__in=offerrer_books).order_by('-created_at')
 
 

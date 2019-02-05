@@ -11,6 +11,7 @@ from os.path import isfile
 from nofapapp.settings import BASE_DIR
 from django.core.validators import RegexValidator
 from django.core.mail import EmailMessage
+from django.core.mail import send_mail
 import threading
 
 CONITION_CHOICES = (
@@ -291,6 +292,7 @@ def send_request_email(sender, instance, created, **kwargs):
         #             'You have recieved a new request from user '+instance.requester.username + ' for book '+instance.requester_book.book_name,
         #             [instance.offerrer.email]).start()
 
+        # send_mail('subject', 'body of the message', 'noreply@brozo.co', ['pratikaher88@gmail.com'])
         # email = EmailMessage('New Request for book '+instance.requester_book.book_name,
         #                      'You have recieved a new request from user '+instance.requester.username + ' for book '+instance.requester_book.book_name,
         #                      to=[instance.offerrer.email])
