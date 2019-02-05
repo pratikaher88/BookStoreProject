@@ -37,55 +37,99 @@ class BookListView(LoginRequiredMixin, ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
-    paginate_by = 2
+    paginate_by = 12
 
     def get_queryset(self):
         # ordered_books = FinalBuyOrder.objects.values_list('book')
         # requester_books = Transaction.objects.values_list('requester_book')
         # offerrer_books = Transaction.objects.values_list('offerrer_book')
 
-        if not self.request.session.get('random_exp'):
-            self.request.session['random_exp'] = random.randrange(0, 5)
+        if not self.request.session.get('all_books'):
+            self.request.session['all_books'] = random.randrange(0, 5)
         
-        id_list = cache.get('random_exp_%d' % self.request.session['random_exp'])
+        id_list = cache.get('all_books_%d' %
+                            self.request.session['all_books'])
 
         if not id_list:
             id_list = [object['id']
                        for object in Book.objects.values('id').all().order_by('?')]
 
-            cache.set('random_exp_%d' %
-                    self.request.session['random_exp'], id_list, 300)
+            cache.set('all_books_%d' %
+                      self.request.session['all_books'], id_list, 200)
 
         preserved = Case(*[When(pk=pk, then=pos)
                            for pos, pk in enumerate(id_list)])
 
-        book_object_list = (Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).exclude(
-            id__in=requester_books).exclude(id__in=offerrer_books).filter(id__in=id_list).order_by(preserved))
+        book_object_list = Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).exclude(
+            id__in=requester_books).exclude(id__in=offerrer_books).filter(id__in=id_list).order_by(preserved)
 
         return book_object_list
 
+        # return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).exclude(
+        #     id__in=requester_books).exclude(id__in=offerrer_books).order_by('-created_at')
 
 class BuyListView(LoginRequiredMixin, ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
-    paginate_by = 15
+    paginate_by = 12
 
     def get_queryset(self):
         # ordered_books = FinalBuyOrder.objects.values_list('book')
-        return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).filter(sell_or_exchange='Sell').order_by('-created_at')
+
+        if not self.request.session.get('buy_books'):
+            self.request.session['buy_books'] = random.randrange(0, 5)
+        
+        id_list = cache.get('buy_books_%d' %
+                            self.request.session['buy_books'])
+
+        if not id_list:
+            id_list = [object['id']
+                       for object in Book.objects.values('id').all().order_by('?')]
+
+            cache.set('buy_books_%d' %
+                      self.request.session['buy_books'], id_list, 200)
+
+        preserved = Case(*[When(pk=pk, then=pos)
+                           for pos, pk in enumerate(id_list)])
+
+        book_object_list = Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).filter(sell_or_exchange='Sell').filter(id__in=id_list).order_by(preserved)
+
+        return book_object_list
+
+        # return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).filter(sell_or_exchange='Sell').order_by('-created_at')
 
 
 class ExchangeListView(LoginRequiredMixin, ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
-    paginate_by = 15
+    paginate_by = 12
 
     def get_queryset(self):
         # requester_books = Transaction.objects.values_list('requester_book')
         # offerrer_books = Transaction.objects.values_list('offerrer_book')
-        return Book.objects.exclude(user=self.request.user).exclude(id__in=requester_books).exclude(id__in=offerrer_books).filter(sell_or_exchange='Exchange').order_by('-created_at')
+        if not self.request.session.get('exchange_books'):
+            self.request.session['exchange_books'] = random.randrange(0, 5)
+        
+        id_list = cache.get('exchange_books_%d' %
+                            self.request.session['exchange_books'])
+
+        if not id_list:
+            id_list = [object['id']
+                       for object in Book.objects.values('id').all().order_by('?')]
+
+            cache.set('exchange_books_%d' %
+                      self.request.session['exchange_books'], id_list, 200)
+
+        preserved = Case(*[When(pk=pk, then=pos)
+                           for pos, pk in enumerate(id_list)])
+
+        book_object_list = Book.objects.exclude(user=self.request.user).exclude(id__in=requester_books).exclude(id__in=offerrer_books).filter(sell_or_exchange='Exchange').order_by(preserved)
+
+        return book_object_list
+
+        # return Book.objects.exclude(user=self.request.user).exclude(id__in=requester_books).exclude(id__in=offerrer_books).filter(sell_or_exchange='Exchange').order_by('-created_at')
 
 
 class UserBookListView(LoginRequiredMixin, ListView):
