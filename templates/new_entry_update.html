@@ -35,8 +35,7 @@
         
         <div class="fieldWrapper">
             {{ form.description | as_crispy_field }}
-        </div>
-        
+        </div>    
         
         <div class="fieldWrapper">
             {{ form.sell_or_exchange | as_crispy_field }}
@@ -47,12 +46,17 @@
         </div>
         
         <div class="fieldWrapper">
+            {{ form.image_url | as_crispy_field }}
+        </div>
+
+        <div class="fieldWrapper">
             {{ form.condition | as_crispy_field }}
         </div>
 
     <script type="text/javascript">
 
         document.getElementById("priceid").disabled = true;
+        document.getElementById('id_image_url').readOnly = true;
 
         var sell_or_exchange = $("#id_sell_or_exchange");
 
@@ -74,6 +78,8 @@
     </script>
 
     <button type="submit" class="btn btn-primary btn-block" name="submitentry">SUBMIT</button>
+
+
 </form>
 
 
