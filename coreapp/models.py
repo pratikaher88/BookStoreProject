@@ -321,7 +321,8 @@ def cancel_requests_email(sender, instance, **kwargs):
 @receiver(post_save, sender=Transaction)
 def send_transaction_email(sender, instance, created, **kwargs):
     
-    print("Email")
+    if created:
+        print("Email")
 
     # if created:
             
