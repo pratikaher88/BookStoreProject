@@ -284,11 +284,11 @@ def create_profile(sender, instance, created, **kwargs):
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
-@receiver(post_save, sender=Requests)
-def send_request_email(sender, instance, created, **kwargs):
+# @receiver(post_save, sender=Requests)
+# def send_request_email(sender, instance, created, **kwargs):
     
-    if created:
-        print("Email", instance.offerrer.email)
+#     if created:
+#         print("Email", instance.offerrer.email)
 
         # EmailThread('New Request for book '+instance.requester_book.book_name,
         #             'You have recieved a new request from user '+instance.requester.username + ' for book '+instance.requester_book.book_name,
@@ -302,8 +302,8 @@ def send_request_email(sender, instance, created, **kwargs):
         #                      to=[instance.offerrer.email])
         # email.send()
 
-@receiver(pre_delete, sender=Requests)
-def cancel_requests_email(sender, instance, **kwargs):
+# @receiver(pre_delete, sender=Requests)
+# def cancel_requests_email(sender, instance, **kwargs):
 
 #     print("Email", instance.offerrer.email)
 #     EmailThread('New Request for book '+instance.requester_book.book_name,
@@ -318,11 +318,11 @@ def cancel_requests_email(sender, instance, **kwargs):
     # email.send()
 
 
-@receiver(post_save, sender=Transaction)
-def send_transaction_email(sender, instance, created, **kwargs):
+# @receiver(post_save, sender=Transaction)
+# def send_transaction_email(sender, instance, created, **kwargs):
     
-    if created:
-        print("Email")
+#     if created:
+#         print("Email")
 
     # if created:
             
@@ -331,10 +331,10 @@ def send_transaction_email(sender, instance, created, **kwargs):
     #     email.send()
 
 
-@receiver(post_save, sender=FinalBuyOrder)
-def send_buyorder_email(sender, instance, created, **kwargs):
+# @receiver(post_save, sender=FinalBuyOrder)
+# def send_buyorder_email(sender, instance, created, **kwargs):
     
-    print("Email")
+#     print("Email")
     # if created:
 
     #     email = EmailMessage('Buy order for book from user '+instance.seller.user_name +
@@ -342,18 +342,19 @@ def send_buyorder_email(sender, instance, created, **kwargs):
     #     email.send()
 
 
-@receiver(pre_delete, sender=Transaction)
-def send_transaction_email(sender, instance , **kwargs):
+# @receiver(pre_delete, sender=Transaction)
+# def send_transaction_email(sender, instance , **kwargs):
 
-    print("Email")
+#     print("Email")
     # email = EmailMessage('Order cancelled for book '+ instance.requester_book.book_name,
     #                      'from user '+instance.requester.username + 'to user' + instance.offerrer.username + '. Go to https://cadabra.co.in/ for more details.', to=[instance.offerrer.email])
     # email.send()
 
 
-@receiver(pre_delete, sender=FinalBuyOrder)
-def send_buyorder_email(sender, instance, created, **kwargs):
-    print("Email")
+# @receiver(pre_delete, sender=FinalBuyOrder)
+# def send_buyorder_email(sender, instance, created, **kwargs):
+
+#     print("Email")
     # email = EmailMessage('Buy order cancelled for book from user ' + instance.seller.user_name +
     #                      'with price' + instance.book.price+'. Go to https://cadabra.co.in/orders/ for more details.' , to=[instance.user.email])
     # email.send()
