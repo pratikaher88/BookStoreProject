@@ -2,7 +2,6 @@ appdirs==1.4.3
 astroid==1.6.5
 attrs==18.2.0
 autopep8==1.4.3
-black==18.9b0
 certifi==2018.11.29
 chardet==3.0.4
 Click==7.0
