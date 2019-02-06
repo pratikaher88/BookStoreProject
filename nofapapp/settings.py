@@ -31,7 +31,7 @@ DEBUG = True
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['159.65.155.239']
 
 
 # Application definition
