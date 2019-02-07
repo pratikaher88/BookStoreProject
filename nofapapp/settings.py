@@ -103,12 +103,20 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'cadabrabooks',
-        'USER': 'pratikaher',
-        'PASSWORD': 'monster8',
+        'NAME': 'cadabradatabase',
+        'USER': 'cadabraadmin',
+        'PASSWORD': 'bullockcart8',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'cadabrabooks',
+    #     'USER': 'pratikaher',
+    #     'PASSWORD': 'monster8',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # }
 }
 
 
