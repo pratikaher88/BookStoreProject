@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 
+
 """
 Django settings for nofapapp project.
 
@@ -13,6 +14,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,17 +24,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '4t_gqc(-($+!3$1#5(z8(4ef3d)77#qvh!yaq934!loh5pa*a$'
+SECRET_KEY = config('SECRET_KEY')
 
 GOOGLE_BOOKS_URL = 'https://www.googleapis.com/books/v1/volumes'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = DEBUG = config('DEBUG', default=False, cast=bool)
 
-IMPORT_EXPORT_USE_TRANSACTIONS = True
-
-ALLOWED_HOSTS = ['139.59.47.233']
-
+ALLOWED_HOSTS = ['139.59.47.233','localhost']
 
 # Application definition
 
@@ -97,26 +96,23 @@ WSGI_APPLICATION = 'nofapapp.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
+
     # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': config('DATABASE_NAME'),
+    #     'USER': config('DATABSE_USER'),
+    #     'PASSWORD': config('DATABASE_PASSWORD'),
+    #     'HOST': 'localhost',
+    #     'PORT': '',
     # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'cadabradatabase',
-        'USER': 'cadabraadmin',
-        'PASSWORD': 'bullockcart8',
+        'NAME': 'cadabrabooks',
+        'USER': 'pratikaher',
+        'PASSWORD': 'monster8',
         'HOST': 'localhost',
-        'PORT': '',
+        'PORT': '5432',
     }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'cadabrabooks',
-    #     'USER': 'pratikaher',
-    #     'PASSWORD': 'monster8',
-    #     'HOST': 'localhost',
-    #     'PORT': '5432',
-    # }
 }
 
 
@@ -162,7 +158,6 @@ MEDIA_URL = '/media/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
@@ -171,11 +166,8 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_FILE_PATH = 'cadabra.care@gmail.com'
+EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = 587
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
-
-EMAIL_HOST_USER = 'cadabrabooks@gmail.com'
-EMAIL_HOST_PASSWORD = '#phantom619'
