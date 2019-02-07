@@ -31,7 +31,7 @@ DEBUG = True
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
-ALLOWED_HOSTS = ['159.65.155.239']
+ALLOWED_HOSTS = ['139.59.47.233']
 
 
 # Application definition
@@ -104,20 +104,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'cadabrabooks',
-        'USER': 'cadabraadmin',
-        'PASSWORD': 'bullockcart8',
+        'USER': 'pratikaher',
+        'PASSWORD': 'monster8',
         'HOST': 'localhost',
         'PORT': '5432',
     }
-
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'cadabrabooks',
-    #     'USER': 'pratikaher',
-    #     'PASSWORD': 'monster8',
-    #     'HOST': 'localhost',
-    #     'PORT': '5432',
-    # }
 }
 
 
@@ -179,7 +170,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_FILE_PATH = 'cadabra.care@gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-
 
 EMAIL_HOST_USER = 'cadabrabooks@gmail.com'
 EMAIL_HOST_PASSWORD = '#phantom619'
