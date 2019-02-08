@@ -29,7 +29,7 @@ SECRET_KEY = config('SECRET_KEY')
 GOOGLE_BOOKS_URL = 'https://www.googleapis.com/books/v1/volumes'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['139.59.47.233', '159.89.169.105', 'localhost','cadabra.co.in','www.cadabra.co.in']
 
