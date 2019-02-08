@@ -100,7 +100,7 @@ class ShippingAddress(models.Model):
     phone_regex = RegexValidator(
         regex=r'^\+?1?\d{10,15}$', message="Phone number must be entered in the format: '+9999999999'. Up to 15 digits allowed.")
     phone_number = models.CharField(
-        validators=[phone_regex], max_length=17, help_text="Enter your 10 digit phone number")
+        validators=[phone_regex], max_length=17, help_text="Enter your 10 digit phone number without any prefix code.")
     flatnumber = models.CharField("Flat Number", max_length=100)
     address1 = models.CharField("Address line 1", max_length=500,)
     address2 = models.CharField(
