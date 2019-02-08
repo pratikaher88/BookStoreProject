@@ -12,7 +12,7 @@ from coreapp.forms import ShippingAddressForm
 from django.db.models import Q
 from django.utils import timezone
 import datetime
-from django.db import SomeError, transaction
+from django.db import transaction
 
 ordered_books = FinalBuyOrder.objects.values_list('book')
 requester_books = Transaction.objects.values_list('requester_book')
