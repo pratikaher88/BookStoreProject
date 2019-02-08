@@ -12,11 +12,13 @@ from coreapp.forms import ShippingAddressForm
 from django.db.models import Q
 from django.utils import timezone
 import datetime
+from django.db import SomeError, transaction
 
 ordered_books = FinalBuyOrder.objects.values_list('book')
 requester_books = Transaction.objects.values_list('requester_book')
 offerrer_books = Transaction.objects.values_list('offerrer_book')
 
+@transaction.atomic
 @login_required
 def final_transaction(request, offer_id, book_id):
     offerrer_book = get_object_or_404(Book, id=book_id)
@@ -63,6 +65,8 @@ def final_transaction(request, offer_id, book_id):
                'address': address, 'address_form': address_form}
     return render(request,'transaction_final.html',context)
 
+
+@transaction.atomic
 @login_required
 def add_request(request,book_id):
     book = get_object_or_404(Book, id=book_id)
