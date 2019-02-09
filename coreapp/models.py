@@ -295,12 +295,12 @@ def send_request_email(sender, instance, created, **kwargs):
         #             [instance.offerrer.email]).start()
 
         # send_mail('subject', 'body of the message', 'noreply@brozo.co', ['pratikaher88@gmail.com'])
-        email = EmailMessage('New Request for book '+ instance.requester_book.book_name,
-                             'You have recieved a new request from user '+instance.requester.username + ' for book ' +
-                             instance.requester_book.book_name +
-                             '. Go to https://cadabra.co.in/transaction/offers/ for more details.',
-                             to=[instance.offerrer.email])
-        email.send()
+        # email = EmailMessage('New Request for book '+ instance.requester_book.book_name,
+        #                      'You have recieved a new request from user '+instance.requester.username + ' for book ' +
+        #                      instance.requester_book.book_name +
+        #                      '. Go to https://cadabra.co.in/transaction/offers/ for more details.',
+        #                      to=[instance.offerrer.email])
+        # email.send()
 
 # @receiver(pre_delete, sender=Requests)
 # def cancel_requests_email(sender, instance, **kwargs):
