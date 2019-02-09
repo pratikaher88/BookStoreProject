@@ -14,6 +14,15 @@
 {% endfor %}
 {% endif %}
 
+{% if addresscheck == "" %}
+
+<div class="alert alert-warning">
+  <strong>Warning!</strong> You cannot add a book without updating address !
+</div>
+
+{% endif %}
+
+
 
             <h3 class="card-title">New Entry</h3>
             <form method="post" novalidate>
