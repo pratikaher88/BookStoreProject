@@ -45,7 +45,7 @@ class BookListView(LoginRequiredMixin, ListView):
         # offerrer_books = Transaction.objects.values_list('offerrer_book')
 
         if not self.request.session.get('all_books'):
-            self.request.session['all_books'] = random.randrange(0, 5)
+            self.request.session['all_books'] = random.randrange(0, 3)
         
         id_list = cache.get('all_books_%d' %
                             self.request.session['all_books'])
@@ -78,7 +78,7 @@ class BuyListView(LoginRequiredMixin, ListView):
         # ordered_books = FinalBuyOrder.objects.values_list('book')
 
         if not self.request.session.get('buy_books'):
-            self.request.session['buy_books'] = random.randrange(0, 5)
+            self.request.session['buy_books'] = random.randrange(0, 3)
         
         id_list = cache.get('buy_books_%d' %
                             self.request.session['buy_books'])
@@ -110,7 +110,7 @@ class ExchangeListView(LoginRequiredMixin, ListView):
         # requester_books = Transaction.objects.values_list('requester_book')
         # offerrer_books = Transaction.objects.values_list('offerrer_book')
         if not self.request.session.get('exchange_books'):
-            self.request.session['exchange_books'] = random.randrange(0, 5)
+            self.request.session['exchange_books'] = random.randrange(0, 3)
         
         id_list = cache.get('exchange_books_%d' %
                             self.request.session['exchange_books'])
