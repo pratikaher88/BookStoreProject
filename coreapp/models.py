@@ -178,7 +178,7 @@ class Transaction(models.Model):
         ShippingAddress, related_name='seller_address', null=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "From {}, to {} Book1 is {} Book2 is{}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name, self.offerrer_book.book_name)
+        return "From {}, to {} and  {} to {}".format(self.requester.username, self.offerrer.username, self.requester_book.book_name, self.offerrer_book.book_name)
 
 
 class OldRequests(models.Model):
@@ -284,23 +284,23 @@ def create_profile(sender, instance, created, **kwargs):
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
-# @receiver(post_save, sender=Requests)
-# def send_request_email(sender, instance, created, **kwargs):
+@receiver(post_save, sender=Requests)
+def send_request_email(sender, instance, created, **kwargs):
     
-#     if created:
-#         print("Email", instance.offerrer.email)
+    if created:
+        print("Email", instance.offerrer.email)
 
-        # EmailThread('New Request for book '+instance.requester_book.book_name,
-        #             'You have recieved a new request from user '+instance.requester.username + ' for book '+instance.requester_book.book_name,
-        #             [instance.offerrer.email]).start()
+        EmailThread('New Request for book '+instance.requester_book.book_name,
+                    'You have recieved a new request from user '+instance.requester.username + ' for book '+instance.requester_book.book_name,
+                    [instance.offerrer.email]).start()
 
         # send_mail('subject', 'body of the message', 'noreply@brozo.co', ['pratikaher88@gmail.com'])
-        # email = EmailMessage('New Request for book '+ instance.requester_book.book_name,
-        #                      'You have recieved a new request from user '+instance.requester.username + ' for book ' +
-        #                      instance.requester_book.book_name +
-        #                      '. Go to https://cadabra.co.in/transaction/offers/ for more details.',
-        #                      to=[instance.offerrer.email])
-        # email.send()
+        email = EmailMessage('New Request for book '+ instance.requester_book.book_name,
+                             'You have recieved a new request from user '+instance.requester.username + ' for book ' +
+                             instance.requester_book.book_name +
+                             '. Go to https://cadabra.co.in/transaction/offers/ for more details.',
+                             to=[instance.offerrer.email])
+        email.send()
 
 # @receiver(pre_delete, sender=Requests)
 # def cancel_requests_email(sender, instance, **kwargs):
