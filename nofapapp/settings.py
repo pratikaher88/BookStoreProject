@@ -97,22 +97,22 @@ WSGI_APPLICATION = 'nofapapp.wsgi.application'
 
 DATABASES = {
 
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': config('DATABASE_NAME'),
-    #     'USER': config('DATABSE_USER'),
-    #     'PASSWORD': config('DATABASE_PASSWORD'),
-    #     'HOST': 'localhost',
-    #     'PORT': '',
-    # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'cadabrabooks',
-        'USER': 'pratikaher',
-        'PASSWORD': 'monster8',
+        'NAME': config('DATABASE_NAME'),
+        'USER': config('DATABSE_USER'),
+        'PASSWORD': config('DATABASE_PASSWORD'),
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'cadabrabooks',
+    #     'USER': 'pratikaher',
+    #     'PASSWORD': 'monster8',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # }
 }
 
 
