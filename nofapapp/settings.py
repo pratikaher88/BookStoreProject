@@ -29,7 +29,7 @@ SECRET_KEY = config('SECRET_KEY')
 GOOGLE_BOOKS_URL = 'https://www.googleapis.com/books/v1/volumes'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = True
 
 ALLOWED_HOSTS = ['139.59.47.233', '159.89.169.105', 'localhost','cadabra.co.in','www.cadabra.co.in']
 
@@ -97,22 +97,22 @@ WSGI_APPLICATION = 'nofapapp.wsgi.application'
 
 DATABASES = {
 
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': config('DATABASE_NAME'),
-        'USER': config('DATABSE_USER'),
-        'PASSWORD': config('DATABASE_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '',
-    }
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'cadabrabooks',
-    #     'USER': 'pratikaher',
-    #     'PASSWORD': 'monster8',
+    #     'NAME': config('DATABASE_NAME'),
+    #     'USER': config('DATABSE_USER'),
+    #     'PASSWORD': config('DATABASE_PASSWORD'),
     #     'HOST': 'localhost',
-    #     'PORT': '5432',
+    #     'PORT': '',
     # }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'cadabrabooks',
+        'USER': 'pratikaher',
+        'PASSWORD': 'monster8',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
 
 
