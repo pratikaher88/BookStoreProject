@@ -19,7 +19,9 @@
         <a href="{% url 'coreapp:address_edit' %}" class="mr-2 btn btn-info float-right">Update Address</a> 
         <a href="{% url 'coreapp:profile_edit' %}" class="mr-2 btn btn-info float-right">Update Profile</a></div>
     <div class="card-body text-secondary">
-        <img class="rounded-circle account-img" src="{{ profile.profile_pic.url }}" style="max-width:100px;
+        <!-- <img class="rounded-circle account-img" src="{{ profile.profile_pic.url }}" style="max-width:100px; -->
+
+        <img class="rounded-circle account-img" src="{% static 'profile_pic/default2.jpg' %}" style="max-width:100px;
             max-height:100px;"/>
             <br/>
             <hr/>
