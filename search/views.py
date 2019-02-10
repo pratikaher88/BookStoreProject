@@ -11,7 +11,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 
-class SearchListView(generic.ListView):
+
+class SearchListView(LoginRequiredMixin, generic.ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
