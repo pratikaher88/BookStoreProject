@@ -276,7 +276,7 @@ class EmailThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        msg = EmailMessage(self.subject, self.html_content, to=self.recipient_list)
+        msg = EmailMessage(self.subject, self.html_content, from_email='cadabrabooks@gmail.com', to=self.recipient_list)
         msg.send()
 
 
