@@ -284,16 +284,16 @@ class EmailThread(threading.Thread):
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
-# @receiver(post_save, sender=Requests)
-# def send_request_email(sender, instance, created, **kwargs):
+@receiver(post_save, sender=Requests)
+def send_request_email(sender, instance, created, **kwargs):
     
-#     if created:
+    if created:
 
-#         EmailThread('New Request for book "' +instance.requester_book.book_name +'"',
-#                     'You have recieved a new request from user "'+instance.requester.username + '" for book "' +
-#                                          instance.requester_book.book_name +
-#                                          '". Go to https://cadabra.co.in/transaction/offers/ for more details.',
-#                     [instance.offerrer.email]).start()
+        EmailThread('New Request for book "' +instance.requester_book.book_name +'"',
+                    'You have recieved a new request from user "'+instance.requester.username + '" for book "' +
+                                         instance.requester_book.book_name +
+                                         '". Go to https://cadabra.co.in/transaction/offers/ for more details.',
+                    [instance.offerrer.email]).start()
 
 #         # send_mail('subject', 'body of the message', 'noreply@brozo.co', ['pratikaher88@gmail.com'])
 #         # email = EmailMessage('New Request for book '+ instance.requester_book.book_name,

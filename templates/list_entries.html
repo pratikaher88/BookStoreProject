@@ -25,6 +25,14 @@
 
 {% block content %}
 
+{% if addresscheck == "" %}
+
+<div class="alert alert-warning">
+  <strong>Warning!</strong> You cannot make a request for book without updating address !
+</div>
+
+{% endif %}
+
 {% if messages %}
 {% for message in messages %}
 <div class="alert alert-{{ message.tags }}">
