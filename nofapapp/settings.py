@@ -19,7 +19,6 @@ from decouple import config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -32,6 +31,14 @@ GOOGLE_BOOKS_URL = 'https://www.googleapis.com/books/v1/volumes'
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['139.59.47.233', '159.89.169.105', 'localhost','cadabra.co.in','www.cadabra.co.in']
+
+MAILGUN_KEY = config('MAILGUN_KEY')
+
+MAILGUN_REQUEST_URL = 'https://api.mailgun.net/v2/mg.cadabra.co.in/messages'
+
+MSG_SMS_URL = 'https://api.msg91.com/api/v2/sendsms'
+
+MSG_SMS_AUTH_KEY = config('MSG_SMS_AUTH_KEY')
 
 # Application definition
 

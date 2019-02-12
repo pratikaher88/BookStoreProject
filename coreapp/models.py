@@ -9,7 +9,7 @@ from os import listdir
 import os
 import requests
 from os.path import isfile
-from nofapapp.settings import BASE_DIR
+from nofapapp.settings import BASE_DIR, MAILGUN_KEY, MAILGUN_REQUEST_URL, MSG_SMS_URL, MSG_SMS_AUTH_KEY
 from django.core.validators import RegexValidator
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail
@@ -268,118 +268,189 @@ def create_profile(sender, instance, created, **kwargs):
         UserCollection.objects.create(owner=instance.profile)
 
 
-class EmailThread(threading.Thread):
-    def __init__(self, subject, html_content, recipient_list):
-        self.subject = subject
-        self.recipient_list = recipient_list
-        self.html_content = html_content
-        threading.Thread.__init__(self)
-
-    def run(self):
-        msg = EmailMessage(self.subject, self.html_content, from_email='cadabrabooks@gmail.com', to=self.recipient_list)
-        msg.send()
-
-
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
-@receiver(post_save, sender=Requests)
-def send_request_email(sender, instance, created, **kwargs):
-    
+
+# class EmailThread(threading.Thread):
+#     def __init__(self, subject, html_content, recipient_list):
+#         self.subject = subject
+#         self.recipient_list = recipient_list
+#         self.html_content = html_content
+#         threading.Thread.__init__(self)
+
+#     def run(self):
+#         msg = EmailMessage(self.subject, self.html_content, to=self.recipient_list)
+#         msg.send()
+
+class EmailThreadAPI(threading.Thread):
+    def __init__(self, subject, text, recepient):
+        self.subject = subject
+        self.text = text
+        self.recepient = recepient
+        threading.Thread.__init__(self)
+
+    def run(self):
+        requests.post(MAILGUN_REQUEST_URL, auth=('api', MAILGUN_KEY), data={
+            'from': 'cadabrabooks@gmail.com',
+            'to': self.recepient,
+            'subject': self.subject,
+            'text': self.text,
+        })
+
+def send_sms(mobiles,message):
+    parms = {
+        'authkey': MSG_SMS_AUTH_KEY,
+        'country': '91',
+        'sender': 'CDABRA',
+        'route': '4',
+        'mobiles': mobiles,
+        'message': message,
+    }
+    request = requests.post(url=MSG_SMS_URL, params=parms)
+
+# Done
+@receiver(post_save, sender=Transaction)
+def send_transaction_email(sender, instance, created, **kwargs):
+
     if created:
 
-        EmailThread('New Request for book "' +instance.requester_book.book_name +'"',
-                    'You have recieved a new request from user "'+instance.requester.username + '" for book "' +
-                                         instance.requester_book.book_name +
-                                         '". Go to https://cadabra.co.in/transaction/offers/ for more details.',
-                    [instance.offerrer.email]).start()
+        EmailThreadAPI(subject='Exchange Order created for your book ' + instance.offerrer_book.book_name,
+                       text='An exchange order has been created for "' + instance.requester_book.book_name +
+                                           '" from "' + instance.requester.username +
+                                           '" and "'+instance.offerrer_book.book_name +
+                                           '" from "' + instance.offerrer.username +
+                                           '". Go to  https://www.cadabra.co.in/transaction/orders/ to view the order. THANK YOU for ordering. Delivery of your book order will be attempted by CADABRA within one week.',
+                                        recepient=instance.offerrer.email).start()
 
-#         # send_mail('subject', 'body of the message', 'noreply@brozo.co', ['pratikaher88@gmail.com'])
-#         # email = EmailMessage('New Request for book '+ instance.requester_book.book_name,
-#         #                      'You have recieved a new request from user '+instance.requester.username + ' for book ' +
-#         #                      instance.requester_book.book_name +
-#         #                      '. Go to https://cadabra.co.in/transaction/offers/ for more details.',
-#         #                      to=[instance.offerrer.email])
-#         # email.send()
+        EmailThreadAPI(subject='Exchange Order created for your book ' + instance.requester_book.book_name,
+                       text='An exchange order has been created for "' + instance.requester_book.book_name +
+                       '" from "' + instance.requester.username +
+                       '" and "'+instance.offerrer_book.book_name +
+                       '" from "' + instance.offerrer.username +
+                       '". Go to  https://www.cadabra.co.in/transaction/orders/ to view the order. THANK YOU for ordering. Delivery of your book order will be attempted by CADABRA within one week.',
+                       recepient=instance.requester.email).start()
 
-# @receiver(pre_delete, sender=Requests)
-# def cancel_requests_email(sender, instance, **kwargs):
+        send_sms(mobiles=instance.offerrer_address.phone_number, message='An exchange order has been created for "' + instance.requester_book.book_name +
+                 '" from  user ' + instance.requester.username +
+                 ' and "'+instance.offerrer_book.book_name +
+                 '" from user ' + instance.offerrer.username +
+                 '. Go to  https://www.cadabra.co.in/transaction/orders/ to view the order. THANK YOU for ordering. Delivery of your book order will be attempted by CADABRA within one week.')
 
-#     EmailThread('Request cancelled for "' + instance.requester_book.book_name + '"',
-#                 'Request for "' + instance.requester_book.book_name + '" from "' +
-#                 instance.requester.username +
-#                 '" is cancelled.',
-#                 [instance.offerrer.email]).start()
+        send_sms(mobiles=instance.requester_address.phone_number, message='An exchange order has been created for "' + instance.requester_book.book_name +
+                 '" from  user ' + instance.requester.username +
+                 ' and "'+instance.offerrer_book.book_name +
+                 '" from user ' + instance.offerrer.username +
+                 '. Go to  https://www.cadabra.co.in/transaction/orders/ to view the order. THANK YOU for ordering. Delivery of your book order will be attempted by CADABRA within one week.')
 
+# Done
+@receiver(post_save, sender=Requests)
+def send_request_email(sender, instance, created, **kwargs):
 
-# @receiver(post_save, sender=Transaction)
-# def send_transaction_email(sender, instance, created, **kwargs):
+    if created:
 
-#     if created:
+        EmailThreadAPI(subject='New Request for book "'+instance.requester_book.book_name + '"',
+                       text='You have recieved a new request from user "'+instance.requester.username + '" for book "' +
+                       instance.requester_book.book_name +
+                       '". Go to https://cadabra.co.in/transaction/offers/ for more details.', recepient=instance.offerrer.email).start()
 
-#         EmailThread('Exchange Order placed ' ,
-#                     'An exchange order has been created for "' + instance.requester_book.book_name +
-#                     '" from "' + instance.requester.username +
-#                     '" and "'+instance.offerrer_book.book_name +
-#                     '" from "' + instance.offerrer.username +
-#                     '". Go to  https: // www.cadabra.co.in/transaction/orders/ to view the order. THANK YOU for ordering. Delivery of your book order will be attempted by CADABRA within one week.',
-#                     [instance.offerrer.email,instance.requester.email]).start()
+# Done
+@receiver(post_save, sender=FinalBuyOrder)
+def send_buyorder_email(sender, instance, created, **kwargs):
 
+    if created:
 
-# @receiver(pre_delete, sender=Transaction)
-# def send_transaction_email(sender, instance , **kwargs):
+        EmailThreadAPI(subject='Buy Order successfully placed',
+                       text='You have successfully ordered book "' + instance.book.book_name + '" . Amount payable is Rs ' +
+                       str(instance.total_price) +
+                       '. Go to  https://www.cadabra.co.in/transaction/orders/ to view the order. CADABRA will deliver the book within one week.',
+                       recepient=instance.user.email).start()
 
-#     EmailThread('Exchange Order cancelled ',
-#                 'An exchange order has been cancelled for "' + instance.requester_book.book_name +
-#                 '" from "' + instance.requester.username +
-#                 '" and "'+instance.offerrer_book.book_name +
-#                 '" from "' + instance.offerrer.username+
-#                 '" is cancelled.',
-#                 [instance.offerrer.email, instance.requester.email]).start()
+        EmailThreadAPI(subject='Order for your book "' + instance.book.book_name + '"',
+                       text='Your book "' +
+                       instance.book.book_name + '" has been sold to user'+instance.user.username+
+                       '. You can view the item at http://cadabra.co.in/userbooks/sold/. CADABRA will pick up the book within one week.',
+                       recepient=instance.seller.email).start()
 
+        send_sms(mobiles=instance.selleraddress.phone_number, message='Your book "' +
+                 instance.book.book_name + '" has been sold. CADABRA will pick up the book within one week.')
 
-# @receiver(post_save, sender=CompletedTransaction)
-# def send_transaction_email(sender, instance, created, **kwargs):
+# Done
+@receiver(post_save, sender=CompletedTransaction)
+def send_completed_transaction_email(sender, instance, created, **kwargs):
 
-#     if created:
+    if created:
 
-#         EmailThread('Delivery Completed ',
-#                     'Delivery for "' + instance.requester_book.book_name +
-#                     '" from "' + instance.requester.username +
-#                     '" and "'+instance.offerrer_book.book_name +
-#                     '" from "' + instance.offerrer.username+
-#                     '" has been completed.',
-#                     [instance.offerrer.email, instance.requester.email]).start()
+        EmailThreadAPI(subject='Delivery Completed ',
+                       text='Delivery for "' + instance.requester_book_name +
+                       '" from "' + instance.requester.username +
+                       '" and "'+instance.offerrer_book_name +
+                       '" from "' + instance.offerrer.username +
+                       '" has been completed. THANK YOU for using CADABRA.',
+                       recepient=instance.offerrer.email).start()
 
+        EmailThreadAPI(subject='Delivery Completed ',
+                       text='Delivery for "' + instance.requester_book_name +
+                       '" from "' + instance.requester.username +
+                       '" and "'+instance.offerrer_book_name +
+                       '" from "' + instance.offerrer.username +
+                       '" has been completed. THANK YOU for using CADABRA.',
+                       recepient=instance.requester.email).start()
 
-# @receiver(post_save, sender=FinalBuyOrder)
-# def send_buyorder_email(sender, instance, created, **kwargs):
-    
-#     if created:
+#Done
+@receiver(post_save, sender=CompletedBuyOrder)
+def send_completed_buy_order_email(sender, instance, created, **kwargs):
 
-#         EmailThread('Buy Order successfully placed',
-#                     'You have successfully ordered book "'+ instance.book_name +'" . Amount payable is Rs'+ instance.total_price +'. CADABRA will deliver the book within one week.',
-#                     [instance.user.email]).start()
-        
-#         EmailThread('Buy Order for book "'+ instance.book_name +'"',
-#                     'Buy Order has been successfully placed book "' + instance.book_name +'. CADABRA will pick up the book within one week.',
-#                     [instance.seller.email]).start()
+    if created:
 
-# @receiver(pre_delete, sender=FinalBuyOrder)
-# def send_buyorder_email(sender, instance, created, **kwargs):
+        EmailThreadAPI(subject='Delivery Completed ',
+                       text='Delivery for "' + instance.book_name +
+                       '" has been completed. THANK YOU for using CADABRA.',
+                       recepient=instance.user.email).start()
 
-#     EmailThread('Buy Order cancelled',
-#                 'Buy Order for book "' + instance.book_name + '" is cancelled from user',
-#                 [instance.seller.email]).start()
+# Done
+@receiver(pre_delete, sender=Requests)
+def cancel_requests_email(sender, instance, **kwargs):
 
+        EmailThreadAPI(subject='Request cancelled for "' + instance.requester_book.book_name + '"',
+                       text='Request for "' + instance.requester_book.book_name + '" from "' +
+                       instance.requester.username +
+                       '" is cancelled.', recepient=instance.offerrer.email).start()
 
-# @receiver(post_save, sender=CompletedBuyOrder)
-# def send_transaction_email(sender, instance, created, **kwargs):
+# Done
+@receiver(pre_delete, sender=Transaction)
+def delete_transaction_email(sender, instance, **kwargs):
 
-#     if created:
+        EmailThreadAPI(subject='Exchange Order cancelled ',
+                       text='An exchange order has been cancelled for book "' + instance.requester_book.book_name +
+                       '" from "' + instance.requester.username +
+                       '" and book "'+instance.offerrer_book.book_name +
+                       '" from "' + instance.offerrer.username +
+                       '".Thanks for using CADABRA.',
+                       recepient=instance.offerrer.email).start()
 
-#         EmailThread('Delivery Completed ',
-#                     'Delivery for "' + instance.book_name +
-#                     '" has been completed.  THANK YOU for using CADABRA.',
-#                     [instance.user.email]).start()
+        EmailThreadAPI(subject='Exchange Order cancelled ',
+                       text='An exchange order has been cancelled for book "' + instance.requester_book.book_name +
+                       '" from "' + instance.requester.username +
+                       '" and book "'+instance.offerrer_book.book_name +
+                       '" from "' + instance.offerrer.username +
+                       '".Thanks for using CADABRA.',
+                       recepient=instance.requester.email).start()
+
+        send_sms(mobiles=instance.offerrer_address.phone_number, message='An exchange order has been cancelled for book "' + instance.requester_book.book_name +
+                       '" from ' + instance.requester.username +
+                       ' and book '+instance.offerrer_book.book_name +
+                       ' from "' + instance.offerrer.username +
+                       '".')
+
+# Done
+@receiver(pre_delete, sender=FinalBuyOrder)
+def delete_buyorder_email(sender, instance, **kwargs):
+
+    EmailThreadAPI(subject='Buy Order cancelled',
+                   text='Buy Order for book "' + instance.book.book_name + '" is cancelled from user',
+                   recepient=instance.seller.email).start()
+
+    send_sms(mobiles=instance.selleraddress.phone_number, message='Buy Order for book "' +
+             instance.book.book_name + '" is cancelled from user '+instance.user.username+'.')

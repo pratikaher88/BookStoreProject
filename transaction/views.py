@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from coreapp.models import Book, Requests, Transaction, UserCollection, FinalBuyOrder, OldRequests, Profile, ShippingAddress, CompletedTransaction, CompletedBuyOrder
+from coreapp.models import Book, Requests, Transaction, UserCollection, FinalBuyOrder, OldRequests, Profile, ShippingAddress, CompletedTransaction, CompletedBuyOrder, cancel_requests_email
 from coreapp.models import Requests
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import generic
@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.utils import timezone
 import datetime
 from django.db import transaction
+from django.db.models import signals
 
 ordered_books = FinalBuyOrder.objects.values_list('book')
 requester_books = Transaction.objects.values_list('requester_book')
@@ -40,7 +41,13 @@ def final_transaction(request, offer_id, book_id):
                                   requester_book=new_request.requester_book)
 
         # delete entry from requests
+        signals.pre_delete.disconnect(cancel_requests_email, sender=Requests)
+
         new_request.delete()
+
+        signals.pre_delete.connect(cancel_requests_email, sender=Requests)
+
+        
         
         # save old request
         # save new order
@@ -88,8 +95,8 @@ def add_request(request,book_id):
 
                 no_of_requests_made_in_one_day = Requests.objects.filter(requester=request.user, timestamp__gte=date_from).count()
 
-                if no_of_requests_made_in_one_day>6:
-                    messages.warning(request,"Maximum requests exceeded for one day : you can make maximum of 7 requests")
+                if no_of_requests_made_in_one_day>5:
+                    messages.warning(request,"Maximum requests exceeded for one day : you can make maximum of 6 requests")
                 else:
                     messages.info(
                         request, "New Request !")
@@ -152,8 +159,14 @@ class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteVie
         return False
 
     def delete(self, request, *args, **kwargs):
+
+        signals.pre_delete.disconnect(cancel_requests_email, sender=Requests)
+
         self.object = self.get_object()
         self.object.delete()
+
+        signals.pre_delete.connect(cancel_requests_email, sender=Requests)
+
         return redirect(self.get_success_url())
 
 class TransactionListView(LoginRequiredMixin, generic.ListView):
