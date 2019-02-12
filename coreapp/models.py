@@ -321,7 +321,7 @@ def send_transaction_email(sender, instance, created, **kwargs):
                                            '" from "' + instance.requester.username +
                                            '" and "'+instance.offerrer_book.book_name +
                                            '" from "' + instance.offerrer.username +
-                                           '". Go to  https://www.cadabra.co.in/transaction/orders/ to view the order. THANK YOU for ordering. Delivery of your book order will be attempted by CADABRA within one week.',
+                                           '". Go to  https://www.cadabra.co.in/transaction/orders/ to view the order. Thank You for ordering. Delivery of your book order will be attempted by CADABRA within one week.',
                                         recepient=instance.offerrer.email).start()
 
         EmailThreadAPI(subject='Exchange Order created for your book ' + instance.requester_book.book_name,
@@ -329,20 +329,20 @@ def send_transaction_email(sender, instance, created, **kwargs):
                        '" from "' + instance.requester.username +
                        '" and "'+instance.offerrer_book.book_name +
                        '" from "' + instance.offerrer.username +
-                       '". Go to  https://www.cadabra.co.in/transaction/orders/ to view the order. THANK YOU for ordering. Delivery of your book order will be attempted by CADABRA within one week.',
+                       '". Go to  https://www.cadabra.co.in/transaction/orders/ to view the order. Thank You for ordering. Delivery of your book order will be attempted by CADABRA within one week.',
                        recepient=instance.requester.email).start()
 
         send_sms(mobiles=instance.offerrer_address.phone_number, message='An exchange order has been created for "' + instance.requester_book.book_name +
                  '" from  user ' + instance.requester.username +
                  ' and "'+instance.offerrer_book.book_name +
                  '" from user ' + instance.offerrer.username +
-                 '. Go to  https://www.cadabra.co.in/transaction/orders/ to view the order. THANK YOU for ordering. Delivery of your book order will be attempted by CADABRA within one week.')
+                 '. Go to  https://www.cadabra.co.in/transaction/orders/ to view the order. Thank You for ordering. Delivery of your book order will be attempted by CADABRA within one week.')
 
         send_sms(mobiles=instance.requester_address.phone_number, message='An exchange order has been created for "' + instance.requester_book.book_name +
                  '" from  user ' + instance.requester.username +
                  ' and "'+instance.offerrer_book.book_name +
                  '" from user ' + instance.offerrer.username +
-                 '. Go to  https://www.cadabra.co.in/transaction/orders/ to view the order. THANK YOU for ordering. Delivery of your book order will be attempted by CADABRA within one week.')
+                 '. Go to  https://www.cadabra.co.in/transaction/orders/ to view the order. Thank You for ordering. Delivery of your book order will be attempted by CADABRA within one week.')
 
 # Done
 @receiver(post_save, sender=Requests)
@@ -387,7 +387,7 @@ def send_completed_transaction_email(sender, instance, created, **kwargs):
                        '" from "' + instance.requester.username +
                        '" and "'+instance.offerrer_book_name +
                        '" from "' + instance.offerrer.username +
-                       '" has been completed. THANK YOU for using CADABRA.',
+                       '" has been completed. Thank You for using CADABRA.',
                        recepient=instance.offerrer.email).start()
 
         EmailThreadAPI(subject='Delivery Completed ',
@@ -395,7 +395,7 @@ def send_completed_transaction_email(sender, instance, created, **kwargs):
                        '" from "' + instance.requester.username +
                        '" and "'+instance.offerrer_book_name +
                        '" from "' + instance.offerrer.username +
-                       '" has been completed. THANK YOU for using CADABRA.',
+                       '" has been completed. Thank You for using CADABRA.',
                        recepient=instance.requester.email).start()
 
 #Done
@@ -406,7 +406,7 @@ def send_completed_buy_order_email(sender, instance, created, **kwargs):
 
         EmailThreadAPI(subject='Delivery Completed ',
                        text='Delivery for "' + instance.book_name +
-                       '" has been completed. THANK YOU for using CADABRA.',
+                       '" has been completed. Thank you for using CADABRA.',
                        recepient=instance.user.email).start()
 
 # Done
