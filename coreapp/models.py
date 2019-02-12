@@ -416,7 +416,7 @@ def cancel_requests_email(sender, instance, **kwargs):
         EmailThreadAPI(subject='Request cancelled for "' + instance.requester_book.book_name + '"',
                        text='Request for "' + instance.requester_book.book_name + '" from "' +
                        instance.requester.username +
-                       '" is cancelled.', recepient=instance.offerrer.email).start()
+                       '" is cancelled. Go to https://www.cadabra.co.in/ for more details.', recepient=instance.offerrer.email).start()
 
 # Done
 @receiver(pre_delete, sender=Transaction)
@@ -427,7 +427,7 @@ def delete_transaction_email(sender, instance, **kwargs):
                        '" from "' + instance.requester.username +
                        '" and book "'+instance.offerrer_book.book_name +
                        '" from "' + instance.offerrer.username +
-                       '".Thanks for using CADABRA.',
+                       '".Go to https://www.cadabra.co.in/ for more books. Thank You for using CADABRA.',
                        recepient=instance.offerrer.email).start()
 
         EmailThreadAPI(subject='Exchange Order cancelled ',
@@ -435,7 +435,7 @@ def delete_transaction_email(sender, instance, **kwargs):
                        '" from "' + instance.requester.username +
                        '" and book "'+instance.offerrer_book.book_name +
                        '" from "' + instance.offerrer.username +
-                       '".Thanks for using CADABRA.',
+                       '".Go to https://www.cadabra.co.in/ for more books. Thank You for using CADABRA.',
                        recepient=instance.requester.email).start()
 
         send_sms(mobiles=instance.offerrer_address.phone_number, message='An exchange order has been cancelled for book "' + instance.requester_book.book_name +
@@ -449,7 +449,7 @@ def delete_transaction_email(sender, instance, **kwargs):
 def delete_buyorder_email(sender, instance, **kwargs):
 
     EmailThreadAPI(subject='Buy Order cancelled',
-                   text='Buy Order for book "' + instance.book.book_name + '" is cancelled from user',
+                   text='Buy Order for book "' + instance.book.book_name + '" is cancelled from user.',
                    recepient=instance.seller.email).start()
 
     send_sms(mobiles=instance.selleraddress.phone_number, message='Buy Order for book "' +
