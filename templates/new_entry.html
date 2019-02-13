@@ -17,7 +17,7 @@
 {% if addresscheck == "" %}
 
 <div class="alert alert-warning">
-  <strong>Warning!</strong> You cannot add a book without updating address !
+  <strong>Warning!</strong> You need to update address in profile to add a book !
 </div>
 
 {% endif %}
@@ -33,7 +33,7 @@
                 {{ form.book_name | as_crispy_field }}
               </div>
 
-              <button type="submit" class="btn btn-primary btn-block" name="check">Check for Book Details</button>
+              <button type="submit" class="btn btn-primary btn-block" name="check">Check for book details after entering book name</button>
               <hr/>
               {% if items %}
 

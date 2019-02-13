@@ -209,7 +209,7 @@ def new_entry(request):
                 ShippingAddress, profile=request.user.profile)
             if address.address1 == '':
                 messages.info(
-                    request, 'You need to update address in profile to make a Sell request!')
+                    request, 'You need to update address in profile to add a book!')
                 return redirect('coreapp:new_entry')
 
             if new_entry_form.cleaned_data['price'] is None and new_entry_form.cleaned_data['sell_or_exchange'] == 'Sell':

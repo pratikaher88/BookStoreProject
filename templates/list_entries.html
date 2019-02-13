@@ -33,6 +33,15 @@
 
 {% endif %}
 
+{% if not exchangeitemexists %}
+
+<div class="alert alert-info">
+  <strong>Warning!</strong> You need to add exchange items to your collection to make a request !
+</div>
+
+
+{% endif %}
+
 {% if messages %}
 {% for message in messages %}
 <div class="alert alert-{{ message.tags }}">
