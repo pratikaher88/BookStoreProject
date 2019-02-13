@@ -117,7 +117,7 @@ class ShippingAddress(models.Model):
         return self.address1 is "" or self.phone_number is ""
 
     def __str__(self):
-        return "{},{},{},{},{}".format(self.flatnumber, self.address1, self.address2, self.zip_code, self.phone_number)
+        return "{},{},{},{},{},{}".format(self.profile.user.username,self.flatnumber, self.address1, self.address2, self.zip_code, self.phone_number)
 
 
 class Order(models.Model):
