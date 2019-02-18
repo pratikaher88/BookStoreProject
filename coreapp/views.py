@@ -33,7 +33,7 @@ class SignUp(SuccessMessageMixin, CreateView):
     template_name = 'signup.html'
     success_message = 'Account Created! You can now Login!'
 
-class BookListView(LoginRequiredMixin, ListView):
+class BookListView( ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
@@ -60,15 +60,19 @@ class BookListView(LoginRequiredMixin, ListView):
         preserved = Case(*[When(pk=pk, then=pos)
                            for pos, pk in enumerate(id_list)])
 
-        book_object_list = Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).exclude(
-            id__in=requester_books).exclude(id__in=offerrer_books).filter(id__in=id_list).order_by(preserved)
+        if self.request.user.is_authenticated:
+            book_object_list = Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).exclude(
+                id__in=requester_books).exclude(id__in=offerrer_books).filter(id__in=id_list).order_by(preserved)
+        else:
+            book_object_list = Book.objects.exclude(id__in=ordered_books).exclude(
+                id__in=requester_books).exclude(id__in=offerrer_books).filter(id__in=id_list).order_by(preserved)
 
         return book_object_list
 
         # return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).exclude(
         #     id__in=requester_books).exclude(id__in=offerrer_books).order_by('-created_at')
 
-class BuyListView(LoginRequiredMixin, ListView):
+class BuyListView(ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
@@ -93,14 +97,25 @@ class BuyListView(LoginRequiredMixin, ListView):
         preserved = Case(*[When(pk=pk, then=pos)
                            for pos, pk in enumerate(id_list)])
 
-        book_object_list = Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).filter(sell_or_exchange='Sell').filter(id__in=id_list).order_by(preserved)
+        
+        if self.request.user.is_authenticated:
+
+            book_object_list = Book.objects.exclude(user=self.request.user).exclude(
+                id__in=ordered_books).filter(sell_or_exchange='Sell').filter(id__in=id_list).order_by(preserved)
+
+        else:
+            book_object_list = Book.objects.all().filter(id__in=id_list).exclude(
+                id__in=ordered_books).filter(
+                sell_or_exchange='Sell').order_by(preserved)
+
+
 
         return book_object_list
 
         # return Book.objects.exclude(user=self.request.user).exclude(id__in=ordered_books).filter(sell_or_exchange='Sell').order_by('-created_at')
 
 
-class ExchangeListView(LoginRequiredMixin, ListView):
+class ExchangeListView( ListView):
     model = Book
     template_name = 'list_entries.html'
     context_object_name = 'books'
@@ -125,7 +140,18 @@ class ExchangeListView(LoginRequiredMixin, ListView):
         preserved = Case(*[When(pk=pk, then=pos)
                            for pos, pk in enumerate(id_list)])
 
-        book_object_list = Book.objects.exclude(user=self.request.user).exclude(id__in=requester_books).exclude(id__in=offerrer_books).filter(sell_or_exchange='Exchange').order_by(preserved)
+        
+        if self.request.user.is_authenticated:
+
+            book_object_list = Book.objects.exclude(user=self.request.user).exclude(id__in=requester_books).exclude(
+                id__in=offerrer_books).filter(sell_or_exchange='Exchange').order_by(preserved)
+
+        else:
+
+            book_object_list = Book.objects.exclude(id__in=requester_books).exclude(
+                id__in=offerrer_books).filter(id__in=id_list).filter(
+                sell_or_exchange='Exchange').order_by(preserved)
+
 
         return book_object_list
 
@@ -162,7 +188,7 @@ class UserBookSoldItemsView(LoginRequiredMixin, ListView):
         return CompletedBuyOrder.objects.filter(seller=self.request.user).order_by('date_ordered')
 
 
-class UserBookListViewForUser(LoginRequiredMixin, ListView):
+class UserBookListViewForUser( ListView):
     model = Book
     template_name = 'collection_user_entries.html'
     context_object_name = 'books'

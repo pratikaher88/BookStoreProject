@@ -33,12 +33,16 @@
 
 {% endif %}
 
+{% if user.is_authenticated %}
+
 {% if not exchangeitemexists %}
 
 <div class="alert alert-info">
   <strong>Warning!</strong> You need to add exchange items to your collection to make a request !
 </div>
 
+
+{% endif %}
 
 {% endif %}
 
