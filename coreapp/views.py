@@ -104,11 +104,9 @@ class BuyListView(ListView):
                 id__in=ordered_books).filter(sell_or_exchange='Sell').filter(id__in=id_list).order_by(preserved)
 
         else:
-            book_object_list = Book.objects.all().filter(id__in=id_list).exclude(
+            book_object_list = Book.objects.filter(id__in=id_list).exclude(
                 id__in=ordered_books).filter(
                 sell_or_exchange='Sell').order_by(preserved)
-
-
 
         return book_object_list
 
