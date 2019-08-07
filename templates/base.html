@@ -85,6 +85,7 @@
       <!-- </li> -->
       <li><a class="btn btn-outline-success ml-2 my-2 my-sm-0" href="{% url 'logout'%}">Logout</a></li>
         {% else %}
+      <li><a href="{% url 'aboutus' %}" class="btn btn-outline-success">About us</a></li>
       <li><a href="{% url 'login' %}" class="btn btn-outline-success">Login</a></li>
       <li><a href="{% url 'coreapp:signup' %}" class="btn btn-primary ml-2">Sign up</a></li>
 
