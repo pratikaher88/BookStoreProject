@@ -337,6 +337,6 @@ def update_address(request):
     })
 
 
-@login_required
+
 def aboutus(request):
     return render(request, 'aboutus.html')
