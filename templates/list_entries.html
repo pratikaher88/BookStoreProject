@@ -96,7 +96,7 @@
         
       </div>
       <div class="card-footer text-mutxed">
-        {{ book.created_at }} 
+
         {% if book.sell_or_exchange == 'Sell' %}
 
         <a href="{% url 'cart:add_to_cart' book.id %}" class="btn btn-primary float-right">BUY FOR {{ book.price }}</a>
