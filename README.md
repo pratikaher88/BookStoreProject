@@ -7,3 +7,6 @@ Once the swap is agreed upon we carry out the exchange for them. There is anothe
 Full Stack : Developed the entire website using Django Framework and then, deployed the website.
 
 Entrepreneurship : Responsible for management, logistics and delivery of books.
+
+
+howitworks.jpg![image](https://user-images.githubusercontent.com/25560037/151745640-1a983af2-ab5d-414f-a428-ee81b3f4c24c.png)
